@@ -3,4 +3,8 @@ from django.shortcuts import render
 # Create your views here.
 def home(request):
 
-    return render(request,'management/base.html')
+    return render(request,'management/index.html')
+
+def clock(request):
+
+    return render(request,'management/clock.html')
