@@ -64,8 +64,12 @@ class Attendance(models.Model):
     is_leave = models.BooleanField(default=False)
     clock_in = models.DateTimeField()
     clock_out = models.DateTimeField()
-    lat = models.CharField(max_length=10)
-    long  = models.CharField(max_length=10)
+    lat = models.CharField(max_length=10,default="")
+    long  = models.CharField(max_length=10,default="")
+    lat1 = models.CharField(max_length=10,default="")
+    lat2 = models.CharField(max_length=10,default="")
+    image1 =models.TextField()
+    image2 =models.TextField()
     remarks = models.TextField()
 
 

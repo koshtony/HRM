@@ -100,6 +100,10 @@
               <img src="images/faces/face28.jpg" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item" href="{% url 'management-clock' %}">
+                <i class="ti-timer text-primary"></i>
+                attendance
+              </a>
               <a class="dropdown-item">
                 <i class="ti-settings text-primary"></i>
                 Settings
@@ -297,9 +301,9 @@
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="{% url 'management-home' %}">
               <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Hope page</span>
+              <span class="menu-title">Homee page</span>
             </a>
           </li>
           <li class="nav-item">

@@ -18,11 +18,28 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
-                  <input type="text" class="form-control" id="longitudes">
-                  <p class="card-description">
-                    Basic form layout
+                  <form class="forms-sample">
+                    <div class="form-group">
+                     <input type="text" class="form-control" id="longitudes" readonly>
+                     
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="latitudes" readonly>
+                    
+                 </div>
+                 <div class="form-group">
+                  <input type="text" class="form-control" id="image_info" readonly>
+                  
+               </div>
+               <div class="form-group">
+                <input type="text" class="form-control" id="my_ip" readonly>
+                
+             </div>
+                  </form>
+                  <p class="card-description" style="color:gree" id="video_msg">
+                   
                   </p>
-                  <button class="btn btn-primary btn-circle" style="margin: 5px;0px;width:200px;height:200px;border-radius:35px;" onclick="getLoc()">
+                  <button class="btn btn-primary btn-circle" style="margin: 5px;0px;width:200px;height:200px;border-radius:35px;" >
                      <div style="color:white; font-weight: bold; font-size: x-large;" id="timenow"></div>
                   </button>
                 </div>
@@ -31,50 +48,30 @@
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Horizontal Form</h4>
+                  <h4 class="card-title">Image set</h4>
                   <p class="card-description">
-                    Horizontal form layout
+                   capture image to complete process
                   </p>
-                  <form class="forms-sample">
-                    <div class="form-group row">
-                      <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Email</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputUsername2" placeholder="Username">
-                      </div>
+                  <div class="row">
+                    <div class="col" >
+                      <video id="video" width="280" height="240"  autoplay></video>
                     </div>
-                    <div class="form-group row">
-                      <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Email</label>
-                      <div class="col-sm-9">
-                        <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email">
-                      </div>
+                    
+                    <div class="col">
+
+                      <canvas id="canvas" width="285" height="200" ></canvas>
                     </div>
-                    <div class="form-group row">
-                      <label for="exampleInputMobile" class="col-sm-3 col-form-label">Mobile</label>
-                      <div class="col-sm-9">
-                        <input type="text" class="form-control" id="exampleInputMobile" placeholder="Mobile number">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="exampleInputPassword2" class="col-sm-3 col-form-label">Password</label>
-                      <div class="col-sm-9">
-                        <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Re Password</label>
-                      <div class="col-sm-9">
-                        <input type="password" class="form-control" id="exampleInputConfirmPassword2" placeholder="Password">
-                      </div>
-                    </div>
-                    <div class="form-check form-check-flat form-check-primary">
-                      <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
-                        Remember me
-                      </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                    <button class="btn btn-light">Cancel</button>
-                  </form>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                  <button class="btn btn-circle" id="click-photo"><i class="ti-image"></i>take photo</button>
+                  </div>
+                  <div class="col">
+                    <button class="btn btn-primary" onclick="subClockin();"><i class="ti-save"></i>submit</button>
+                  </div>
+                  </div>
+                  <br>
+                  
                 </div>
               </div>
             </div>
@@ -177,7 +174,7 @@
          
          // Setting text of element P with id gfg
         
-         alert(data.ip)
+         document.getElementById("my_ip").value = data.ip
      })
               
             }else{
@@ -196,7 +193,55 @@
           var lat = position.coords.latitude;
           var long = position.coords.longitude;
           document.getElementById("longitudes").value = long
+          document.getElementById("latitudes").value = lat
        }
+
+
+       let camera_button = document.querySelector("#timenow");
+        let video = document.querySelector("#video");
+        let click_button = document.querySelector("#click-photo");
+        let canvas = document.querySelector("#canvas");
+
+        camera_button.addEventListener('click', async function() {
+            let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          video.srcObject = stream;
+          getLoc();
+          document.getElementById("video_msg").innerHTML = "scroll down video initiated";
+
+        });
+
+        click_button.addEventListener('click', function() {
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let image_data_url = canvas.toDataURL('image/jpeg');
+
+            // data url of the image
+            //console.log(image_data_url);
+            document.getElementById("image_info").value = image_data_url
+            video.srcObject.getVideoTracks().forEach(track => track.stop());
+        });
+
+      // submit clock in details 
+
+        function subClockin(){
+
+             alert("done")
+            $.ajax({
+              
+              type:"POST",
+              url:"{% url 'management-clock' %}",
+              data: {
+
+                 latitude: $("#latitudes").val(),
+                 longitude: $("#longitudes").val(),
+                 image_str:$("#image_info").val(),
+                 csrfmiddlewaretoken:'{{ csrf_token }}'
+              },
+
+              success:function(data,status){
+                 alert(data)
+              }
+            })
+        }
 
     </script>
   {% endblock content %}
