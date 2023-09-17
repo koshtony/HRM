@@ -1,0 +1,63 @@
+
+{% extends 'management/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <!-- create camera modal here-->
+
+     
+
+
+
+
+
+
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Employee registation</h4>
+                    <form class="form-sample">
+                      <p class="card-description">
+                        Personal info
+                      </p>
+                      <div class="row">
+                        {% for field in emp_form %}
+                        <div class="col-md-6">
+                          <div class="form-group row">
+                           
+                            <div class="col-sm-9">
+                              {{field | as_crispy_field}}
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+                        
+                      </div>
+                      
+                    
+                      
+                    </form>
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+
+    <script>
+     
+
+    </script>
+  {% endblock content %}
+
+  

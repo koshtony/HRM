@@ -18,7 +18,6 @@ class Roles(models.Model):
 
 class Employee(models.Model):
    
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
     emp_id = models.CharField(max_length=50,default="None")
    # personal details
     
@@ -26,9 +25,12 @@ class Employee(models.Model):
     second_name = models.CharField(max_length=50,default="None")
     id_no = models.CharField(max_length=50,default="None")
     email = models.EmailField(default="None")
+    dob = models.DateField(default=timezone.now)
     phone = models.CharField(max_length=50,default="None")
     next_kin_name = models.CharField(max_length=50,default="None")
     next_kin_id = models.CharField(max_length=50,default="None")
+    address = models.CharField(max_length=50,default="None")
+    location = models.CharField(max_length=50,default="None")
 
  # HR admin section
 
@@ -36,6 +38,8 @@ class Employee(models.Model):
     department = models.CharField(max_length=50,default="None")
     education_level = models.CharField(max_length=50,default="None")
     documents = models.FileField(default='documents.pdf',upload_to='documents')
+    doj = models.DateField(default=timezone.now)
+    dol = models.DateField(default=timezone.now)
 
  # finance section 
 
@@ -49,6 +53,7 @@ class Employee(models.Model):
 # account management 
 
     status = models.CharField(max_length=50,default="None")
+    image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
 
     def __str__(self):
 
@@ -71,5 +76,63 @@ class Attendance(models.Model):
     image1 =models.TextField()
     image2 =models.TextField()
     remarks = models.TextField()
+
+
+class Approvers(models.Model):
+
+    Employee_ids = models.CharField(max_length=100,default="")
+    approval_type = models.CharField(max_length=10,default="")
+    created = models.DateField(default=timezone.now)
+    remarks = models.TextField() 
+
+class Approvals(models.Model):
+
+    type = models.CharField(max_length=100,default="")
+    approvers = models.ForeignKey(Approvers,on_delete=models.PROTECT)
+    level = models.CharField(max_length=10,default="")
+    created = models.DateField(default=timezone.now)
+    remarks = models.TextField()
+
+    def __str__(self):
+        return self.type
+
+class Process(models.Model):
+
+    applicant = models.CharField(max_length=10,default="")
+    approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
+    details = models.TextField()
+    created = models.DateField()
+    documents = models.FileField(default="process.pdf",upload_to='process')
+
+    
+class Leave(models.Model):
+    
+    applicant = models.ForeignKey(User,on_delete=models.PROTECT,related_name="applicant")
+    Approvals_type = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="leave")
+    category = models.CharField(max_length=100,choices=(("annual","annual"),("sick","sick"),("compassionate","compassionate"),("office","office")),default="")
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    attachments = models.FileField(default="attachment.pdf",upload_to='leave')
+    status = models.CharField(max_length=30,default="pending")
+    created = models.DateTimeField(default=timezone.now)
+    remarks = models.TextField()
+
+    def __str__(self):
+
+        self.category 
+
+
+class Todo(models.Model):
+
+    recpient_id = models.CharField(max_length=30,default="")
+    details = models.TextField()
+    links = models.CharField(max_length=200,default="")
+
+
+    def __str__(self):
+
+        self.recpient_id
+
+
 
 
