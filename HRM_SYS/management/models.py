@@ -102,6 +102,7 @@ class Process(models.Model):
     approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
     details = models.TextField()
     created = models.DateField()
+    status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")))
     documents = models.FileField(default="process.pdf",upload_to='process')
 
     
@@ -119,7 +120,7 @@ class Leave(models.Model):
 
     def __str__(self):
 
-        self.category 
+        return self.category 
 
 
 class Todo(models.Model):
@@ -131,8 +132,28 @@ class Todo(models.Model):
 
     def __str__(self):
 
-        self.recpient_id
+        return self.recpient_id
+class Events(models.Model):
 
+    title = models.CharField(max_length=100,default="")
+    details = models.TextField()
+    category = models.CharField(max_length=100,choices=(("announcement","announcement"),("events","events")),default="")
+    created = models.DateTimeField(default=timezone.now)
+    creator = models.ForeignKey(User,on_delete=models.CASCADE)
+
+    def __str__(self):
+
+        return self.title
+
+class Posts(models.Model):
+    
+    post = models.TextField()
+    created = models.DateTimeField()
+    creator = models.ForeignKey(User,on_delete=models.CASCADE)
+
+    def __str__(self):
+
+        return str(self.pk)
 
 
 

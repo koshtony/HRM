@@ -21,7 +21,8 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="{% static 'management/css/vertical-layout-light/style.css' %}">
   <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  
+
 </head>
 <body>
   <div class="container-scroller">
@@ -133,10 +134,10 @@
         <div id="settings-trigger"><i class="ti-settings"></i></div>
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close ti-close"></i>
-          <p class="settings-heading">SIDEBAR SKINS</p>
+          <p class="settings-heading">Process bar</p>
           <div class="sidebar-bg-options selected" id="sidebar-light-theme"><div class="img-ss rounded-circle bg-light border mr-3"></div>Light</div>
           <div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark</div>
-          <p class="settings-heading mt-2">HEADER SKINS</p>
+          <p class="settings-heading mt-2"></p>
           <div class="color-tiles mx-0 px-4">
             <div class="tiles success"></div>
             <div class="tiles warning"></div>
@@ -309,7 +310,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="icon-layout menu-icon"></i>
+              <i class="ti-desktop"></i>&nbsp;
               <span class="menu-title">Broadcast</span>
               <i class="menu-arrow"></i>
             </a>
@@ -330,7 +331,7 @@
             <div class="collapse" id="form-elements">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"><a class="nav-link" href="{% url 'management_approvals' %}">Initiate</a></li>
-                <li class="nav-item"><a class="nav-link" href="pages/forms/basic_elements.html">view</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'management_list_approvals' %}">view</a></li>
               </ul>
             </div>
           </li>
@@ -348,20 +349,20 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-              <i class="icon-grid-2 menu-icon"></i>
+              <i class="ti-user"></i>&nbsp;
               <span class="menu-title">Employees</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'management_add_employee' %}">add Employees</a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/tables/basic-table.html">View Employees</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'management_list_employee' %}">View Employees</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="icon-contract menu-icon"></i>
+              <i class="ti-comments"></i>&nbsp;
               <span class="menu-title">Interactions</span>
               <i class="menu-arrow"></i>
             </a>
@@ -400,7 +401,7 @@
           <li class="nav-item">
             <a class="nav-link" href="pages/documentation/documentation.html">
               <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">Documentation</span>
+              <span class="menu-title">Reports</span>
             </a>
           </li>
         </ul>
@@ -433,7 +434,11 @@
   <!-- Custom js for this page-->
   <script src="{% static 'management/js/dashboard.js' %}"></script>
   <script src="{% static 'management/js/Chart.roundedBarCharts.js' %}"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
   <!-- End custom js for this page-->
+
 </body>
 
 </html>
