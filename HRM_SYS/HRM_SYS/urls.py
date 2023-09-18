@@ -20,10 +20,15 @@ from django.contrib.auth import views as auth_view
 from django.conf import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('login/',auth_view.LoginView.as_view(template_name = 'management/login.html'),name="login"),
+    path('admin', admin.site.urls),
+    path('login',auth_view.LoginView.as_view(template_name = 'management/login.html'),name="login"),
     path('',include('management.urls'))
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)
+
+
+admin.site.site_header = 'Beezy'                    # default: "Django Administration"
+admin.site.index_title = 'Admin page'                 # default: "Site administration"
+admin.site.site_title = 'Beezy admin'

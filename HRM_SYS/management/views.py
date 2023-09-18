@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .forms import EmpForm,ApprovalForm,LeaveForm
+from .models import *
 from datetime import datetime
 import time
 # Create your views here.
@@ -18,8 +19,50 @@ def approvals(request):
 
 def view_approvals(request):
 
-    return render(request,'management/approval_list.html')
+    context = {"processes":Process.objects.filter(applicant=request.user.username)}
 
+    return render(request,'management/approval_list.html',context)
+
+def leave(request):
+
+  
+    if request.POST:
+
+        type_ = request.POST.get("type")
+ 
+        category_ = request.POST.get("category")
+        start = request.POST.get("start")
+        end = request.POST.get("end")
+        remarks = request.POST.get("remarks")
+
+        new_leave =  Leave(
+             applicant = request.user, Approvals_type = Approvals.objects.get(type=type_),
+             category = category_, start=start,end=end,remarks=remarks
+        )
+
+        new_leave.save() 
+
+        process = Process(
+
+             applicant = request.user.username ,
+             approvals = Approvals.objects.get(type=type_),
+             details = str(type_)+"\n"+str(remarks),created = datetime.now(),
+             status = "pending"
+        )
+
+        process.save()
+
+        todo = Todo(
+
+             recpient_id = Approvals.objects.get(type=type_).approvers.Employee_ids,
+             details = str(type_)+": "+str(remarks),
+             
+        )
+        todo.save()
+
+        return JsonResponse("applied successfully",safe=False)
+    
+   
 
 
 def add_department(request):
@@ -43,7 +86,7 @@ def list_employee(request):
 
 def clock(request):
 
-    context = {'leave_form':LeaveForm()}
+    context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
 
     if request.POST:
 

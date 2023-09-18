@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+bo43m_vcns%1t_9u(n3f$8!t+0^b=99s7&ppvi(tyxw@53@=&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'admin_interface', 
+      'colorfield',
     'crispy_forms',
     'crispy_bootstrap5',
    
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -121,8 +123,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+
+STATIC_ROOT =  os.path.join(BASE_DIR,'management/static')
+
 STATIC_URL = 'static/'
-MEDIA_ROOT = 'media/'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+MEDIA_URL = 'media/'
 LOGIN_REDIRECT_URL = 'management-home'
 LOGIN_URL = 'login'
 
@@ -132,3 +142,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ["GET","POST"]
+CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-type", "dnt", "origin", "user-agent", "x-csrftoken", "x-requested-with" ]
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+
+CSRF_TRUSTED_ORIGINS = ['https://general-pos-production.up.railway.app','https://*.127.0.0.1']

@@ -44,25 +44,28 @@
                             </tr>
                           </thead>
                           <tbody>
+                            {% for process in processes %}
                             <tr>
                               <td class="py-1">
-                               
+                                 {{process.approvals.type}}
                               </td>
                               <td>
-                                
+                                {{process.approvals.approvers.Employee_ids}}
                               </td>
                               <td>
                                 <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                               </td>
                               <td>
-                               
+                                {{process.created}}
                               </td>
                               <td>
-                                
+                                {{process.status}}
                               </td>
                             </tr>
+
+                            {% endfor %}
                  
                           </tbody>
                         </table>

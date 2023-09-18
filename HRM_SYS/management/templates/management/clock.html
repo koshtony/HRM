@@ -83,11 +83,13 @@
                   <p class="card-description">
                     annual,sick, compassionate
                   </p>
-                  <form class="forms-sample">
+                
                     <div class="form-group">
-                      <label for="exampleInputName1" id="type">Approval Type</label>
-                      <select class="form-control">
-                            <option value=""></option>
+                      <label for="exampleInputName1">Approval Type</label>
+                      <select class="form-control" id="type">
+                        {% for approval in approvals %}
+                            <option value="{{approval.type}}">{{approval.type}}</option>
+                        {% endfor %}
                       </select>
                     </div>
                     <div class="form-group">
@@ -114,11 +116,11 @@
                    
                     <div class="form-group">
                       <label for="exampleTextarea1">Remarks</label>
-                      <textarea class="form-control" id="exampleTextarea1" rows="4"></textarea>
+                      <textarea class="form-control" id="remarks" rows="4"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <button type="submit" class="btn btn-primary mr-2" onclick="loadLeave();">Submit</button>
                     <button class="btn btn-light">Cancel</button>
-                  </form>
+              
                 </div>
               </div>
             </div>
@@ -244,6 +246,27 @@
         }
   
       // upload leave data 
+ function loadLeave(){
+  alert($("#type").val())
+      $.ajax({
+         type:"POST",
+         url:"{% url 'management_leave' %}",
+         data:{
+
+            type:$("#type").val(),
+            category:$("#category").val(),
+            start:$("#start").val(),
+            end:$("#end").val(),
+            remarks:$("#remarks").val(),
+            csrfmiddlewaretoken:'{{ csrf_token }}'
+         },
+         success:function(data,status){
+             
+          alert(data)
+         }
+      })
+
+ }
       
     </script>
   {% endblock content %}

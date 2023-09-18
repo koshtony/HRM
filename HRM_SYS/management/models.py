@@ -102,7 +102,7 @@ class Process(models.Model):
     approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
     details = models.TextField()
     created = models.DateField()
-    status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")))
+    status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
     documents = models.FileField(default="process.pdf",upload_to='process')
 
     
