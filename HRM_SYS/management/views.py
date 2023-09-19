@@ -94,8 +94,8 @@ def clock(request):
 
     if request.POST:
 
-        lat = request.POST.get('latitudes')
-        long = request.POST.get('longitudes')
+        lat = request.POST.get('latitude')
+        long = request.POST.get('longitude')
         image_info = request.POST.get('image_str')
         #print(image_info)
         t_now= time.localtime()
@@ -104,7 +104,9 @@ def clock(request):
                 employee =  request.user,
                 clock_in = datetime.now(),
                 clock_out = datetime.now(),
-                lat =lat ,long=long,image1=image_info
+                lat =lat ,long=long,image1=image_info,
+                lat1 = lat , lat2 = long, image2 = image_info,remarks="done"
+
             )
         attendance.save()
 
