@@ -1,10 +1,12 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
-from .forms import EmpForm,ApprovalForm,LeaveForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee
 from .models import *
 from datetime import datetime
 import time
 # Create your views here.
+@login_required
 def home(request):
 
     return render(request,'management/index.html')
@@ -80,10 +82,12 @@ def add_employee(request):
     return render(request,'management/add_employees.html',context)
 
 def list_employee(request):
+
+    context = {"employee":Employee.objects.all()}
     
-    return render(request,'management/list_employees.html')
+    return render(request,'management/list_employees.html',context)
 
-
+@login_required
 def clock(request):
 
     context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
@@ -96,7 +100,15 @@ def clock(request):
         #print(image_info)
         t_now= time.localtime()
         current_time = time.strftime("%H", t_now)
-        print(current_time)
+        attendance = Attendance(
+                employee =  request.user,
+                clock_in = datetime.now(),
+                clock_out = datetime.now(),
+                lat =lat ,long=long,image1=image_info
+            )
+        attendance.save()
+
+            
 
         return JsonResponse("info submitted",safe=False)
 

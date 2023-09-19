@@ -65,7 +65,7 @@ class Employee(models.Model):
 
 class Attendance(models.Model):
 
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT)
+    employee = models.ForeignKey(User,on_delete=models.PROTECT)
     is_leave = models.BooleanField(default=False)
     clock_in = models.DateTimeField()
     clock_out = models.DateTimeField()
@@ -154,6 +154,3 @@ class Posts(models.Model):
     def __str__(self):
 
         return str(self.pk)
-
-
-

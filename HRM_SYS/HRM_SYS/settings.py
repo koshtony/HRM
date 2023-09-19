@@ -151,4 +151,4 @@ CORS_ALLOW_HEADERS = [ "accept", "accept-encoding", "authorization", "content-ty
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 
-CSRF_TRUSTED_ORIGINS = ['https://general-pos-production.up.railway.app','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://hrm-production-02c6.up.railway.app','https://*.127.0.0.1']
