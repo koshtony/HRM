@@ -90,6 +90,7 @@ class AttSettings(models.Model):
     deduction_per_hour = models.FloatField()
     morning_deduction =  models.FloatField()
     evening_deduction = models.FloatField()
+    distance = models.FloatField(default=100.0)
     remarks = models.TextField()
 
 

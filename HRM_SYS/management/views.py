@@ -99,8 +99,11 @@ def clock(request):
         image_info = request.POST.get('image_str')
         #print(image_info)
         empty = ""
-        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = request.user)[0]
-        if len(att_filt) == 0 and datetime.now().hour()<12: #record initial data
+        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = request.user)
+        time_diff = datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")
+                                     
+        time_diff = time_diff.total_seconds()
+        if len(att_filt) == 0 and datetime.now().hour<12: #record initial data
             attendance = Attendance(
                     employee =  request.user,
                     day = date.today(),
@@ -112,7 +115,9 @@ def clock(request):
 
                 )
             attendance.save()
-        elif len(att_filt)>0 and ((time.localtime())-(att_filt.end)).seconds()>= 0:
+            return JsonResponse("clock in successful",safe=False)
+        
+        elif len(att_filt)>0 and time_diff >= 0:
 
             att_filt.clock_out = datetime.now()
             att_filt.lat1 = lat
@@ -122,11 +127,23 @@ def clock(request):
             att_filt.remarks = str(att_filt.remarks)+" clock out"
             att_filt.save()
 
-            pass # update and set clock out time
+            return JsonResponse("clock out successful",safe=False)
 
-            
+        elif len(att_filt) == 0 and time_diff >= 0:
+           
+            attendance = Attendance(
+                    employee =  request.user,
+                    day = date.today(),
+                    clock_in = "",
+                    clock_out = datetime.now(),
+                    lat ="" ,long="",image1="",
+                    lat1 = lat , long1 = long, image2 = image_info,remarks="clock out"   
 
-        return JsonResponse("info submitted",safe=False)
+                )
+            attendance.save()
+
+
+            return JsonResponse("missed clock in, clocked out",safe=False)
 
     return render(request,'management/clock.html',context)
 
