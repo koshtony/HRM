@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee
 from .models import *
-from datetime import datetime
+from datetime import datetime,date
 import time
 # Create your views here.
 @login_required
@@ -91,24 +91,38 @@ def list_employee(request):
 def clock(request):
 
     context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
-
+    att_settings =  AttSettings.objects.all()[0]
     if request.POST:
 
         lat = request.POST.get('latitude')
         long = request.POST.get('longitude')
         image_info = request.POST.get('image_str')
         #print(image_info)
-        t_now= time.localtime()
-        current_time = time.strftime("%H", t_now)
-        attendance = Attendance(
-                employee =  request.user,
-                clock_in = datetime.now(),
-                clock_out = datetime.now(),
-                lat =lat ,long=long,image1=image_info,
-                lat1 = lat , lat2 = long, image2 = image_info,remarks="done"
+        empty = ""
+        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = request.user)[0]
+        if len(att_filt) == 0 and datetime.now().hour()<12: #record initial data
+            attendance = Attendance(
+                    employee =  request.user,
+                    day = date.today(),
+                    clock_in = datetime.now(),
+                    clock_out = empty,
+                    lat =lat ,long=long,image1=image_info,
+                    lat1 = empty , long1 = empty, image2 = empty,remarks="clock in"
+                    
 
-            )
-        attendance.save()
+                )
+            attendance.save()
+        elif len(att_filt)>0 and ((time.localtime())-(att_filt.end)).seconds()>= 0:
+
+            att_filt.clock_out = datetime.now()
+            att_filt.lat1 = lat
+            att_filt.long1 = long 
+            att_filt.image1 = image_info
+            att_filt.status = "present"
+            att_filt.remarks = str(att_filt.remarks)+" clock out"
+            att_filt.save()
+
+            pass # update and set clock out time
 
             
 

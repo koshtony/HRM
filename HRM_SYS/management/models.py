@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from datetime import date
+import time
 # Create your models here.
 
 class Department(models.Model):
@@ -67,14 +69,27 @@ class Attendance(models.Model):
 
     employee = models.ForeignKey(User,on_delete=models.PROTECT)
     is_leave = models.BooleanField(default=False)
-    clock_in = models.DateTimeField()
-    clock_out = models.DateTimeField()
+    day = models.DateField(default=date.today())
+    clock_in = models.CharField(max_length=1000,default="")
+    clock_out = models.CharField(max_length=1000,default="")
     lat = models.CharField(max_length=10,default="")
     long  = models.CharField(max_length=10,default="")
     lat1 = models.CharField(max_length=10,default="")
-    lat2 = models.CharField(max_length=10,default="")
+    long1 = models.CharField(max_length=10,default="")
     image1 =models.TextField()
     image2 =models.TextField()
+    status = models.CharField(max_length=100,default="partial")
+    counts = models.IntegerField(default=0)
+    remarks = models.TextField()
+    
+
+class AttSettings(models.Model):
+
+    start = models.TimeField()
+    end = models.TimeField()
+    deduction_per_hour = models.FloatField()
+    morning_deduction =  models.FloatField()
+    evening_deduction = models.FloatField()
     remarks = models.TextField()
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Employee,Department,Roles,Approvals,Approvers,Attendance
+from .models import Employee,Department,Roles,Approvals,Approvers,Attendance,AttSettings
 
 # Register your models here.
 
@@ -28,7 +28,7 @@ class ApprovalAdmin(admin.ModelAdmin):
         search_fields = ["level"]
 
 class AttAdmin(admin.ModelAdmin):
-        list_display = ("employee","clock_in","clock_out","lat","long","lat1","lat2","image1","image2")
+        list_display = ("employee","clock_in","clock_out","lat","long","lat1","long","image1","image2")
         list_filter = ("employee",)
         
 
@@ -41,4 +41,5 @@ admin.site.register(Roles,RolesAdmin)
 admin.site.register(Approvers,ApproversAdmin)
 admin.site.register(Approvals,ApprovalAdmin)
 admin.site.register(Attendance,AttAdmin)
+admin.site.register(AttSettings)
 
