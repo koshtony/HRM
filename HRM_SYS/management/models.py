@@ -39,7 +39,6 @@ class Employee(models.Model):
     role = models.CharField(max_length=50,default="None")
     department = models.CharField(max_length=50,default="None")
     education_level = models.CharField(max_length=50,default="None")
-    documents = models.FileField(default='documents.pdf',upload_to='documents')
     doj = models.DateField(default=timezone.now)
     dol = models.DateField(default=timezone.now)
 
@@ -50,7 +49,6 @@ class Employee(models.Model):
     salary = models.FloatField(default=0.0)
     allowance = models.FloatField(default=0.0)
     add_ons = models.FloatField(default=0.0)
-    finance_documents = models.FileField(default='documents.pdf',upload_to='bank_documents')
 
 # account management 
 
@@ -60,6 +58,26 @@ class Employee(models.Model):
     def __str__(self):
 
         return self.emp_id
+class FilesCategory(models.Model):
+
+    category_name = models.CharField(max_length=100)
+
+    def __str__(self):
+
+        return self.category_name
+    
+class EmpFiles(models.Model):
+
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    category = models.ForeignKey(FilesCategory,on_delete=models.PROTECT)
+    file_name = models.CharField(max_length=100,default="none")
+    document = models.FileField(default="document.pdf",upload_to='emp_files')
+    properties = models.TextField(default="none")
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+
+        return self.file_name
 
 
 
@@ -80,6 +98,7 @@ class Attendance(models.Model):
     image2 =models.TextField()
     status = models.CharField(max_length=100,default="partial")
     counts = models.IntegerField(default=0)
+    hours = models.FloatField(default=0.0)
     remarks = models.TextField()
     
 
@@ -90,7 +109,7 @@ class AttSettings(models.Model):
     deduction_per_hour = models.FloatField()
     morning_deduction =  models.FloatField()
     evening_deduction = models.FloatField()
-    distance = models.FloatField(default=100.0)
+    expected_hours = models.FloatField()
     remarks = models.TextField()
 
 
