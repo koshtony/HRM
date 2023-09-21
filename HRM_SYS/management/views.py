@@ -118,14 +118,14 @@ def clock(request):
             return JsonResponse("clock in successful",safe=False)
         
         elif len(att_filt)>0 and time_diff >= 0:
-
-            att_filt.clock_out = datetime.now()
-            att_filt.lat1 = lat
-            att_filt.long1 = long 
-            att_filt.image1 = image_info
-            att_filt.status = "present"
-            att_filt.remarks = str(att_filt.remarks)+" clock out"
-            att_filt.save()
+            
+            att_filt[0].clock_out = datetime.now()
+            att_filt[0].lat1 = lat
+            att_filt[0].long1 = long 
+            att_filt[0].image2 = image_info
+            att_filt[0].status = "present"
+            att_filt[0].remarks = att_filt[0].remarks+" clock out"
+            att_filt[0].save()
 
             return JsonResponse("clock out successful",safe=False)
 
