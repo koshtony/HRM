@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,27 +7,30 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Skydash Admin</title>
+  <title></title>
   <!-- plugins:css -->
-  <link rel="stylesheet" href="../../vendors/feather/feather.css">
-  <link rel="stylesheet" href="../../vendors/ti-icons/css/themify-icons.css">
-  <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
+  <link rel="stylesheet" href="/static/management/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/static/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
   <!-- endinject -->
   <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/static/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="/static/management/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" type="text/css" href="/static/management/js/select.dataTables.min.css">
   <!-- End plugin css for this page -->
   <!-- inject:css -->
-  <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
+  <link rel="stylesheet" href="/static/management/css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../../images/favicon.png" />
-</head>
+  
 
+</head>
 <body>
   <div class="container-scroller">
-    <!-- partial:../../partials/_navbar.html -->
+    <!-- partial:partials/_navbar.html -->
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo mr-5" href="../../index.html"><img src="../../images/logo.svg" class="mr-2" alt="logo"/></a>
-        <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
+        <a class="navbar-brand brand-logo mr-5" href=""><img src="https://www.koshtech.site/static/img/logo.png" class="mr-2" alt="logo"/></a>
+        <a class="navbar-brand brand-logo-mini" href=""><img src="https://www.koshtech.site/static/img/logo.png" alt="logo"/></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -73,7 +78,7 @@
                 <div class="preview-item-content">
                   <h6 class="preview-subject font-weight-normal">Settings</h6>
                   <p class="font-weight-light small-text mb-0 text-muted">
-                    Private message
+                    initialised
                   </p>
                 </div>
               </a>
@@ -86,7 +91,7 @@
                 <div class="preview-item-content">
                   <h6 class="preview-subject font-weight-normal">New user registration</h6>
                   <p class="font-weight-light small-text mb-0 text-muted">
-                    2 days ago
+                    today
                   </p>
                 </div>
               </a>
@@ -94,12 +99,16 @@
           </li>
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-              <img src="../../images/faces/face28.jpg" alt="profile"/>
+              <img src="https://www.koshtech.site/static/img/logo.png" alt="profile"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
-              <a class="dropdown-item">
+              <a class="dropdown-item" href="/clock">
+                <i class="ti-timer text-primary"></i>
+                attendance
+              </a>
+              <a class="dropdown-item" href="/admin">
                 <i class="ti-settings text-primary"></i>
-                Settings
+                Admin
               </a>
               <a class="dropdown-item">
                 <i class="ti-power-off text-primary"></i>
@@ -120,15 +129,15 @@
     </nav>
     <!-- partial -->
     <div class="container-fluid page-body-wrapper">
-      <!-- partial:../../partials/_settings-panel.html -->
+      <!-- partial:partials/_settings-panel.html -->
       <div class="theme-setting-wrapper">
         <div id="settings-trigger"><i class="ti-settings"></i></div>
         <div id="theme-settings" class="settings-panel">
           <i class="settings-close ti-close"></i>
-          <p class="settings-heading">SIDEBAR SKINS</p>
+          <p class="settings-heading">Process bar</p>
           <div class="sidebar-bg-options selected" id="sidebar-light-theme"><div class="img-ss rounded-circle bg-light border mr-3"></div>Light</div>
           <div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark</div>
-          <p class="settings-heading mt-2">HEADER SKINS</p>
+          <p class="settings-heading mt-2"></p>
           <div class="color-tiles mx-0 px-4">
             <div class="tiles success"></div>
             <div class="tiles warning"></div>
@@ -179,52 +188,21 @@
                   </div>
                   <i class="remove ti-close"></i>
                 </li>
-                <li>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="checkbox" type="checkbox">
-                      Resolve all the low priority tickets due today
-                    </label>
-                  </div>
-                  <i class="remove ti-close"></i>
-                </li>
-                <li class="completed">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="checkbox" type="checkbox" checked>
-                      Schedule meeting for next week
-                    </label>
-                  </div>
-                  <i class="remove ti-close"></i>
-                </li>
-                <li class="completed">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="checkbox" type="checkbox" checked>
-                      Project review
-                    </label>
-                  </div>
-                  <i class="remove ti-close"></i>
-                </li>
+                
+                
+                
               </ul>
             </div>
             <h4 class="px-3 text-muted mt-5 font-weight-light mb-0">Events</h4>
             <div class="events pt-4 px-3">
               <div class="wrapper d-flex mb-2">
                 <i class="ti-control-record text-primary mr-2"></i>
-                <span>Feb 11 2018</span>
+                <span>Sept 19 2023</span>
               </div>
-              <p class="mb-0 font-weight-thin text-gray">Creating component page build a js</p>
-              <p class="text-gray mb-0">The total number of sessions</p>
+              <p class="mb-0 font-weight-thin text-gray">upcoming meeting</p>
+              <p class="text-gray mb-0">Agenda: attaendance</p>
             </div>
-            <div class="events pt-4 px-3">
-              <div class="wrapper d-flex mb-2">
-                <i class="ti-control-record text-primary mr-2"></i>
-                <span>Feb 7 2018</span>
-              </div>
-              <p class="mb-0 font-weight-thin text-gray">Meeting with Alisa</p>
-              <p class="text-gray mb-0 ">Call Sarah Graves</p>
-            </div>
+           
           </div>
           <!-- To do section tab ends -->
           <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
@@ -234,130 +212,102 @@
             </div>
             <ul class="chat-list">
               <li class="list active">
-                <div class="profile"><img src="../../images/faces/face1.jpg" alt="image"><span class="online"></span></div>
+                <div class="profile"><img src="https://www.koshtech.site/static/img/logo.png" alt="image"><span class="online"></span></div>
                 <div class="info">
-                  <p>Thomas Douglas</p>
+                  <p>Antony</p>
                   <p>Available</p>
                 </div>
                 <small class="text-muted my-auto">19 min</small>
               </li>
               <li class="list">
-                <div class="profile"><img src="../../images/faces/face2.jpg" alt="image"><span class="offline"></span></div>
+                <div class="profile"><img src="https://www.koshtech.site/static/img/logo.png" alt="image"><span class="offline"></span></div>
                 <div class="info">
                   <div class="wrapper d-flex">
-                    <p>Catherine</p>
+                    <p>Alex</p>
                   </div>
                   <p>Away</p>
                 </div>
                 <div class="badge badge-success badge-pill my-auto mx-2">4</div>
                 <small class="text-muted my-auto">23 min</small>
               </li>
-              <li class="list">
-                <div class="profile"><img src="../../images/faces/face3.jpg" alt="image"><span class="online"></span></div>
-                <div class="info">
-                  <p>Daniel Russell</p>
-                  <p>Available</p>
-                </div>
-                <small class="text-muted my-auto">14 min</small>
-              </li>
-              <li class="list">
-                <div class="profile"><img src="../../images/faces/face4.jpg" alt="image"><span class="offline"></span></div>
-                <div class="info">
-                  <p>James Richardson</p>
-                  <p>Away</p>
-                </div>
-                <small class="text-muted my-auto">2 min</small>
-              </li>
-              <li class="list">
-                <div class="profile"><img src="../../images/faces/face5.jpg" alt="image"><span class="online"></span></div>
-                <div class="info">
-                  <p>Madeline Kennedy</p>
-                  <p>Available</p>
-                </div>
-                <small class="text-muted my-auto">5 min</small>
-              </li>
-              <li class="list">
-                <div class="profile"><img src="../../images/faces/face6.jpg" alt="image"><span class="online"></span></div>
-                <div class="info">
-                  <p>Sarah Graves</p>
-                  <p>Available</p>
-                </div>
-                <small class="text-muted my-auto">47 min</small>
-              </li>
+              
+              
             </ul>
           </div>
           <!-- chat tab ends -->
         </div>
       </div>
       <!-- partial -->
-      <!-- partial:../../partials/_sidebar.html -->
+      <!-- partial:partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="../../index.html">
+            <a class="nav-link" href="/">
               <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Dashboard</span>
+              <span class="menu-title">Homee page</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="icon-layout menu-icon"></i>
-              <span class="menu-title">UI Elements</span>
+              <i class="ti-desktop"></i>&nbsp;
+              <span class="menu-title">Broadcast</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/buttons.html">Buttons</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/dropdowns.html">Dropdowns</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/typography.html">Typography</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/events">feeds</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">bulky sms</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">bulky emails</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
               <i class="icon-columns menu-icon"></i>
-              <span class="menu-title">Form elements</span>
+              <span class="menu-title">Applications</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="form-elements">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="../../pages/forms/basic_elements.html">Basic Elements</a></li>
+                <li class="nav-item"><a class="nav-link" href="/approvals">Initiate</a></li>
+                <li class="nav-item"><a class="nav-link" href="/list_approvals">view</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+            <a class="nav-link" data-toggle="collapse" href="" aria-expanded="false" aria-controls="charts">
               <i class="icon-bar-graph menu-icon"></i>
-              <span class="menu-title">Charts</span>
+              <span class="menu-title">Analysis</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="charts">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/charts/chartjs.html">ChartJs</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Analysis</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
-              <i class="icon-grid-2 menu-icon"></i>
-              <span class="menu-title">Tables</span>
+              <i class="ti-user"></i>&nbsp;
+              <span class="menu-title">Employees</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/tables/basic-table.html">Basic table</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/add_employees">add Employees</a></li>
+                <li class="nav-item"> <a class="nav-link" href="/list_employee">View Employees</a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="icon-contract menu-icon"></i>
-              <span class="menu-title">Icons</span>
+              <i class="ti-comments"></i>&nbsp;
+              <span class="menu-title">Interactions</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="icons">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/icons/mdi.html">Mdi icons</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">sema</a></li>
               </ul>
             </div>
           </li>
@@ -369,121 +319,166 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/samples/login.html"> Login </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/samples/register.html"> Register </a></li>
+                <li class="nav-item"> <a class="nav-link" href=""> Logout </a></li>
+                <li class="nav-item"> <a class="nav-link" href=""> Register </a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="icon-ban menu-icon"></i>
-              <span class="menu-title">Error pages</span>
+              <span class="menu-title">system logs</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="error">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/samples/error-404.html"> 404 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/samples/error-500.html"> 500 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
               </ul>
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="../../pages/documentation/documentation.html">
+            <a class="nav-link" href="">
               <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">Documentation</span>
+              <span class="menu-title">Reports</span>
             </a>
+            <div class="collapse" id="error">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href=""> attendance </a></li>
+                <li class="nav-item"> <a class="nav-link" href=""> payroll </a></li>
+              </ul>
+            </div>
           </li>
         </ul>
       </nav>
-      <!-- partial -->
+      
+     
+<link rel="shortcut icon" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+  <link rel="shortcut icon" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
-            <div class="col-lg-6 grid-margin stretch-card">
+            
+            
+            <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Line chart</h4>
-                  <canvas id="lineChart"></canvas>
+                  <h4 class="card-title">Employee list</h4>
+                  <p class="card-description">
+                   
+                  </p>
+                  <div class="table-responsive">
+                    <table class="table table-striped" id="EmpTab">
+                      <thead>
+                        <tr>
+                          <th>
+                            image
+                          </th>
+                          <th>
+                            empid
+                          </th>
+                          <th>
+                            name
+                          </th>
+                          <th>
+                            email
+                          </th>
+                          <th>
+                            phone
+                          </th>
+                          <th>
+                            Doj
+                          </th>
+                          <th>
+                            files
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        <tr>
+                          <td class="py-1">
+                            <img src="/media/emoloyee.png" alt="image"/>
+                          </td>
+                          <td>
+                            001
+                          </td>
+                          <td>
+                            Patrick
+                          </td>
+                          <td>
+                            tonykungu2@gmail.com
+                          </td>
+                          <td>
+                            0712110972
+                          </td>
+                          <td>
+                            Sept. 21, 2023
+                          </td>
+                          <td>
+                            <a href="" download><i class="ti-export">documents</i></a>
+                          </td>
+                        </tr>
+                        
+                       
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Bar chart</h4>
-                  <canvas id="barChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Area chart</h4>
-                  <canvas id="areaChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Doughnut chart</h4>
-                  <canvas id="doughnutChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Pie chart</h4>
-                  <canvas id="pieChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Scatter chart</h4>
-                  <canvas id="scatterChart"></canvas>
-                </div>
-              </div>
-            </div>
+          
+            
+           
           </div>
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
-          <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block"> <a href="https://www.bootstrapdash.com/" target="_blank"></span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"><i class="ti-heart text-danger ml-1"></i></span>
-          </div>
+          
         </footer>
         <!-- partial -->
       </div>
+      <!-- main-panel ends -->
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    new DataTable('#EmpTab');
+</script>
+
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
   </div>
   <!-- container-scroller -->
+
   <!-- plugins:js -->
-  <script src="../../vendors/js/vendor.bundle.base.js"></script>
+  <script src="/static/management/vendors/js/vendor.bundle.base.js"></script>
   <!-- endinject -->
   <!-- Plugin js for this page -->
-  <script src="../../vendors/chart.js/Chart.min.js"></script>
+  <script src="/static/management/vendors/chart.js/Chart.min.js"></script>
+  <script src="/static/management/vendors/datatables.net/jquery.dataTables.js"></script>
+  <script src="/static/management/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+  <script src="/static/management/js/dataTables.select.min.js"></script>
+
   <!-- End plugin js for this page -->
   <!-- inject:js -->
-  <script src="../../js/off-canvas.js"></script>
-  <script src="../../js/hoverable-collapse.js"></script>
-  <script src="../../js/template.js"></script>
-  <script src="../../js/settings.js"></script>
-  <script src="../../js/todolist.js"></script>
+  <script src="/static/management/js/off-canvas.js"></script>
+  <script src="/static/management/js/hoverable-collapse.js"></script>
+  <script src="/static/management/js/template.js"></script>
+  <script src="/static/management/js/settings.js"></script>
+  <script src="/static/management/js/todolist.js"></script>
   <!-- endinject -->
   <!-- Custom js for this page-->
-  <script src="../../js/chart.js"></script>
+  <script src="/static/management/js/dashboard.js"></script>
+  <script src="/static/management/js/Chart.roundedBarCharts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
   <!-- End custom js for this page-->
+
 </body>
 
 </html>
+

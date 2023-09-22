@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Employee,Department,Roles,Approvals,\
-Approvers,Attendance,AttSettings,EmpFiles,FilesCategory
+Applications,Attendance,AttSettings,EmpFiles,FilesCategory
 
 # Register your models here.
 
@@ -18,15 +18,14 @@ class RolesAdmin(admin.ModelAdmin):
         list_display = ("name","requirements","created","remarks")
         list_filter = ("requirements",)
         search_fields = ["name"]
-class ApproversAdmin(admin.ModelAdmin):
-        list_display = ("Employee_ids","approval_type","created","remarks")
-        list_filter = ("approval_type",)
-        search_fields = ["Employee_ids"]
+class ApprovalsAdmin(admin.ModelAdmin):
+        list_display = ("name","created","remarks")
+        search_fields = ["name"]
 
-class ApprovalAdmin(admin.ModelAdmin):
-        list_display = ("type","approvers","level","created","remarks")
+class ApplicationsAdmin(admin.ModelAdmin):
+        list_display = ("type","details","created","attachment")
         list_filter = ("type",)
-        search_fields = ["level"]
+        search_fields = ["approvers"]
 
 class AttAdmin(admin.ModelAdmin):
         list_display = ("employee","clock_in","clock_out","lat","long","lat1","long1","image1","image2")
@@ -44,8 +43,8 @@ class FilesAdmin(admin.ModelAdmin):
 admin.site.register(Employee,EmpAdmin)
 admin.site.register(Department,DepAdmin)
 admin.site.register(Roles,RolesAdmin)
-admin.site.register(Approvers,ApproversAdmin)
-admin.site.register(Approvals,ApprovalAdmin)
+admin.site.register(Approvals,ApprovalsAdmin)
+admin.site.register(Applications,ApplicationsAdmin)
 admin.site.register(Attendance,AttAdmin)
 admin.site.register(EmpFiles,FilesAdmin)
 admin.site.register(AttSettings)

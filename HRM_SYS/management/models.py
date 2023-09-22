@@ -31,6 +31,7 @@ class Employee(models.Model):
     phone = models.CharField(max_length=50,default="None")
     next_kin_name = models.CharField(max_length=50,default="None")
     next_kin_id = models.CharField(max_length=50,default="None")
+    next_kin_phone = models.CharField(max_length=50,default="None")
     address = models.CharField(max_length=50,default="None")
     location = models.CharField(max_length=50,default="None")
 
@@ -113,32 +114,41 @@ class AttSettings(models.Model):
     remarks = models.TextField()
 
 
-class Approvers(models.Model):
+class Approvals(models.Model):
 
-    Employee_ids = models.CharField(max_length=100,default="")
-    approval_type = models.CharField(max_length=10,default="")
+    name = models.CharField(max_length=10,default="")
+    approvers = models.ManyToManyField(Employee)
     created = models.DateField(default=timezone.now)
     remarks = models.TextField() 
 
-class Approvals(models.Model):
+    def __str__(self):
+        return self.name
 
-    type = models.CharField(max_length=100,default="")
-    approvers = models.ForeignKey(Approvers,on_delete=models.PROTECT)
-    level = models.CharField(max_length=10,default="")
+class Applications(models.Model):
+
+    type = models.ForeignKey(Approvals,on_delete=models.PROTECT)
+    applicant = models.ForeignKey(User,on_delete=models.PROTECT)
+    details = models.TextField()
     created = models.DateField(default=timezone.now)
+    attachment = models.FileField(default='attachment',upload_to='ápproval_files')
     remarks = models.TextField()
 
     def __str__(self):
-        return self.type
+        return self.type.name
 
 class Process(models.Model):
 
-    applicant = models.CharField(max_length=10,default="")
-    approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
+    applicant = models.ForeignKey(User,on_delete=models.PROTECT)
+    approvals = models.ForeignKey(Applications,on_delete=models.PROTECT,related_name="processes")
     details = models.TextField()
     created = models.DateField()
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
-    documents = models.FileField(default="process.pdf",upload_to='process')
+   
+    def __str__(self):
+
+        return self.applicant.username
+
+
 
     
 class Leave(models.Model):

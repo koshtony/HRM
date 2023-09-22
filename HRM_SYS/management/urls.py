@@ -2,7 +2,7 @@ from django.urls import path
 from . import views 
 from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
-      view_approvals,Post,Events,leave
+      view_approvals,Post,Events,leave,get_emp_files
 
 urlpatterns = [
      path('',views.home,name="management-home"),
@@ -13,6 +13,7 @@ urlpatterns = [
      path('add_employees',views.add_employee,name="management_add_employee"),
      path('approvals',views.approvals,name="management_approvals"),
       path('list_employee',views.list_employee,name="management_list_employee"),
+      path('get_files',views.get_emp_files,name="management_get_files"),
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
       path('leave',views.leave,name="management_leave"),
       path('events',views.Events,name="management_events"),

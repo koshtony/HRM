@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
+from django.core import serializers
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee
 from .models import *
 from datetime import datetime,date
@@ -86,6 +87,23 @@ def list_employee(request):
     context = {"employee":Employee.objects.all()}
     
     return render(request,'management/list_employees.html',context)
+
+def get_emp_files(request):
+
+    if request.POST:
+        emp_id = request.POST.get("emp_id")
+        my_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id=emp_id))
+        all_my_files = []
+        for my_file in my_files:
+            file_inst ={
+                "category":my_file.category.category_name,
+                "file_name":my_file.file_name,
+                "document":my_file.document.url,
+                "created":my_file.created 
+            }
+            all_my_files.append(file_inst)
+        print(all_my_files)
+        return JsonResponse(all_my_files,safe=False)
 
 @login_required
 def clock(request):

@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Department,Roles,Employee,Approvals,Leave
+from .models import Department,Roles,Employee,Applications,Leave
 
 class DepForm(forms.ModelForm):
 
@@ -27,8 +27,8 @@ class ApprovalForm(forms.ModelForm):
 
     class Meta:
 
-        model = Approvals
-        fields = ['type','level','remarks']
+        model = Applications
+        fields = ['type','details','remarks','attachment']
 
 class LeaveForm(forms.ModelForm):
 

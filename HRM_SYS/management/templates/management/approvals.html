@@ -26,6 +26,7 @@
                   </p>
                   <form class="forms-sample" method="POST">
                     {% for field in appForm %}
+                    {% csrf_token %}
                     <div class="form-group">
                        {{field | as_crispy_field}}
                     </div>
