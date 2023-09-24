@@ -109,7 +109,7 @@ def get_emp_files(request):
 def clock(request):
 
     context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
-    att_settings =  AttSettings.objects.all()[0]
+    att_settings =  AttSettings.objects.filter(employee_id = request.user.username)[0]
     if request.POST:
 
         lat = request.POST.get('latitude')
@@ -117,25 +117,46 @@ def clock(request):
         image_info = request.POST.get('image_str')
         #print(image_info)
         empty = ""
-        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = request.user)
-        time_diff = datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")
+        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
+        
+        early_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+        '''
+             condition to determine if employee  left on time or early; early denoted by -ve
+        '''
+        if early_diff < 0:
+
+            early_diff = early_diff*-1
+        else:
+            early_diff = 0
+        
+        late_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') - datetime.strptime(att_settings.start.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+        
+        if late_diff > 0:
+
+            late_diff =  late_diff 
+
+        else:
+
+            late_diff = 0
                                      
-        time_diff = time_diff.total_seconds()
-        if len(att_filt) == 0 and datetime.now().hour<12: #record initial data
+        
+        if len(att_filt) == 0: #record initial data
             attendance = Attendance(
-                    employee =  request.user,
+                    employee =  Employee.objects.get(emp_id = request.user.username),
                     day = date.today(),
                     clock_in = datetime.now(),
                     clock_out = empty,
                     lat =lat ,long=long,image1=image_info,
-                    lat1 = empty , long1 = empty, image2 = empty,remarks="clock in"
+                    lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
+                    deductions  = (late_diff/60)*att_settings.deduction_per_minute,
+
                     
 
                 )
             attendance.save()
             return JsonResponse("clock in successful",safe=False)
         
-        elif len(att_filt)>0 and time_diff >= 0:
+        elif len(att_filt)>0 and att_filt[0].clock_out == '':
             
             att_filt[0].clock_out = datetime.now()
             att_filt[0].lat1 = lat
@@ -143,27 +164,49 @@ def clock(request):
             att_filt[0].image2 = image_info
             att_filt[0].status = "present"
             att_filt[0].remarks = att_filt[0].remarks+" clock out"
+            att_filt[0].deductions =  att_filt[0].deductions + (early_diff/60)*att_settings.deduction_per_minute
             att_filt[0].save()
 
             return JsonResponse("clock out successful",safe=False)
+        
+        elif att_filt[0].clock_in != '' and att_filt[0].clock_out != '':
 
-        elif len(att_filt) == 0 and time_diff >= 0:
-           
-            attendance = Attendance(
-                    employee =  request.user,
-                    day = date.today(),
-                    clock_in = "",
-                    clock_out = datetime.now(),
-                    lat ="" ,long="",image1="",
-                    lat1 = lat , long1 = long, image2 = image_info,remarks="clock out"   
-
-                )
-            attendance.save()
+            return JsonResponse("clock in and clockout already completed",safe=False)
 
 
-            return JsonResponse("missed clock in, clocked out",safe=False)
+            
+
+
 
     return render(request,'management/clock.html',context)
+
+def get_attendance(request):
+
+    today_att = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
+    att_settings = AttSettings.objects.filter(employee_id = request.user.username)[0]
+
+
+    if len(today_att) > 0:
+
+        details = {
+            "clock_in":today_att[0].clock_in,
+            "clock_out":today_att[0].clock_out,
+            "h1":att_settings.start.hour,
+               "m1":att_settings.start.minute,
+            "h2":att_settings.end.hour,
+            "m2":att_settings.end.minute,
+        }
+
+        return JsonResponse(details,safe=False)
+    
+    details = {"h1":att_settings.start.hour,
+               "m1":att_settings.start.minute,
+            "h2":att_settings.end.hour,
+            "m2":att_settings.end.minute,
+            "clock_in":"",
+            "clock_out":"",
+        }
+    return JsonResponse(details,safe=False)
 
 def Events(request):
 

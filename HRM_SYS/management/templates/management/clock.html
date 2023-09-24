@@ -24,6 +24,7 @@
                      
                   </div>
                   <div class="form-group">
+                    
                     <input type="text" class="form-control" id="latitudes" readonly>
                     
                  </div>
@@ -36,11 +37,47 @@
                 
              </div>
                   </form>
+                  <div>
+
+                    <form class="forms-sample">
+                      <div class="form-group">
+                       <input type="text" class="form-control" id="longitudes" readonly>
+                       
+                    </div>
+                    <div class="form-group">
+                      
+                      <input type="text" class="form-control" id="latitudes" readonly>
+                      
+                   </div>
+                   <div class="form-group">
+                    <input type="text" class="form-control" id="image_info" readonly>
+                    
+                 </div>
+                 <div class="form-group">
+                  <input type="text" class="form-control" id="my_ip" readonly>
+                  
+               </div>
+                    </form>
+
+                  </div>
                   <p class="card-description" style="color:gree" id="video_msg">
                    
                   </p>
+                  <div>
+                    <p style="color:green">set clock in > <span id="h1"></span>:<span id="m1"></span></p>
+                    <p style="color:green">set clock out > <span id="h2">:</span><span id="m2"></span></p>
+                  <a class="ti-eye" onclick="getClock();">view</a>
+                  <div>
+                  <div>
+                  <i class="ti-alarm-clock" style="color:green" id="in"></i>
+                  </div>
+                  <div>
+                    <i class="ti-alarm-clock" style="color:blue" id="out"></i>
+                    </div>
+                  </div>
+                  </div>
                   <button class="btn btn-primary btn-circle" style="margin: 5px;0px;width:200px;height:200px;border-radius:35px; background-color:orange;" >
-                     <span style="color:white; font-weight: bold; font-size: x-large;" id="timenow"></span>
+                     <p style="color:white; font-weight: bold;" id="timenow"></p>
                      <i class="ti-image"></i>
                   </button>
                 </div>
@@ -54,18 +91,19 @@
                    capture image to complete process
                   </p>
                   <div class="row">
-                    <div class="col" >
+                    <div class="col" style="border-color:green; border-style:dotted">
                       <video id="video" width="280" height="240"  autoplay></video>
                     </div>
                     
-                    <div class="col">
+                    <div class="col" style="border-color:blue; border-style:dotted">
 
                       <canvas id="canvas" width="285" height="200" ></canvas>
                     </div>
                   </div>
+                  <br>
                   <div class="row">
                     <div class="col">
-                  <button class="btn btn-circle" id="click-photo"><i class="ti-image"></i>take photo</button>
+                  <button class="btn btn-secondary" id="click-photo"><i class="ti-image"></i>capture</button>
                   </div>
                   <div class="col">
                     <button class="btn btn-primary" onclick="subClockin();"><i class="ti-save"></i>submit</button>
@@ -137,21 +175,33 @@
 
     <script>
       // creating live clock
-
+getClock()
       function startTime() {
           const today = new Date();
+          
           let h = today.getHours();
-          let m = today.getMinutes();
-          let s = today.getSeconds();
-          m = checkTime(m);
-          s = checkTime(s);
+          let min = today.getMinutes();
+          let sec = today.getSeconds();
+          console.log(min)
+          m = checkTime(min);
+          s = checkTime(sec);
           document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "";
-          if(h>8 && h<12){
+          if((h>=document.getElementById("h1").innerHTML && min>document.getElementById("m1").innerHTML) && document.getElementById("in").innerHTML == ""){
             document.getElementById('timenow').style.color = "red";
             document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "late";
-          }else if(h>12 && h<24){
+          }else if((h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) || document.getElementById("in").innerHTML != ""){
             document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ " clock out";
 
+          }else if((document.getElementById("in").innerHTML != "" && document.getElementById("in").innerHTML != "") && (h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) ){
+                
+            document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "complete";
+          }else if ((h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) || document.getElementById("in").innerHTML == ""){
+                 
+            document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "missed clock in";
+          }
+          else if((document.getElementById("in").innerHTML != "" && document.getElementById("in").innerHTML != "") && (h<=document.getElementById("h2").innerHTML) ){
+
+            document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "left early!!";
           }
           setTimeout(startTime, 1000);
       }
@@ -264,7 +314,43 @@
       })
 
  }
-      
+
+ // pull time of clock in and out 
+
+ function getClock(){
+/**
+     $.ajax({
+         
+      url: "{% url 'management-get-attendance' %}",
+      type:"GET",
+      success:function(data,status){
+
+         console.log(data)
+      }
+
+     })
+  **/
+
+  let fetchRes = fetch(
+
+  "{% url 'management-get-attendance' %}"
+  
+  );
+    // fetchRes is the promise to resolve
+    // it by using.then() method
+    fetchRes.then(res =>
+        res.json()).then(d => {
+           console.log(d)
+           document.getElementById("h1").innerHTML = d["h1"];
+           document.getElementById("m1").innerHTML = d["m1"];
+           document.getElementById("h2").innerHTML = d["h2"];
+           document.getElementById("m2").innerHTML = d["m2"];
+           document.getElementById("in").innerHTML = d["clock_in"];
+           document.getElementById("out").innerHTML = d["clock_out"];
+        })
+
+ }
+
     </script>
   {% endblock content %}
 

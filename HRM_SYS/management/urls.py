@@ -2,11 +2,12 @@ from django.urls import path
 from . import views 
 from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
-      view_approvals,Post,Events,leave,get_emp_files
+      view_approvals,Post,Events,leave,get_emp_files,get_attendance
 
 urlpatterns = [
      path('',views.home,name="management-home"),
      path('clock',views.clock,name="management-clock"),
+     path('get_attendance',views.get_attendance,name="management-get-attendance"),
      path('add_info',views.add_info,name="management_add_info"),
      path('add_departments',views.add_department,name="management_add_department"),
      path('add_roles',views.add_roles,name="management_add_roles"),

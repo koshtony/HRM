@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
    
     'management.apps.ManagementConfig',
+    'payroll.apps.PayrollConfig',
+    'hrm_users.apps.HrmUsersConfig'
+
 ]
 
 MIDDLEWARE = [

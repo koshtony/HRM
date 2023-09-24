@@ -22,7 +22,9 @@ from django.conf import settings
 urlpatterns = [
     path('admin', admin.site.urls),
     path('login',auth_view.LoginView.as_view(template_name = 'management/login.html'),name="login"),
-    path('',include('management.urls'))
+    path('',include('management.urls')),
+    path('',include('payroll.urls')),
+    path('',include('hrm_users.urls'))
 ]
 
 if settings.DEBUG:
