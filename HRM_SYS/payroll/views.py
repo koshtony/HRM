@@ -7,6 +7,8 @@ from .models import *
 def gen_payroll(request):
     employees = Employee.objects.all()
     leaves = Leave.objects.all()
-    
-    return render(request,"payroll/reports.html")
+    attendance = Attendance.objects.all()
+    context = {"attendances":attendance}
+
+    return render(request,"payroll/reports.html",context)
 

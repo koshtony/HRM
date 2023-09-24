@@ -43,7 +43,7 @@
                                                 <th>status</th>
                                                 <th>count</th>
                                                 <th>deduction</th>
-                                                <th>Exam View</th>
+                                               
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -64,16 +64,16 @@
                                                     {{attendance.clock_out}}
                                                 </td>
                                                 <td>
-                                                    {{attendance.lat }},{{attendance.long}}
+                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="ti-map">show map</i></button>
                                                 </td>
                                                 <td>
                                                     {{attendance.lat1 }},{{attendance.long1}}
                                                 </td>
                                                 <td>
-                                                    {{attendance.image1}}
+                                                    <img src="{{attendance.image1}}">
                                                 </td>
                                                 <td>
-                                                    {{attendance.image2}}
+                                                    <img src="{{attendance.image2}}">
                                                 </td>
                                                 <td>
                                                     {{attendance.status}}
@@ -99,6 +99,9 @@
                             
                         </div>
                     </div>
+                    <div id="Map">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,6 +113,17 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script>
      new DataTable('#attendance');
+
+     function showMap(lat,long){
+       
+
+        var mapProp= {
+  center:new google.maps.LatLng(lat,long),
+  zoom:5,
+};
+var map = new google.maps.Map(document.getElementById("Map"),mapProp);
+     }
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvRNKaczQYKS20s1vGmfK9KGCxl5ksfV0&callback=showMap"></script
 
 {% endblock content %}
