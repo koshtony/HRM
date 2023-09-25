@@ -9,8 +9,15 @@ import time
 # Create your views here.
 @login_required
 def home(request):
-
-    return render(request,'management/index.html')
+    todos = []
+    for todo in Applications.objects.all():
+        if request.user.username in todo.approvers.split(','):
+            apps = [
+                 todo.pk,todo.approvers,todo.created,todo.remarks
+            ]
+            todos.append(apps)
+    context = {"todos":todos}
+    return render(request,'management/index.html',context)
 
 def add_info(request):
 
@@ -210,19 +217,49 @@ def get_attendance(request):
 
 def upload_leave(request):
     if request.POST:
-       
        form = LeaveForm(request.POST,request.FILES)
        if form.is_valid():
             form.instance.applicant = request.user
             form.save()
-          
+            approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
+            approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
+            print(approvers)
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
-                applicant = request.user,details = form.cleaned_data.get("Approvals_type"),
-                attachment = form.cleaned_data.get("attachments"),remarks = form.cleaned_data.get("remarks")
+                applicant = request.user,details = form.cleaned_data.get("remarks"),
+                attachment = form.cleaned_data.get("attachments"),remarks = "",
+                approvers = ",".join(approvers),expected = len(approvers)
+                
             )
             application.save()
             return JsonResponse("application submitted successfully",safe=False)
+       
+def upload_process(request):
+    pass
+
+
+'''
+processing all approvals
+'''
+def approve(request):
+
+    if request.POST:
+        id = request.POST.get("id")
+        application = Applications.objects.get(pk=id)
+        application.approvers = ",".join([i for i in application.approvers.split(',') if i!=request.user.username])
+        print(application.approvers)
+
+        application.stage +=1
+        if application.stage == application.expected:
+            application.status = "pending"
+        
+        application.status = "pending"
+        application.save()
+
+        return JsonResponse("approved successfully",safe=False)
+
+
+
 
 
 def Events(request):

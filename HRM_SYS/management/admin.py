@@ -19,8 +19,14 @@ class RolesAdmin(admin.ModelAdmin):
         list_filter = ("requirements",)
         search_fields = ["name"]
 class ApprovalsAdmin(admin.ModelAdmin):
-        list_display = ("name","created","remarks")
+        list_display = ("name","created","get_approvers","remarks")
         search_fields = ["name"]
+
+        def get_approvers(self,obj):
+
+                return ",".join([str(app.approvers) for app in Approvals.objects.all()])
+
+
 
 class ApplicationsAdmin(admin.ModelAdmin):
         list_display = ("type","details","created","attachment")

@@ -3,7 +3,7 @@ from . import views
 from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
       view_approvals,Post,Events,leave,get_emp_files,get_attendance,\
-      upload_leave
+      upload_leave,approve
 
 urlpatterns = [
      path('',views.home,name="management-home"),
@@ -19,6 +19,8 @@ urlpatterns = [
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
       path('leave',views.leave,name="management_leave"),
       path('upload_leave',views.upload_leave,name="management_upload_leave"),
+      path('approve',views.approve,name="management_approve"),
+
       path('events',views.Events,name="management_events"),
       path('posts',views.Post,name="management_post"),
 

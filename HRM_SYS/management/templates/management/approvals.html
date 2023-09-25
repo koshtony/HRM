@@ -24,7 +24,7 @@
                   <p class="card-description">
                     
                   </p>
-                  <form class="forms-sample" method="POST">
+                  <form class="forms-sample" method="POST" id="ApprovalForm">
                     {% for field in appForm %}
                     {% csrf_token %}
                     <div class="form-group">
@@ -34,7 +34,7 @@
                   {% endfor %}
                     
                    
-                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                    <button type="submit" class="btn btn-primary mr-2" onclick="loadApproval()">Submit</button>
                     <button class="btn btn-light">Cancel</button>
                   </form>
                 </div>
@@ -52,6 +52,28 @@
       </div>
 
     <script>
+
+function loadApproval(){
+  
+  $("#ApprovalForm").submit(function(e){
+   e.preventDefault()
+
+   $form = $(this)
+   var formData = new FormData(this);
+ 
+   $.ajax({
+     method:"post",
+     url:"{% url 'management_upload_leave' %}",
+     data:formData,
+     processData: false,
+contentType: false,
+     success:function(data,status){
+       $("#success").html(data)
+     }
+   })
+  })
+
+}
     
     </script>
   {% endblock content %}

@@ -128,7 +128,7 @@ class Attendance(models.Model):
 class Approvals(models.Model):
 
     name = models.CharField(max_length=10,default="")
-    approvers = models.ManyToManyField(Employee)
+    approvers = models.TextField(default="")
     created = models.DateField(default=timezone.now)
     remarks = models.TextField() 
 
@@ -139,9 +139,13 @@ class Applications(models.Model):
 
     type = models.ForeignKey(Approvals,on_delete=models.PROTECT)
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
+    approvers = models.TextField(default="")
     details = models.TextField()
     created = models.DateField(default=timezone.now)
     attachment = models.FileField(default='attachment',upload_to='ápproval_files')
+    status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
+    stage = models.IntegerField(default=0)
+    expected = models.IntegerField(default=0)
     remarks = models.TextField()
 
     def __str__(self):
@@ -150,9 +154,10 @@ class Applications(models.Model):
 class Process(models.Model):
 
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
-    approvals = models.ForeignKey(Applications,on_delete=models.PROTECT,related_name="processes")
+    approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
     details = models.TextField()
     created = models.DateField()
+    attachments = models.FileField(default="process.pdf",upload_to='application_files')
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
    
     def __str__(self):
@@ -173,11 +178,13 @@ class Leave(models.Model):
     attachments = models.FileField(default="attachment.pdf",upload_to='application_files')
     status = models.CharField(max_length=30,default="pending")
     created = models.DateTimeField(default=timezone.now)
-    remarks = models.TextField()
+    details = models.TextField()
 
     def __str__(self):
 
         return self.category 
+    
+
 
 
 class Todo(models.Model):

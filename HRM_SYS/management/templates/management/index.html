@@ -144,7 +144,7 @@
                       <div class="row">
                         <div class="col-8 text-white">
                           <h3>0</h3>
-                          <p class="text-white font-weight-500 mb-0">............................................................................................................................................. </p>
+                          <p class="text-white font-weight-500 mb-0">....................................................................... </p>
                           <p class="text-white font-weight-500 mb-0"> </p>
                         </div>
                         <div class="col-4 background-icon">
@@ -161,14 +161,27 @@
                   <p class="card-title">Notifications</p>
                   <ul class="icon-data-list">
                     <li>
-                      <div class="d-flex">
-                        <img src="images/faces/face1.jpg" alt="user">
-                        <div>
-                          <p class="text-info mb-1">Isabella Becker</p>
-                          <p class="mb-0">Sales dashboard have been created</p>
-                          <small>9:30 am</small>
+                    
+                        <div class="list-wrapper px-3">
+                          <ul class="d-flex flex-column-reverse todo-list">
+                            {% for todo in todos %}
+                            <li>
+                              <div class="form-check">
+                                <label class="form-check-label">
+                                  <input class="checkbox" type="checkbox" onclick="getPk('{{todo.0}}')">
+                                  {{todo.3}} {{todo.2}}
+                                </label>
+                              </div>
+                              <i class="remove ti-close"></i>
+                            </li>
+                            {% endfor %}
+                            
+                            
+                            
+                            
+                          </ul>
                         </div>
-                      </div>
+                      
                    
                   </ul>
                 </div>
@@ -317,6 +330,25 @@
         },
       });
      
+
+    // approve todo 
+function getPk(id){
+  alert(id)
+   $.ajax({
+
+      type:"post",
+      url:"{% url 'management_approve' %}",
+      data:{
+        id:id,
+        csrfmiddlewaretoken:'{{ csrf_token }}'
+
+      },
+      success:function(data,status){
+        alert(data)
+      }
+   })
+}
+
     
       </script>
 {% endblock content %}
