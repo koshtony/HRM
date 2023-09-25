@@ -1,5 +1,5 @@
 {% extends 'management/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
      <!-- create camera modal here-->
 
@@ -120,45 +120,27 @@
                   <h4 class="card-title">Apply leave</h4>
                   <p class="card-description">
                     annual,sick, compassionate
+                    <h4 id="success">
+                       
+                    </h4>
                   </p>
-                
+                <form id="leaveForm" enctype="multipart/form-data" method="POST">
+                  {% csrf_token %}
+
+                  {% for field in leave_form %}
                     <div class="form-group">
-                      <label for="exampleInputName1">Approval Type</label>
-                      <select class="form-control" id="type">
-                        {% for approval in approvals %}
-                            <option value="{{approval.type}}">{{approval.type}}</option>
-                        {% endfor %}
-                      </select>
+                       {{field | as_crispy_field}}
                     </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail3">Category</label>
-                      <select class="form-control" id="category">
-                        <option value="annual">Annual Leave</option>
-                        <option value="compassionate">Compassionate Leave</option>
-                        <option value="out">out of office</option>
-                  </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputPassword4">Start</label>
-                      <input type="date" class="form-control" id="start" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleSelectGender">End</label>
-                      <input type="date" class="form-control" id="end" placeholder="Password">
-                      </div>
-                    <div class="form-group">
-                      <label>attachments</label>
-                      <input type="file" name="img[]" class="form-control">
-                      
-                    </div>
+                  {% endfor %}
+                    
                    
-                    <div class="form-group">
-                      <label for="exampleTextarea1">Remarks</label>
-                      <textarea class="form-control" id="remarks" rows="4"></textarea>
-                    </div>
+                    
+                    
+                   
+                  
                     <button type="submit" class="btn btn-primary mr-2" onclick="loadLeave();">Submit</button>
                     <button class="btn btn-light">Cancel</button>
-              
+                  </form>
                 </div>
               </div>
             </div>
@@ -294,24 +276,24 @@ getClock()
   
       // upload leave data 
  function loadLeave(){
-  alert($("#type").val())
-      $.ajax({
-         type:"POST",
-         url:"{% url 'management_leave' %}",
-         data:{
+  
+     $("#leaveForm").submit(function(e){
+      e.preventDefault()
 
-            type:$("#type").val(),
-            category:$("#category").val(),
-            start:$("#start").val(),
-            end:$("#end").val(),
-            remarks:$("#remarks").val(),
-            csrfmiddlewaretoken:'{{ csrf_token }}'
-         },
-         success:function(data,status){
-             
-          alert(data)
-         }
+      $form = $(this)
+      var formData = new FormData(this);
+    
+      $.ajax({
+        method:"post",
+        url:"{% url 'management_upload_leave' %}",
+        data:formData,
+        processData: false,
+   contentType: false,
+        success:function(data,status){
+          $("#success").html(data)
+        }
       })
+     })
 
  }
 

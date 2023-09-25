@@ -2,7 +2,8 @@ from django.urls import path
 from . import views 
 from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
-      view_approvals,Post,Events,leave,get_emp_files,get_attendance
+      view_approvals,Post,Events,leave,get_emp_files,get_attendance,\
+      upload_leave
 
 urlpatterns = [
      path('',views.home,name="management-home"),
@@ -17,6 +18,7 @@ urlpatterns = [
       path('get_files',views.get_emp_files,name="management_get_files"),
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
       path('leave',views.leave,name="management_leave"),
+      path('upload_leave',views.upload_leave,name="management_upload_leave"),
       path('events',views.Events,name="management_events"),
       path('posts',views.Post,name="management_post"),
 

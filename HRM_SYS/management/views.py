@@ -208,6 +208,23 @@ def get_attendance(request):
         }
     return JsonResponse(details,safe=False)
 
+def upload_leave(request):
+    if request.POST:
+       
+       form = LeaveForm(request.POST,request.FILES)
+       if form.is_valid():
+            form.instance.applicant = request.user
+            form.save()
+          
+            application = Applications(
+                type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
+                applicant = request.user,details = form.cleaned_data.get("Approvals_type"),
+                attachment = form.cleaned_data.get("attachments"),remarks = form.cleaned_data.get("remarks")
+            )
+            application.save()
+            return JsonResponse("application submitted successfully",safe=False)
+
+
 def Events(request):
 
     return render(request,'management/events.html')
