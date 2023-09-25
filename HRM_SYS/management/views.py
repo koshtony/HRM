@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
 from django.core import serializers
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee
+from django.contrib import messages
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm
 from .models import *
 from datetime import datetime,date
 import time
@@ -19,6 +20,21 @@ def home(request):
     context = {"todos":todos}
     return render(request,'management/index.html',context)
 
+def register(request):
+    form=UserRegForm()
+    if request.method=='POST':
+        form=UserRegForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username=form.cleaned_data.get("username")
+            employee = Employee(
+                emp_id = form.cleaned_data.get("username")
+            )
+            employee.save()
+            print(form.cleaned_data.get("username"))
+            messages.success(request,f'{username} account created')
+            return redirect('management-home')
+    return render(request,'management/register.html',{'form':form})
 def add_info(request):
 
     return render(request,'management/add_info.html')
@@ -223,7 +239,7 @@ def upload_leave(request):
             form.save()
             approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
-            print(approvers)
+           
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
                 applicant = request.user,details = form.cleaned_data.get("remarks"),
@@ -235,7 +251,26 @@ def upload_leave(request):
             return JsonResponse("application submitted successfully",safe=False)
        
 def upload_process(request):
-    pass
+    if request.POST:
+       form = ApprovalForm(request.POST,request.FILES)
+       if form.is_valid():
+            form.instance.applicant = request.user
+            form.instance.created = datetime.now()
+            form.save()
+            approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
+            approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
+          
+            application = Applications(
+                type = Approvals.objects.get(name=form.cleaned_data.get("approvals")),
+                applicant = request.user,details = form.cleaned_data.get("details"),
+                attachment = form.cleaned_data.get("attachments"),remarks = "",
+                approvers = ",".join(approvers),expected = len(approvers),
+               
+                
+            )
+            application.save()
+            return JsonResponse("application submitted successfully",safe=False)
+    
 
 
 '''

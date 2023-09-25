@@ -24,9 +24,10 @@
                   <p class="card-description">
                     
                   </p>
-                  <form class="forms-sample" method="POST" id="ApprovalForm">
-                    {% for field in appForm %}
+                  <form class="forms-sample" ectype="multipart/form-data" method="POST" id="ApprovalForm">
                     {% csrf_token %}
+                    {% for field in appForm %}
+                 
                     <div class="form-group">
                        {{field | as_crispy_field}}
                     </div>
@@ -63,12 +64,12 @@ function loadApproval(){
  
    $.ajax({
      method:"post",
-     url:"{% url 'management_upload_leave' %}",
+     url:"{% url 'management_upload_process' %}",
      data:formData,
      processData: false,
 contentType: false,
      success:function(data,status){
-       $("#success").html(data)
+       alert(data)
      }
    })
   })

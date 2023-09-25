@@ -1,6 +1,7 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process
-
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 class DepForm(forms.ModelForm):
 
     class Meta:
@@ -36,3 +37,27 @@ class LeaveForm(forms.ModelForm):
 
         model = Leave
         fields = ['Approvals_type','category','start','end','days','attachments','details']
+
+
+class profileForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Profile 
+        fields = '__all__'
+
+
+class UserRegForm(UserCreationForm):
+    email= forms.EmailField(required=True)
+    
+    class Meta:
+        model=User
+        fields=["username","email","password1","password2"]
+
+
+class UserUpdate(forms.ModelForm):
+    email = forms.EmailField()
+    
+    class Meta:
+        model = User 
+        fields = ['username','email']
