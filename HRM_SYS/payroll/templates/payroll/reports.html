@@ -95,7 +95,71 @@
                     </div>
                     <div id="grid-view" class="tab-pane fade col-lg-12">
                         <div class="row">
-                            
+                            <div class="table-responsive">
+                                <table  class="table table-striped"  id="payroll">
+                                    <thead style="background-color: yellowgreen;">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>first_name</th>
+                                          
+                                            <th>national_id</th>
+                                            <th>phone</th>
+                                            <th>role</th>
+                                            <th>account_no</th>
+                                            <th>salary</th>
+                                            <th>leave days</th>
+                                            <th>hours</th>
+                                            <th>deductions</th>
+                                            <th>gross_pay</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for col,val in payrolls.iterrows %}
+                                        
+                                        <tr>
+                                            <td>
+                                                {{val.employee_id}}
+
+                                            </td>
+                                            <td>
+                                                {{val.name}}
+                                            </td>
+                                            <td>
+                                                {{val.id_no}}
+                                            </td>
+                                            <td>
+                                                {{val.phone}}
+                                            </td>
+                                            <td>
+                                                {{val.role}}
+                                            </td>
+                                            <td>
+                                                {{val.account_no}}
+                                            </td>
+                                            <td>
+                                                {{val.basic_salary}}
+                                            </td>
+                                            <td>
+                                                {{val.leave_days}}
+                                            </td>
+                                            <td>
+                                                {{val.total_hours}}
+                                            </td>
+                                            <td>
+                                                {{val.deductions}}
+                                            </td>
+                                            <td>
+                                                {{val.gross_pay}}
+                                            </td>
+                                           
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
                             
                         </div>
                     </div>

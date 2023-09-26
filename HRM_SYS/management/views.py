@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
 from django.core import serializers
 from django.contrib import messages
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm
 from .models import *
 from datetime import datetime,date
 import time
@@ -110,6 +110,16 @@ def list_employee(request):
     context = {"employee":Employee.objects.all()}
     
     return render(request,'management/list_employees.html',context)
+
+def list_files(request):
+
+    context ={"files":EmpFiles.objects.all(),"file_form":filesForm()}
+    if request.POST:
+        file_form = filesForm(request.POST,request.FILES)
+        if file_form.is_valid():
+            file_form.save()
+            return JsonResponse("file uploaded successfully",safe=False)
+    return render(request,'management/files.html',context)
 
 def get_emp_files(request):
 
@@ -286,7 +296,7 @@ def approve(request):
 
         application.stage +=1
         if application.stage == application.expected:
-            application.status = "pending"
+            application.status = "completed"
         
         application.status = "pending"
         application.save()

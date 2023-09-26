@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process,Profile
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 class DepForm(forms.ModelForm):
@@ -38,6 +38,12 @@ class LeaveForm(forms.ModelForm):
         model = Leave
         fields = ['Approvals_type','category','start','end','days','attachments','details']
 
+class filesForm(forms.ModelForm):
+
+    class Meta:
+
+        model = EmpFiles
+        fields = "__all__"
 
 class profileForm(forms.ModelForm):
 

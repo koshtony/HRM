@@ -18,7 +18,11 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
-                  <form class="forms-sample">
+                  <img src="">
+                  <marquee width="80%" direction="right" height="20px">
+                    clock in time
+                    </marquee>
+                  <form class="forms-sample" style="display:none">
                     <div class="form-group">
                      <input type="text" class="form-control" id="longitudes" readonly>
                      
@@ -39,25 +43,7 @@
                   </form>
                   <div>
 
-                    <form class="forms-sample">
-                      <div class="form-group">
-                       <input type="text" class="form-control" id="longitudes" readonly>
-                       
-                    </div>
-                    <div class="form-group">
-                      
-                      <input type="text" class="form-control" id="latitudes" readonly>
-                      
-                   </div>
-                   <div class="form-group">
-                    <input type="text" class="form-control" id="image_info" readonly>
-                    
-                 </div>
-                 <div class="form-group">
-                  <input type="text" class="form-control" id="my_ip" readonly>
-                  
-               </div>
-                    </form>
+                   
 
                   </div>
                   <p class="card-description" style="color:gree" id="video_msg">
@@ -177,7 +163,7 @@ getClock()
           }else if((document.getElementById("in").innerHTML != "" && document.getElementById("in").innerHTML != "") && (h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) ){
                 
             document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "complete";
-          }else if ((h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) || document.getElementById("in").innerHTML == ""){
+          }else if ((h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) && (document.getElementById("in").innerHTML == "" && h<24)){
                  
             document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "missed clock in";
           }

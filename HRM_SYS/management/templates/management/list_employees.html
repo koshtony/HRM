@@ -349,10 +349,14 @@
                           <th>
                             files
                           </th>
+                          <th>
+                            edit
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
                         {% for emp in employee %}
+                        {% if user.is_staff %}
                         <tr>
                           <td class="py-1">
                             <img src="{{emp.image.url}}" alt="image"/>
@@ -407,7 +411,70 @@
                           <td style="background-color:greenyellow">
                             <a onclick="viewFiles('{{emp.emp_id}}');"><i class="ti-files">documents</i></a>
                           </td>
+                          <td>
+                            <a class="btn btn-primary"><i class="ti-pencil"></i></a>
+                          </td>
                         </tr>
+                        {% elif employee.emp_id == request.user.username %}
+                        <tr>
+                          <td class="py-1">
+                            <img src="{{emp.image.url}}" alt="image"/>
+                          </td>
+                          <td>
+                            {{emp.emp_id}}
+                          </td>
+                          <td>
+                            {{emp.first_name}}
+                          </td>
+                          <td>
+                            {{emp.email}}
+                          </td>
+                          <td>
+                            {{emp.phone}}
+                          </td>
+                         
+                          <td>
+                            {{emp.role}}
+                          </td>
+                          <td>
+                             {{emp.department}}
+                          </td>
+                          <td>
+                            {{emp.education_level}}
+                         </td>
+                         <td>
+                            {{emp.doj}}
+                         </td>
+                         <td>
+                            {{emp.dol}}
+                         </td>
+                         <td>
+                            {{emp.account_no}}
+                         </td>
+                         <td>
+                            {{emp.bank_name}}
+                         </td>
+                         <td>
+                            {{emp.salary}}
+                         </td>
+                         <td>
+                            {{emp.allowance}}
+                         </td>
+                         <td>
+                            {{emp.add_ons}}
+                         </td>
+                         <td>
+                            {{emp.status}}
+                         </td>
+                          <!--views for admin-->
+                          <td style="background-color:greenyellow">
+                            <a onclick="viewFiles('{{emp.emp_id}}');"><i class="ti-files">documents</i></a>
+                          </td>
+                          <td>
+                            <a class="btn btn-primary"><i class="ti-pencil"></i></a>
+                          </td>
+                        </tr>
+                        {% endif %}
                         {% endfor %}
                        
                       </tbody>

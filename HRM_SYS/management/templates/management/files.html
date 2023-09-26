@@ -1,0 +1,501 @@
+{% extends 'management/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %} 
+<style>
+    .file-manager-actions {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+.file-manager-actions > * {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.file-manager-container {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.file-item {
+    position: relative;
+    z-index: 1;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    border: 1px solid #eee;
+    cursor: pointer;
+}
+.file-item:hover,
+.file-item.focused {
+    border-color: rgba(0, 0, 0, 0.05);
+}
+.file-item.focused {
+    z-index: 2;
+}
+.file-item * {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    text-decoration:none;
+}
+.dark-style .file-item:hover,
+.dark-style .file-item.focused {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+.file-item-checkbox {
+    margin: 0 !important;
+}
+.file-item-select-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0;
+}
+.file-item-img {
+    background-color: transparent;
+    background-position: center center;
+    background-size: cover;
+}
+.file-item-name {
+    display: block;
+    overflow: hidden;
+}
+.file-manager-col-view .file-item {
+    margin: 0 0.25rem 0.25rem 0;
+    padding: 1.25rem 0 1rem 0;
+    width: 9rem;
+    text-align: center;
+}
+[dir="rtl"] .file-manager-col-view .file-item {
+    margin-right: 0;
+    margin-left: 0.25rem;
+}
+.file-manager-col-view .file-item-img,
+.file-manager-col-view .file-item-icon {
+    display: block;
+    margin: 0 auto 0.75rem auto;
+    width: 4rem;
+    height: 4rem;
+    font-size: 2.5rem;
+    line-height: 4rem;
+}
+.file-manager-col-view .file-item-level-up {
+    font-size: 1.5rem;
+}
+.file-manager-col-view .file-item-checkbox,
+.file-manager-col-view .file-item-actions {
+    position: absolute;
+    top: 6px;
+}
+.file-manager-col-view .file-item-checkbox {
+    left: 6px;
+}
+[dir="rtl"] .file-manager-col-view .file-item-checkbox {
+    right: 6px;
+    left: auto;
+}
+.file-manager-col-view .file-item-actions {
+    right: 6px;
+}
+[dir="rtl"] .file-manager-col-view .file-item-actions {
+    right: auto;
+    left: 6px;
+}
+.file-manager-col-view .file-item-name {
+    width: 100%;
+}
+.file-manager-col-view .file-manager-row-header,
+.file-manager-col-view .file-item-changed {
+    display: none;
+}
+.file-manager-row-view .file-manager-row-header,
+.file-manager-row-view .file-item {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 0 0 0.125rem 0;
+    padding: 0.25rem 3rem 0.25rem 2.25em;
+    width: 100%;
+}
+[dir="rtl"] .file-manager-row-view .file-manager-row-header,
+[dir="rtl"] .file-manager-row-view .file-item {
+    padding-right: 2.25em;
+    padding-left: 3rem;
+}
+.file-manager-row-view .file-item-img,
+.file-manager-row-view .file-item-icon {
+    display: block;
+    margin: 0 1rem;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    font-size: 1.25rem;
+    line-height: 2rem;
+}
+.file-manager-row-view .file-item-level-up {
+    font-size: 1rem;
+}
+.file-manager-row-view .file-item-checkbox,
+.file-manager-row-view .file-item-actions {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.file-manager-row-view .file-item-checkbox {
+    left: 10px;
+}
+[dir="rtl"] .file-manager-row-view .file-item-checkbox {
+    right: 10px;
+    left: auto;
+}
+.file-manager-row-view .file-item-actions {
+    right: 10px;
+}
+[dir="rtl"] .file-manager-row-view .file-item-actions {
+    right: auto;
+    left: 10px;
+}
+.file-manager-row-view .file-item-changed {
+    display: none;
+    margin-left: auto;
+    width: 10rem;
+}
+[dir="rtl"] .file-manager-row-view .file-item-changed {
+    margin-right: auto;
+    margin-left: 0;
+}
+.file-manager-row-view .file-item-name {
+    width: calc(100% - 4rem);
+}
+.file-manager-row-view .file-manager-row-header {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    font-weight: bold;
+}
+.file-manager-row-view .file-manager-row-header .file-item-name {
+    margin-left: 4rem;
+}
+[dir="rtl"] .file-manager-row-view .file-manager-row-header .file-item-name {
+    margin-right: 4rem;
+    margin-left: 0;
+}
+.light-style .file-item-name {
+    color: #4e5155 !important;
+}
+.light-style .file-item.selected .file-item-select-bg {
+    opacity: 0.15;
+}
+@media (min-width: 768px) {
+    .light-style .file-manager-row-view .file-item-changed {
+        display: block;
+    }
+    .light-style .file-manager-row-view .file-item-name {
+        width: calc(100% - 15rem);
+    }
+}
+@media (min-width: 992px) {
+    .light-style .file-manager-col-view .file-item-checkbox,
+    .light-style .file-manager-col-view .file-item-actions {
+        opacity: 0;
+    }
+    .light-style .file-manager-col-view .file-item:hover .file-item-checkbox,
+    .light-style .file-manager-col-view .file-item.focused .file-item-checkbox,
+    .light-style .file-manager-col-view .file-item.selected .file-item-checkbox,
+    .light-style .file-manager-col-view .file-item:hover .file-item-actions,
+    .light-style .file-manager-col-view .file-item.focused .file-item-actions,
+    .light-style .file-manager-col-view .file-item.selected .file-item-actions {
+        opacity: 1;
+    }
+}
+.material-style .file-item-name {
+    color: #4e5155 !important;
+}
+.material-style .file-item.selected .file-item-select-bg {
+    opacity: 0.15;
+}
+@media (min-width: 768px) {
+    .material-style .file-manager-row-view .file-item-changed {
+        display: block;
+    }
+    .material-style .file-manager-row-view .file-item-name {
+        width: calc(100% - 15rem);
+    }
+}
+@media (min-width: 992px) {
+    .material-style .file-manager-col-view .file-item-checkbox,
+    .material-style .file-manager-col-view .file-item-actions {
+        opacity: 0;
+    }
+    .material-style .file-manager-col-view .file-item:hover .file-item-checkbox,
+    .material-style .file-manager-col-view .file-item.focused .file-item-checkbox,
+    .material-style .file-manager-col-view .file-item.selected .file-item-checkbox,
+    .material-style .file-manager-col-view .file-item:hover .file-item-actions,
+    .material-style .file-manager-col-view .file-item.focused .file-item-actions,
+    .material-style .file-manager-col-view .file-item.selected .file-item-actions {
+        opacity: 1;
+    }
+}
+.dark-style .file-item-name {
+    color: #fff !important;
+}
+.dark-style .file-item.selected .file-item-select-bg {
+    opacity: 0.15;
+}
+@media (min-width: 768px) {
+    .dark-style .file-manager-row-view .file-item-changed {
+        display: block;
+    }
+    .dark-style .file-manager-row-view .file-item-name {
+        width: calc(100% - 15rem);
+    }
+}
+@media (min-width: 992px) {
+    .dark-style .file-manager-col-view .file-item-checkbox,
+    .dark-style .file-manager-col-view .file-item-actions {
+        opacity: 0;
+    }
+    .dark-style .file-manager-col-view .file-item:hover .file-item-checkbox,
+    .dark-style .file-manager-col-view .file-item.focused .file-item-checkbox,
+    .dark-style .file-manager-col-view .file-item.selected .file-item-checkbox,
+    .dark-style .file-manager-col-view .file-item:hover .file-item-actions,
+    .dark-style .file-manager-col-view .file-item.focused .file-item-actions,
+    .dark-style .file-manager-col-view .file-item.selected .file-item-actions {
+        opacity: 1;
+    }
+}
+</style>
+<link rel="shortcut icon" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<!---modal here-->
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fModal" id="fileBtn" style="display:none">
+    
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="fModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color: yellowgreen;">
+          <h5 class="modal-title" id="exampleModalLongTitle">file uploader</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form class="form-sample" id="fileForm" ectype="multipart/form-data" method="POST">
+                <p class="card-description">
+                  Personal info
+                </p>
+                  {% csrf_token %}
+                  {% for field in file_form %}
+                
+                    <div class="form-group">
+                     
+                   
+                        {{field | as_crispy_field}}
+                    
+                    </div>
+             
+                  {% endfor %}
+       
+                
+                <button type="submit" class="btn btn-primary" onclick="saveFile()">Save</button>
+                
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="main-panel">
+    <!-- row -->
+    <div class="content-wrapper">
+            
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>files</h4>
+                </div>
+            </div>
+            
+        </div>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons.min.css" integrity="sha512-0/rEDduZGrqo4riUlwqyuHDQzp2D1ZCgH/gFIfjMIL5az8so6ZiXyhf1Rg8i6xsjv+z/Ubc4tt1thLigEcu6Ug==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <div class="container flex-grow-1 light-style container-p-y">
+            <div class="container-m-nx container-m-ny bg-lightest mb-3">
+                <ol class="breadcrumb text-big container-p-x py-3 m-0">
+                    <input type="text" list="ëmpids" id="empid" class="form-control"placeholder="search by employee id">
+                    <datalist id="empids">
+                        {% for file in files %}
+                        <option value="{{file.emp_id}}">{{file.emp_id}}</option>
+                        {% endfor %}
+                    </datalist>
+                </ol>
+        
+                <hr class="m-0" />
+        
+                <div class="file-manager-actions container-p-x py-2">
+                    <div>
+                        <button type="button" class="btn btn-primary mr-2" onclick="fileModal();"><i class="ion ion-md-cloud-upload"></i>&nbsp; Upload</button>
+                        
+                        <div class="btn-group mr-2">
+                            <button type="button" class="btn btn-default md-btn-flat dropdown-toggle px-2" data-toggle="dropdown"><i class="ion ion-ios-settings"></i></button>
+                            <div class="dropdown-menu">
+                                
+                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                
+                            </div>
+                            <button type="button" class="btn btn-default md-btn-flat dropdown-toggle px-2" onclick="location.reload()"><i class="ion ion-ios-refresh"></i></button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-default icon-btn md-btn-flat active"> <input type="radio" name="file-manager-view" value="file-manager-col-view" checked="" /> <span class="ion ion-md-apps"></span> </label>
+                            <label class="btn btn-default icon-btn md-btn-flat"> <input type="radio" name="file-manager-view" value="file-manager-row-view" /> <span class="ion ion-md-menu"></span> </label>
+                        </div>
+                    </div>
+                </div>
+        
+                <hr class="m-0" />
+            </div>
+        
+            <div class="file-manager-container file-manager-col-view" id="fileCols">
+                <div class="file-manager-row-header">
+                    <div class="file-item-name pb-2">Filename</div>
+                    <div class="file-item-changed pb-2">Changed</div>
+                </div>
+        
+                
+            {% for file in files %}
+            {% if user.is_staff %}
+                <div class="file-item" id="fileDiv">
+                    <div class="file-item-select-bg bg-primary"></div>
+                    <label class="file-item-checkbox custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" />
+                        <input type="text" class="custom-control-input" value="{{file.emp_id}}">
+                        <span class="custom-control-label"></span>
+                    </label>
+                    <div>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 100 100">
+                                <polygon fill="#4b4dff" points="74,82 26,82 26,20 61,20 74,33"></polygon><polygon fill="#edf7f5" points="73,38 56,38 56,21 60,21 60,34 73,34"></polygon><path fill="#4343bf" d="M77,85H23V17h40.313L77,31.827V85z M29,79h42V34.173L60.687,23H29V79z"></path><rect width="20" height="4" x="40" y="43" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="54" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="64" fill="#edf7f5"></rect><polygon fill="#3abcf8" points="71,89 20,89 20,13 60,13 60,23 30,23 30,79 71,79"></polygon>
+                                </svg>
+                    </div>
+                    <a href="{{file.document.url}}" class="file-item-name" download>
+                        {{file.file_name}}-{{file.category}}-<span style="color:green;">{{file.employee.emp_id}}</span>
+                    </a>
+                    <div class="file-item-changed">{{file.created}}</div>
+                    <div class="file-item-actions btn-group">
+                        <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="javascript:void(0)">Rename</a>
+                           
+                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                        </div>
+                    </div>
+                </div>
+                {% elif user.username == file.employee.emp_id %}
+                <div class="file-item">
+                    <div class="file-item-select-bg bg-primary"></div>
+                    
+                    <div>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 100 100">
+                                <polygon fill="#4b4dff" points="74,82 26,82 26,20 61,20 74,33"></polygon><polygon fill="#edf7f5" points="73,38 56,38 56,21 60,21 60,34 73,34"></polygon><path fill="#4343bf" d="M77,85H23V17h40.313L77,31.827V85z M29,79h42V34.173L60.687,23H29V79z"></path><rect width="20" height="4" x="40" y="43" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="54" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="64" fill="#edf7f5"></rect><polygon fill="#3abcf8" points="71,89 20,89 20,13 60,13 60,23 30,23 30,79 71,79"></polygon>
+                                </svg>
+                    </div>
+                    <a href="{{file.document.url}}" class="file-item-name" download>
+                        {{file.file_name}}-{{file.category}}-{{file.employee.emp_id}}
+                    </a>
+                    <div class="file-item-changed">{{file.created}}</div>
+                    
+                </div>
+
+                {% endif %}
+
+            {% endfor %}
+        
+               
+        
+             
+        
+                
+        
+                
+        
+        
+                
+        
+        
+             
+        
+                
+        
+               
+        
+        
+                
+        
+        
+              
+
+                
+            </div>
+        </div>
+   
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script>
+     new DataTable('#attendance');
+     $(document).ready(function(){
+          $("#empid").on("keyup",function(){
+              var value=$(this).val().toLowerCase();
+             $('#fileDiv').hide()
+      
+            $('#fileDiv:contains("'+value+'")').show()
+      
+          });
+      });
+
+    function fileModal(){
+
+        $("#fileBtn").click()
+    }
+ function saveFile(){
+    $("#fileForm").submit(function(e){
+   e.preventDefault()
+
+   $form = $(this)
+   var formData = new FormData(this);
+ 
+   $.ajax({
+     method:"post",
+     url:"{% url 'management_files' %}",
+     data:formData,
+     processData: false,
+contentType: false,
+     success:function(data,status){
+       alert(data)
+     }
+   })
+  })
+
+}
+ 
+</script>
+
+
+{% endblock content %}
