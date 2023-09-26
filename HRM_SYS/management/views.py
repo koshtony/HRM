@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required,permission_required
 from django.http import JsonResponse
 from django.core import serializers
 from django.contrib import messages
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm
+from django.contrib.auth.decorators import login_required
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm
 from .models import *
 from datetime import datetime,date
 import time
@@ -304,6 +305,25 @@ def approve(request):
         return JsonResponse("approved successfully",safe=False)
 
 
+@login_required
+def profile(request):
+
+    profile_form = profileForm(instance=request.user.profile)
+
+    context = {"profile_form":profile_form}
+
+    if request.method=='POST':
+    
+        profile_forms = profileForm(request.POST,request.FILES,instance=request.user.profile)
+        if profile_forms.is_valid():
+            
+            profile_forms.save()
+            
+
+        return JsonResponse("profile updated",safe=False)
+
+
+    return render(request,'management/profile.html',context)
 
 
 

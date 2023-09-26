@@ -110,11 +110,17 @@
                 <i class="ti-timer text-primary"></i>
                 attendance
               </a>
+              <a class="dropdown-item" href="{% url 'management_profile' %}">
+                <i class="ti-user text-primary"></i>
+                My profile
+              </a>
+              {% if user.is_staff %}
               <a class="dropdown-item" href="/admin">
                 <i class="ti-settings text-primary"></i>
                 Admin
               </a>
-              <a class="dropdown-item">
+              {% endif %}
+              <a class="dropdown-item" href="{% url 'logout' %}">
                 <i class="ti-power-off text-primary"></i>
                 Logout
               </a>
@@ -278,18 +284,7 @@
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="" aria-expanded="false" aria-controls="charts">
-              <i class="icon-bar-graph menu-icon"></i>
-              <span class="menu-title">Analysis</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/charts/chartjs.html">Analysis</a></li>
-              </ul>
-            </div>
-          </li>
+         
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="ti-user"></i>&nbsp;
@@ -323,8 +318,10 @@
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href=""> Logout </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'logout' %}"> Logout </a></li>
+                {% if user.is_staff %}
                 <li class="nav-item"> <a class="nav-link" href="{% url 'management_register' %}"> Register </a></li>
+                {% endif %}
               </ul>
             </div>
           </li>
@@ -336,8 +333,8 @@
             </a>
             <div class="collapse" id="error">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-                <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
+                <li class="nav-item"> <a class="nav-link" href=""> logs </a></li>
+                
               </ul>
             </div>
           </li>

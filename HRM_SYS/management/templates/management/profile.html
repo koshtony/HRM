@@ -1,0 +1,201 @@
+{% extends 'management/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %} 
+<style>
+    .img-account-profile {
+    height: 10rem;
+}
+.rounded-circle {
+    border-radius: 50% !important;
+}
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+}
+.card .card-header {
+    font-weight: 500;
+}
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0;
+}
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+.form-control, .dataTable-input {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.nav-borders .nav-link.active {
+    color: #0061f2;
+    border-bottom-color: #0061f2;
+}
+.nav-borders .nav-link {
+    color: #69707a;
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+</style>
+<div class="main-panel">
+    <!-- row -->
+    <div class="content-wrapper">
+            
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Reports</h4>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-pills mb-3">
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active">My profile</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary">others</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-12">
+                <div class="row tab-content">
+                    <div id="list-view" class="tab-pane fade active show col-lg-12">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div class="container-xl px-4 mt-4">
+                                        <!-- Account page navigation-->
+                                        <nav class="nav nav-borders">
+                                   
+                                        </nav>
+                                        <hr class="mt-0 mb-4">
+                                        <div class="row">
+                                            <div class="col-xl-4">
+                                                <!-- Profile picture card-->
+                                                <div class="card mb-4 mb-xl-0">
+                                                    <div class="card-header">Profile Picture</div>
+                                                    <div class="card-body text-center">
+                                                        <!-- Profile picture image-->
+                                                        <img class="img-account-profile rounded-circle mb-3" src="{{user.profile.image.url}}" alt="">
+                                                        <!-- Profile picture help block-->
+                                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                                        <!-- Profile picture upload button-->
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-8">
+                                                <!-- Account details card-->
+                                                <div class="card mb-4">
+                                                    <div class="card-header">Account Details</div>
+                                                    <div class="card-body">
+                                                        <form method="POST" enctype="multipart/form-data" id="profileForm">
+                                                            {% csrf_token %}
+                                                            <!-- Form Row-->
+                                                            <div class="row gx-3 mb-3">
+                                                                <!-- Form Group (first name)-->
+                                                                <div class="col-md-6">
+                                                                    {{profile_form.first | as_crispy_field}}
+                                                                </div>
+                                                                <!-- Form Group (last name)-->
+                                                                <div class="col-md-6">
+                                                                    {{profile_form.surname | as_crispy_field}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row gx-3 mb-3">
+                                                               
+                                                                <div class="col-md-6">
+                                                                    {{profile_form.email | as_crispy_field}}
+                                                                </div>
+                                                                <!-- Form Group (location)-->
+                                                                <div class="col-md-6">
+                                                                    {{profile_form.phone | as_crispy_field}}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="mb-3">
+                                                                {{profile_form.image | as_crispy_field}}
+                                                            </div>
+                                                          
+                                                            <button class="btn btn-primary" type="submit" onclick="profileUpdate();">Save changes</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="grid-view" class="tab-pane fade col-lg-12">
+                        <div class="row">
+                            <div class="table-responsive">
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div id="Map">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script>
+     
+     function profileUpdate(){
+       alert("yes")
+          
+        $("#profileForm").submit(function(e){
+   e.preventDefault()
+
+   $form = $(this)
+   var formData = new FormData(this);
+ 
+   $.ajax({
+     method:"post",
+     url:"{% url 'management_profile' %}",
+     data:formData,
+     processData: false,
+contentType: false,
+     success:function(data,status){
+       alert(data)
+     }
+   })
+  })
+     }
+</script>
+
+
+{% endblock content %}
