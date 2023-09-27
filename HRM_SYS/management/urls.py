@@ -3,7 +3,8 @@ from . import views
 from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
       view_approvals,Post,Events,leave,get_emp_files,get_attendance,\
-      upload_leave,approve,upload_process,register,list_files,profile,EditEmpView
+      upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView
+      
 
 urlpatterns = [
      path('',views.home,name="management-home"),
@@ -26,6 +27,7 @@ urlpatterns = [
       path('register',views.register,name="management_register"),
       path('list_files',views.list_files,name="management_files"),
        path('profile',views.profile,name="management_profile"),
-        path('edit_employee/<int:pk>',EditEmpView.as_view(),name="management-edit-employee")
+        path('edit_employee/<int:pk>',EditEmpView.as_view(),name="management-edit-employee"),
+        path('password-reset', ResetPasswordView.as_view(), name='password_reset')
 
 ]

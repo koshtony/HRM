@@ -23,6 +23,12 @@ urlpatterns = [
     path('admin', admin.site.urls),
     path('login',auth_view.LoginView.as_view(template_name = 'management/login.html'),name="login"),
     path('logout/',auth_view.LoginView.as_view(template_name='management/logout.html'),name="logout"),
+    path('password-reset-confirm/<uidb64>/<token>/',
+         auth_view.PasswordResetConfirmView.as_view(template_name='management/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+         path('password-reset-complete/',
+         auth_view.PasswordResetCompleteView.as_view(template_name='management/password_reset_complete.html'),
+         name='password_reset_complete'),
     path('',include('management.urls')),
     path('',include('payroll.urls')),
     path('',include('hrm_users.urls'))
