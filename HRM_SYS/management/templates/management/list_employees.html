@@ -412,7 +412,7 @@
                             <a onclick="viewFiles('{{emp.emp_id}}');"><i class="ti-files">documents</i></a>
                           </td>
                           <td>
-                            <a class="btn btn-primary"><i class="ti-pencil"></i></a>
+                            <a  href="{% url 'management-edit-employee' emp.pk %}"><i class="ti-pencil"></i></a>
                           </td>
                         </tr>
                         {% elif employee.emp_id == request.user.username %}
@@ -471,7 +471,7 @@
                             <a onclick="viewFiles('{{emp.emp_id}}');"><i class="ti-files">documents</i></a>
                           </td>
                           <td>
-                            <a class="btn btn-primary"><i class="ti-pencil"></i></a>
+                            <a  href="{% url 'management-edit-employee' emp.pk %}"><i class="ti-pencil"></i></a>
                           </td>
                         </tr>
                         {% endif %}

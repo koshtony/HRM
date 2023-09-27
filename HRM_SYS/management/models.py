@@ -83,6 +83,8 @@ class AttSettings(models.Model):
     evening_deduction = models.FloatField()
    
     remarks = models.TextField()
+    clock_in_latitude = models.CharField(max_length=1000,default="")
+    clock_in_longitude = models.CharField(max_length=1000,default="")
 
     def __str__(self):
         return self.employee_id

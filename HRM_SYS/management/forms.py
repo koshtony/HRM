@@ -23,6 +23,13 @@ class EmpForm(forms.ModelForm):
         model = Employee
         fields = '__all__'
 
+class EmpUpdateForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Employee 
+        fields = ['first_name','second_name','national_no','phone','address','location','account_no','bank_name']
+
 
 class ApprovalForm(forms.ModelForm):
 
@@ -59,6 +66,13 @@ class UserRegForm(UserCreationForm):
     class Meta:
         model=User
         fields=["username","email","password1","password2"]
+
+class UserUpdateForm(forms.ModelForm):
+    email= forms.EmailField(required=True)
+    
+    class Meta:
+        model=User
+        fields=["username","email"]
 
 
 class UserUpdate(forms.ModelForm):

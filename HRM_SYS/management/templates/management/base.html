@@ -293,7 +293,9 @@
             </a>
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'management_add_employee' %}">add Employees</a></li>
+                {% if user.is_staff %}
+                <li class="nav-item"> <a class="nav-link" href="{% url 'management_files' %}">Employee files</a></li>
+                {% endif %}
                 <li class="nav-item"> <a class="nav-link" href="{% url 'management_list_employee' %}">View Employees</a></li>
               </ul>
             </div>

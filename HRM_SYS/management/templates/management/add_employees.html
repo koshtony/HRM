@@ -20,13 +20,14 @@
             <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Employee registation</h4>
-                    <form class="form-sample">
+                    <h4 class="card-title">Edit employee details</h4>
+                    <form class="form-sample" method="POST">
+                      {% csrf_token %}
                       <p class="card-description">
                         Personal info
                       </p>
                       <div class="row">
-                        {% for field in emp_form %}
+                        {% for field in form %}
                         <div class="col-md-6">
                           <div class="form-group row">
                            
@@ -39,7 +40,7 @@
                         
                       </div>
                       
-                    
+                      <button type="submit" class="btn btn-primary mr-2">Submit</button>
                       
                     </form>
                   </div>

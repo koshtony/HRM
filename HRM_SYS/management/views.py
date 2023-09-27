@@ -4,7 +4,11 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.views.generic import UpdateView
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm
 from .models import *
 from datetime import datetime,date
 import time
@@ -31,8 +35,13 @@ def register(request):
             employee = Employee(
                 emp_id = form.cleaned_data.get("username")
             )
+       
+            send_mail(
+                subject='Beezy new login details',
+                message='username: '+str(form.cleaned_data.get("username"))+'\n'+ "password: "+str(form.cleaned_data.get("password1"))+'\n'+"if you didn't register kindly ignore",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[form.cleaned_data.get("email")])
             employee.save()
-            print(form.cleaned_data.get("username"))
             messages.success(request,f'{username} account created')
             return redirect('management-home')
     return render(request,'management/register.html',{'form':form})
@@ -309,14 +318,16 @@ def approve(request):
 def profile(request):
 
     profile_form = profileForm(instance=request.user.profile)
+    user_form = UserUpdateForm(instance=request.user)
 
     context = {"profile_form":profile_form}
 
     if request.method=='POST':
     
         profile_forms = profileForm(request.POST,request.FILES,instance=request.user.profile)
-        if profile_forms.is_valid():
-            
+        user_form = UserUpdateForm(instance=request.user)
+        if profile_forms.is_valid() and user_form.is_valid():
+            user_form.save()
             profile_forms.save()
             
 
@@ -335,3 +346,14 @@ def Post(request):
 
     return render(request,'management/post.html')
 
+class EditEmpView(LoginRequiredMixin,UpdateView):
+    
+    model = Employee
+    template_name = 'management/add_employees.html'
+    fields = ['first_name','second_name','national_no','phone','address','location','account_no','bank_name']
+    
+    raise_exception = True
+    success_url = '/list_employee'
+
+    def form_valid(self,form):
+        return super().form_valid(form)
