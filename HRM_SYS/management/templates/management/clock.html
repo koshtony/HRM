@@ -18,10 +18,11 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
-                  <img src="">
+                  <img style="width: 50px; border-radius: 50%;" src="{{user.profile.image.url}}">
                   <marquee width="80%" direction="right" height="20px">
-                    clock in time
+                    clock in and out
                     </marquee>
+                  
                   <form class="forms-sample" style="display:none">
                     <div class="form-group">
                      <input type="text" class="form-control" id="longitudes" readonly>
@@ -62,7 +63,7 @@
                     </div>
                   </div>
                   </div>
-                  <button class="btn btn-primary btn-circle" style="margin: 5px;0px;width:200px;height:200px;border-radius:35px; background-color:orange;" >
+                  <button class="btn btn-primary btn-circle" style="margin: 25px;width:200px;height:200px;border-radius:35px; background-color:orange;" >
                      <p style="color:white; font-weight: bold;" id="timenow"></p>
                      <i class="ti-image"></i>
                   </button>

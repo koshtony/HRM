@@ -22,9 +22,9 @@ def home(request):
                  todo.pk,todo.approvers,todo.created,todo.remarks
             ]
             todos.append(apps)
-    context = {"todos":todos}
+    context = {"todos":todos,"employees":Employee.objects.all()}
     return render(request,'management/index.html',context)
-
+@login_required
 def register(request):
     form=UserRegForm()
     if request.method=='POST':
@@ -250,7 +250,7 @@ def get_attendance(request):
             "clock_out":"",
         }
     return JsonResponse(details,safe=False)
-
+@login_required
 def upload_leave(request):
     if request.POST:
        form = LeaveForm(request.POST,request.FILES)
@@ -269,7 +269,7 @@ def upload_leave(request):
             )
             application.save()
             return JsonResponse("application submitted successfully",safe=False)
-       
+@login_required    
 def upload_process(request):
     if request.POST:
        form = ApprovalForm(request.POST,request.FILES)
@@ -296,6 +296,7 @@ def upload_process(request):
 '''
 processing all approvals
 '''
+@login_required
 def approve(request):
 
     if request.POST:
