@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from management.models import * 
+from .formula import tax_amount
 from .models import *
 import pandas as pd
 # Create your views here.
@@ -37,6 +38,7 @@ def gen_payroll(request):
                 "leave_days":leave_days,
                 "deductions":deductions,
                 "gross_pay":(employee.salary+employee.allowance+employee.add_ons)-deductions,
+                "taxable_income":((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)
             }
             payrolls.append(data)
             messages.success(request,'payment report created successfully')

@@ -1,9 +1,12 @@
 from django.db import models
-from management.models import *
+from django.utils import *
+import datetime
 
 # Create your models here.
+
 class PayRoll(models.Model):
-    employee = models.ForeignKey(Employee,on_delete=models.PROTECT)
+    payroll_id = models.CharField(max_length=1000,default=hash(datetime.datetime.now()))
+    employee = models.ForeignKey("management.Employee",on_delete=models.PROTECT)
     total_hours = models.FloatField()
     expected_hours = models.FloatField()
     deductions = models.FloatField()
@@ -15,13 +18,23 @@ class PayRoll(models.Model):
 
         return self.employee.emp_id
 
-
-
-
-class PayRollSettings(models.Model):
-
-    total_tax = models.FloatField()
+tax_formula = '''24000=10%
+8333=25%
+467667=30%
+300000=32.5%
+'''
+class PayRollSetting(models.Model):
+    
+    category = models.CharField(max_length=100)
+    tax_rate = models.TextField(default=tax_formula)
     nssf = models.FloatField()
     nhif = models.FloatField()
+    health_insurance = models.FloatField(default=0.0)
+    housing = models.FloatField(default=0.0)
     others = models.FloatField()
+
+    def __str__(self):
+
+        return self.category
+
     
