@@ -20,6 +20,7 @@
                 <ul class="nav nav-pills mb-3">
                     <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active">Attendance</a></li>
                     <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary">payroll</a></li>
+                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary">settings</a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
@@ -112,6 +113,11 @@
                                             <th>deductions</th>
                                             <th>gross_pay</th>
                                             <th>taxable income</th>
+                                            <th>PAYE</th>
+                                            <th>nhif</th>
+                                            <th>housing</th>
+                                            <th>others</th>
+                                            <th>net_pay</th>
                                            
                                         </tr>
                                     </thead>
@@ -156,6 +162,21 @@
                                             <td>
                                                 {{val.taxable_income}}
                                             </td>
+                                            <td>
+                                                {{val.tax}}
+                                            </td>
+                                            <td>
+                                                {{val.nhif}}
+                                            </td>
+                                            <td>
+                                                {{val.housing}}
+                                            </td>
+                                            <td>
+                                                {{val.others}}
+                                            </td>
+                                            <td>
+                                                {{val.net_pay}}
+                                            </td>
                                            
                                             
                                         </tr>
@@ -167,12 +188,17 @@
                             
                         </div>
                     </div>
-                    <div id="grid-view" class="tab-pane fade col-lg-12">
+                    <div id="settings" class="tab-pane fade col-lg-12">
                         <div class="row">
-                    <div id="Map">
-
-                    </div>
-                </div>
+                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                            <div class="card card-light-blue">
+                                    <div class="card-body">
+                            <input type="date" class="form-control">
+                            <input type="date" class="form-control">
+                                    </div>
+                                    </div>
+                            </div>
+                       </div>
             </div>
         </div>
        

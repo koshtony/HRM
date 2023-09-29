@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
@@ -363,9 +364,9 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'management/password_reset.html'
     email_template_name = 'management/password_reset_email.html'
-    subject_template_name = 'management/password_reset_subject'
+    subject_template_name = 'management/password_reset_subject.txt'
     success_message = "We've emailed you instructions for setting your password, " \
                       "if an account exists with the email you entered. You should receive them shortly." \
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
-    #success_url = reverse_lazy('users-home')    
+    success_url = reverse_lazy('management-home')    

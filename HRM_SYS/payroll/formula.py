@@ -19,7 +19,7 @@ def tax_amount(rates,amount,relief):
 
     elif amount <= first and amount > 0:
 
-        tax = 0 
+        tax = (amount*first_rate)
 
     return tax-relief
 

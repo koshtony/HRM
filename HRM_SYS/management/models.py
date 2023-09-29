@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from payroll.models import PayRollSetting
 from datetime import date
 import time
 # Create your models here.
@@ -30,8 +31,7 @@ class Roles(models.Model):
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
 
-
-
+    
 class Employee(models.Model):
    
     emp_id = models.CharField(max_length=50,default="None")
@@ -56,6 +56,7 @@ class Employee(models.Model):
     education_level = models.CharField(max_length=50,default="None")
     doj = models.DateField(default=timezone.now)
     dol = models.DateField(default=timezone.now)
+    payroll_settings = models.ForeignKey(PayRollSetting,on_delete=models.PROTECT,null=True)
     
  # finance section 
 

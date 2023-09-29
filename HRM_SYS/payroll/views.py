@@ -38,7 +38,17 @@ def gen_payroll(request):
                 "leave_days":leave_days,
                 "deductions":deductions,
                 "gross_pay":(employee.salary+employee.allowance+employee.add_ons)-deductions,
-                "taxable_income":((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)
+                "taxable_income":((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),
+                "tax": tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0),
+                "nhif":employee.payroll_settings.nhif,
+                "insurance":employee.payroll_settings.health_insurance,
+                "housing": employee.payroll_settings.housing,
+                "others": employee.payroll_settings.others,
+                "net_pay": ((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)\
+                    -tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0)\
+                    -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others
+
+
             }
             payrolls.append(data)
             messages.success(request,'payment report created successfully')
