@@ -58,7 +58,7 @@ def approvals(request):
 
 def view_approvals(request):
 
-    context = {"processes":Process.objects.filter(applicant=request.user.username)}
+    context = {"applications":Applications.objects.all()}
 
     return render(request,'management/approval_list.html',context)
 
@@ -123,6 +123,23 @@ def list_employee(request):
     context = {"employee":Employee.objects.all()}
     
     return render(request,'management/list_employees.html',context)
+
+def get_employee(request):
+
+    if request.POST:
+
+        id = request.POST.get("id")
+
+        print(id)
+
+        employee = Employee.objects.get(emp_id = str(id))
+
+        employee = serializers.serialize('json',[employee,])
+        
+        print(employee)
+        return JsonResponse(employee, safe=False)
+
+
 
 def list_files(request):
 
@@ -265,7 +282,7 @@ def upload_leave(request):
            
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
-                applicant = request.user,details = form.cleaned_data.get("remarks"),
+                applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers)
                 

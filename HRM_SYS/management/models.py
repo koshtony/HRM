@@ -131,6 +131,7 @@ class Attendance(models.Model):
     counts = models.IntegerField(default=0)
     hours = models.FloatField(default=0.0)
     deductions = models.FloatField(default=0.0)
+    created = models.DateField(default=timezone.now)
     remarks = models.TextField()
 
     def __str__(self):

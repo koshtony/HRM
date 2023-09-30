@@ -2,6 +2,9 @@ from django import forms
 from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
 class DepForm(forms.ModelForm):
 
     class Meta:
@@ -44,6 +47,11 @@ class LeaveForm(forms.ModelForm):
 
         model = Leave
         fields = ['Approvals_type','category','start','end','days','attachments','details']
+        widgets = {
+            'start': DateInput(),
+            'end': DateInput(),
+
+        }
 
 class filesForm(forms.ModelForm):
 
@@ -51,6 +59,8 @@ class filesForm(forms.ModelForm):
 
         model = EmpFiles
         fields = "__all__"
+    
+    
 
 class profileForm(forms.ModelForm):
 

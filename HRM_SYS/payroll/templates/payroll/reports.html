@@ -193,11 +193,35 @@
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                             <div class="card card-light-blue">
                                     <div class="card-body">
-                            <input type="date" class="form-control">
-                            <input type="date" class="form-control">
+                                        <div class="form-group row">
+                                       
+                                            <label>from</label>
+                            <input type="date" class="form-control" id="date1">
+                        
+                           
+                            <label>to</label>
+                            <input type="date" class="form-control" id="date2">
+                         
+                            </div>
+                            <a class="btn btn-primary" onclick="filter()">filter</a>
+
                                     </div>
                                     </div>
                             </div>
+                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+                                <div class="card card-dark-blue">
+                                        <div class="card-body">
+                                            
+                                
+    
+                                        </div>
+                                        </div>
+                                </div>
+                       </div>
+                       <div class="row">
+
+
+
                        </div>
             </div>
         </div>
@@ -219,7 +243,29 @@
 };
 var map = new google.maps.Map(document.getElementById("Map"),mapProp);
      }
+
+    
+    function filter(){
+        alert($("#date1").val())
+        $.ajax({
+
+            type:"POST",
+            url:"{% url 'payroll-month' %}",
+            data:{
+                 
+                date1: $("#date1").val(),
+                date2: $("#date2").val(),
+                csrfmiddlewaretoken:'{{ csrf_token }}',
+
+                
+            },
+            success:function(data,status){
+
+                alert(data)
+            }
+        })
+    }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvRNKaczQYKS20s1vGmfK9KGCxl5ksfV0&callback=showMap"></script
+
 
 {% endblock content %}

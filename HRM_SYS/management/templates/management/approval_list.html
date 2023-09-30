@@ -30,6 +30,9 @@
                                 Type
                               </th>
                               <th>
+                                applicant
+                              </th>
+                              <th>
                                 approvers
                               </th>
                               <th>
@@ -44,13 +47,16 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {% for process in processes %}
+                            {% for application in applications %}
                             <tr>
                               <td class="py-1">
-                                 {{process.approvals.type}}
+                                 {{application.type}}
                               </td>
                               <td>
-                                {{process.approvals.approvers.Employee_ids}}
+                                {{application.applicant}}
+                              </td>
+                              <td>
+                                {{application.approvers}}
                               </td>
                               <td>
                                 <div class="progress">
@@ -58,10 +64,10 @@
                                 </div>
                               </td>
                               <td>
-                                {{process.created}}
+                                {{application.created}}
                               </td>
                               <td>
-                                {{process.status}}
+                                {{application.status}}
                               </td>
                             </tr>
 
