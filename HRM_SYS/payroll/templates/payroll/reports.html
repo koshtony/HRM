@@ -122,7 +122,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for col,val in payrolls.iterrows %}
+                                        {% for val in payrolls %}
                                         
                                         <tr>
                                             <td>
@@ -209,13 +209,9 @@
                                     </div>
                             </div>
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                                <div class="card card-dark-blue">
-                                        <div class="card-body">
-                                            
-                                
-    
-                                        </div>
-                                        </div>
+                                 {% for payroll in payrolls %}
+                                 {{payroll.payroll_id}}
+                                 {% endfor %}
                                 </div>
                        </div>
                        <div class="row">
