@@ -8,18 +8,18 @@ def tax_amount(rates,amount,relief):
     second = float(rates.split(',')[1].split("=")[0])
     second_rate = float(rates.split(',')[1].split("=")[1])/100
     third_rate = float(rates.split(',')[2].split("=")[1])/100
-
+    tax=0
     if amount > first and amount <= first+second :
 
-       tax = (first*first_rate)+(second*second_rate)
+       tax += (first*first_rate)+(second*second_rate)
 
     elif amount > (first+second):
         
-        tax = ((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate)
+        tax += ((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate)
 
     elif amount <= first and amount > 0:
 
-        tax = (amount*first_rate)
+        tax += (amount*first_rate)
 
     return tax-relief
 

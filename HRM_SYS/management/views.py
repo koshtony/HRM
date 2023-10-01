@@ -172,9 +172,13 @@ def get_emp_files(request):
 def clock(request):
 
     context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
-    att_settings =  AttSettings.objects.filter(employee_id = request.user.username)[0]
+   
     if request.POST:
+        if len(AttSettings.objects.filter(employee_id = request.user.username))< 1:
 
+            return JsonResponse("no settings found, contact admin",safe=False)
+
+        att_settings =  AttSettings.objects.filter(employee_id = request.user.username)[0]
         lat = request.POST.get('latitude')
         long = request.POST.get('longitude')
         image_info = request.POST.get('image_str')
@@ -211,7 +215,8 @@ def clock(request):
                     clock_out = empty,
                     lat =lat ,long=long,image1=image_info,
                     lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
-                    deductions  = (late_diff/60)*att_settings.deduction_per_minute,
+                    deductions  = 0,
+                    days = 1
 
                     
 
@@ -227,7 +232,7 @@ def clock(request):
             att_filt[0].image2 = image_info
             att_filt[0].status = "present"
             att_filt[0].remarks = att_filt[0].remarks+" clock out"
-            att_filt[0].deductions =  att_filt[0].deductions + (early_diff/60)*att_settings.deduction_per_minute
+            att_filt[0].deductions =  0
             att_filt[0].save()
 
             return JsonResponse("clock out successful",safe=False)
@@ -246,30 +251,43 @@ def clock(request):
 def get_attendance(request):
 
     today_att = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
-    att_settings = AttSettings.objects.filter(employee_id = request.user.username)[0]
+    att_settings = AttSettings.objects.filter(employee_id = request.user.username)
 
+    if len(att_settings)>0:
 
-    if len(today_att) > 0:
+        att_settings = att_settings[0]
+
+        if len(today_att) > 0:
+
+            details = {
+                "clock_in":today_att[0].clock_in,
+                "clock_out":today_att[0].clock_out,
+                "h1":att_settings.start.hour,
+                "m1":att_settings.start.minute,
+                "h2":att_settings.end.hour,
+                "m2":att_settings.end.minute,
+            }
+
+            return JsonResponse(details,safe=False)
+        
+        details = {"h1":att_settings.start.hour,
+                "m1":att_settings.start.minute,
+                "h2":att_settings.end.hour,
+                "m2":att_settings.end.minute,
+                "clock_in":"",
+                "clock_out":"",
+            }
+        return JsonResponse(details,safe=False)
+    else:
 
         details = {
-            "clock_in":today_att[0].clock_in,
-            "clock_out":today_att[0].clock_out,
-            "h1":att_settings.start.hour,
-               "m1":att_settings.start.minute,
-            "h2":att_settings.end.hour,
-            "m2":att_settings.end.minute,
-        }
+            "error":"no settings found"
 
+            }
+        
         return JsonResponse(details,safe=False)
-    
-    details = {"h1":att_settings.start.hour,
-               "m1":att_settings.start.minute,
-            "h2":att_settings.end.hour,
-            "m2":att_settings.end.minute,
-            "clock_in":"",
-            "clock_out":"",
-        }
-    return JsonResponse(details,safe=False)
+
+
 @login_required
 def upload_leave(request):
     if request.POST:

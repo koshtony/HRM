@@ -19,7 +19,7 @@
                 <div class="card-body">
                   <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
                   <img style="width: 50px; border-radius: 50%;" src="{{user.profile.image.url}}">
-                  <marquee width="80%" direction="right" height="20px">
+                  <marquee width="80%" direction="right" height="20px" id="statuss">
                     clock in and out
                     </marquee>
                   
@@ -310,6 +310,10 @@ getClock()
     fetchRes.then(res =>
         res.json()).then(d => {
            console.log(d)
+           if(d["error"]){
+            document.getElementById("statuss").innerHTML = d["error"];
+            document.getElementById("statuss").style.color = "red"
+           }
            document.getElementById("h1").innerHTML = d["h1"];
            document.getElementById("m1").innerHTML = d["m1"];
            document.getElementById("h2").innerHTML = d["h2"];

@@ -40,6 +40,7 @@ class Employee(models.Model):
     first_name = models.CharField(max_length=50,default="None")
     second_name = models.CharField(max_length=50,default="None")
     national_no = models.CharField(max_length=50,default="None")
+    kra_pin = models.CharField(max_length=50,default="None")
     email = models.EmailField(default="None")
     dob = models.DateField(default=timezone.now)
     phone = models.CharField(max_length=50,default="None")
@@ -79,10 +80,8 @@ class AttSettings(models.Model):
     employee_id = models.CharField(max_length=100,null=True)
     start = models.TimeField()
     end = models.TimeField()
-    deduction_per_minute = models.FloatField()
-    morning_deduction =  models.FloatField()
-    evening_deduction = models.FloatField()
-   
+    deduction_per_day = models.FloatField()
+    expected_days =  models.FloatField(default=24.0)
     remarks = models.TextField()
     clock_in_latitude = models.CharField(max_length=1000,default="")
     clock_in_longitude = models.CharField(max_length=1000,default="")
@@ -130,6 +129,7 @@ class Attendance(models.Model):
     status = models.CharField(max_length=100,default="partial")
     counts = models.IntegerField(default=0)
     hours = models.FloatField(default=0.0)
+    days = models.FloatField(default=0.0)
     deductions = models.FloatField(default=0.0)
     created = models.DateField(default=timezone.now)
     remarks = models.TextField()
@@ -224,4 +224,3 @@ class Events(models.Model):
     def __str__(self):
 
         return self.title
-
