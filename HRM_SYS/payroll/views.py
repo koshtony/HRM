@@ -1,20 +1,21 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib import messages
+from django.db.models import Sum,Count
 from management.models import * 
 from .formula import tax_amount
 from .models import *
 import pandas as pd
+import json
 # Create your views here.
 
 
 def gen_payroll(request):
-    
-    
-
     attendance = Attendance.objects.all()
     payroll_report = PayRoll.objects.all()
-    context = {"attendances":attendance,"payrolls":payroll_report}
+    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('net_pay'))
+    print(grouped_payroll)
+    context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll}
     return render(request,"payroll/reports.html",context)
 
 def monthly_payroll(request):
@@ -56,18 +57,18 @@ def monthly_payroll(request):
                     "add_ons":employee.add_ons,
                     "total_hours":total_hours,
                     "leave_days":leave_days,
-                    "deductions":((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day,
-                    "gross_pay":(employee.salary+employee.allowance+employee.add_ons)-deductions,
-                    "taxable_income":((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),
-                    "tax": tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0),
+                    "deductions":round(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day,2),
+                    "gross_pay":round((employee.salary+employee.allowance+employee.add_ons)-deductions,2),
+                    "taxable_income":round(((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),2),
+                    "tax": round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0),2),
                     "nhif":employee.payroll_settings.nhif,
                     "nssf":employee.payroll_settings.nssf,
                     "insurance":employee.payroll_settings.health_insurance,
                     "housing": employee.payroll_settings.housing,
                     "others": employee.payroll_settings.others,
-                    "net_pay": ((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)\
+                    "net_pay":round( ((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)\
                         -tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0)\
-                        -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,
+                        -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
                     "created": datetime.datetime.now()
 
@@ -85,7 +86,7 @@ def monthly_payroll(request):
             pay = PayRoll(**payroll)
             pay.save()
 
-        return JsonResponse("successfully generated",safe=False)
+        return JsonResponse(json.dump(payrolls),safe=False)
 
 def gen_payslip(request,signid):
     

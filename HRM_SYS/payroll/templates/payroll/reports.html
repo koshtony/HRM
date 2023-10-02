@@ -100,7 +100,9 @@
                                 <table  class="table table-striped"  id="payroll">
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
+                                            <th>docs</th>
                                             <th>#</th>
+                                            
                                             <th>first_name</th>
                                           
                                             <th>national_id</th>
@@ -118,6 +120,7 @@
                                             <th>housing</th>
                                             <th>others</th>
                                             <th>net_pay</th>
+
                                            
                                         </tr>
                                     </thead>
@@ -125,6 +128,9 @@
                                         {% for val in payrolls %}
                                         
                                         <tr>
+                                            <td>
+                                                <a href="{% url 'payroll-payslip' val.sign_id %}"><i class="ti-download"></i></a>
+                                            </td>
                                             <td>
                                                 {{val.employee_id}}
 
@@ -204,14 +210,58 @@
                          
                             </div>
                             <a class="btn btn-primary" onclick="filter()">filter</a>
+                            <table  class="table table-striped"  id="paySummary">
+                                <thead style="background-color: yellowgreen;">
+                                    <tr>
+                                        <th>payroll id</th>
+                                        <th>total payable</th>
+                                        <th>size</th>
+                                        <th>created</th>
+                                        <th>view all</th>
+                                      
+                                        
+                                       
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody id="payrollFilt">
+                                    
+                                </tbody>
+                            </table>
 
                                     </div>
                                     </div>
+                                    
                             </div>
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                                 {% for payroll in payrolls %}
-                                 {{payroll.payroll_id}}
-                                 {% endfor %}
+                                <table  class="table table-striped"  id="paySummary">
+                                    <thead style="background-color: yellowgreen;">
+                                        <tr>
+                                            <th>payroll id</th>
+                                            <th>total payable</th>
+                                            <th>size</th>
+                                            <th>created</th>
+                                            <th>view all</th>
+                                          
+                                            
+                                           
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for payroll in by_payroll_ids  %}
+                                        <tr>
+                                            <td>{{payroll.payroll_id}}</td>
+                                            <td>{{payroll.total_amount}}</td>
+                                            <td>{{payroll.size}}</td>
+                                            <td></td>
+                                            <td><a class="btn btn-primary"><i class="ti-eye"></i></a></td>
+                                           
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                 
                                 </div>
                        </div>
                        <div class="row">
@@ -229,6 +279,8 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script>
      new DataTable('#attendance');
+     new DataTable('#paySummary');
+     new DataTable('#payroll');
 
      function showMap(lat,long){
        
@@ -256,8 +308,27 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                 
             },
             success:function(data,status){
+              
+                var data = JSON.parse(data)
 
-                alert(data)
+                for(key in data){
+                   console.log(data[key])
+                    $("#payrollFilt").html(
+                        `
+                        <tr>
+
+                            <td>${data[key]["payroll_id"]}</td>
+                            <td>${data[key]["org_name"]}</td>
+                            <td>${data[key]["employee_id"]}</td>
+                            <td>${data[key]["sign_id"]}</td>
+                            <td>${data[key]["created"]}</td>
+
+                        </tr>
+                        
+                        `
+                    )
+                }
+                
             }
         })
     }

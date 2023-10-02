@@ -389,7 +389,7 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
     
     model = Employee
     template_name = 'management/add_employees.html'
-    fields = ['first_name','second_name','national_no','phone','address','location','account_no','bank_name']
+    fields = '__all__'
     
     raise_exception = True
     success_url = '/list_employee'

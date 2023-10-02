@@ -31,7 +31,7 @@ class EmpUpdateForm(forms.ModelForm):
     class Meta:
 
         model = Employee 
-        fields = ['first_name','second_name','national_no','phone','address','location','account_no','bank_name']
+        fields = '__all__'
 
 
 class ApprovalForm(forms.ModelForm):
