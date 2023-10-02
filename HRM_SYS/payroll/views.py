@@ -86,7 +86,7 @@ def monthly_payroll(request):
             pay = PayRoll(**payroll)
             pay.save()
 
-        return JsonResponse(json.dump(payrolls),safe=False)
+        return JsonResponse(json.dumps(payrolls,default=str),safe=False)
 
 def gen_payslip(request,signid):
     
@@ -97,6 +97,33 @@ def gen_payslip(request,signid):
     context = {"details":emp_payroll}
 
     return render(request,'payroll/payslip.html',context)
+
+
+def payroll_details(request):
+
+    if request.POST:
+
+        id = request.POST.get("id")
+        print(id)
+        details = PayRoll.objects.filter(payroll_id=id)
+        
+        payrolls = []
+        for detail in details:
+
+            info = {
+                "employee_id":detail.employee_id,
+                "name":detail.name,
+                "pin_no":detail.pin_no,
+                "taxable":detail.taxable_income,
+                "gross_pay":detail.gross_pay,
+                "paye":detail.tax,
+                "net_pay":detail.net_pay,
+                "created":detail.created,
+            }
+
+            payrolls.append(info)
+        print(payrolls)
+        return JsonResponse(json.dumps(payrolls,default=str),safe=False)
 
 
 

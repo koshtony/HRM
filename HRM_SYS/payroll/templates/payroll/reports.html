@@ -2,6 +2,36 @@
 
 {% block content %} 
 
+<!--details modal-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" style="display:none" id="detailModal">details</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="margin: 20px;">
+
+        <div class="table-responsive">
+            <table  class="table table-striped"  id="details">
+                <thead>
+                    <th>employee ids</th>
+                    <th>name</th>
+                    <th>pin no</th>
+                    <th>gross pay</th>
+                    <th>taxable income</th>
+                    <th>paye</th>
+                    <th>net pay</th>
+                    <th>created</th>
+                </thead>
+
+                <tbody id="detailsTab">
+                    
+                </tbody>
+            </table>
+      
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="main-panel">
     <!-- row -->
     <div class="content-wrapper">
@@ -18,9 +48,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active">Attendance</a></li>
-                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary">payroll</a></li>
-                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary">settings</a></li>
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i></a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary"><i class="ti-list"></i></a></li>
+                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="ti-filter"></i></a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
@@ -29,6 +59,7 @@
                         <div class="card">
                             
                             <div class="card-body">
+                                <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx')"><i class="ti-download"></i></button>
                                 <div class="table-responsive">
                                     <table  class="table table-striped"  id="attendance">
                                         <thead>
@@ -101,6 +132,7 @@
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
                                             <th>docs</th>
+                                            <th>created</th>
                                             <th>#</th>
                                             
                                             <th>first_name</th>
@@ -130,6 +162,9 @@
                                         <tr>
                                             <td>
                                                 <a href="{% url 'payroll-payslip' val.sign_id %}"><i class="ti-download"></i></a>
+                                            </td>
+                                            <td>
+                                                {{val.created}}
                                             </td>
                                             <td>
                                                 {{val.employee_id}}
@@ -197,7 +232,7 @@
                     <div id="settings" class="tab-pane fade col-lg-12">
                         <div class="row">
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                            <div class="card card-light-blue">
+                            <div class="card">
                                     <div class="card-body">
                                         <div class="form-group row">
                                        
@@ -210,12 +245,13 @@
                          
                             </div>
                             <a class="btn btn-primary" onclick="filter()">filter</a>
-                            <table  class="table table-striped"  id="paySummary">
+                            <table  class="table table-striped"  id="paySummary" >
                                 <thead style="background-color: yellowgreen;">
                                     <tr>
                                         <th>payroll id</th>
-                                        <th>total payable</th>
-                                        <th>size</th>
+                                        <th>organisation</th>
+                                        <th>sign_id</th>
+                                       
                                         <th>created</th>
                                         <th>view all</th>
                                       
@@ -233,8 +269,8 @@
                                     </div>
                                     
                             </div>
-                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-                                <table  class="table table-striped"  id="paySummary">
+                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent" style="overflow-x: scroll;">
+                                <table  class="table table-striped"  id="paygen" >
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
                                             <th>payroll id</th>
@@ -255,7 +291,7 @@
                                             <td>{{payroll.total_amount}}</td>
                                             <td>{{payroll.size}}</td>
                                             <td></td>
-                                            <td><a class="btn btn-primary"><i class="ti-eye"></i></a></td>
+                                            <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-eye"></i></a></td>
                                            
                                         </tr>
                                         {% endfor %}
@@ -277,10 +313,13 @@
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
      new DataTable('#attendance');
      new DataTable('#paySummary');
+     new DataTable('#paygen');
      new DataTable('#payroll');
+     new DataTable('#details');
 
      function showMap(lat,long){
        
@@ -332,6 +371,65 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             }
         })
     }
+
+
+    function showDetails(id){
+       $("#detailModal").click()
+        $.ajax({
+            type:"post",
+            url:"{% url 'payroll-details' %}",
+            data:{
+                    id:id,
+                    csrfmiddlewaretoken:'{{ csrf_token }}'
+
+            },
+            success:function(data,status){
+            
+                var data = JSON.parse(data)
+                $("#detailsTab").html('')
+                for(key in data){
+
+                    $("#detailsTab").append(
+                     `
+
+                        <tr>
+                             <td>${data[key]["employee_id"]}</td>
+                             <td>${data[key]["name"]}</td>
+                             <td>${data[key]["pin_no"]}</td>
+                             <td>${data[key]["gross_pay"]}</td>
+                             <td>${data[key]["taxable"]}</td>
+                             <td>${data[key]["paye"]}</td>
+                             <td>${data[key]["net_pay"]}</td>
+                             <td>${data[key]["created"]}</td>
+
+                        </tr>
+                     `
+
+
+                    )
+                }
+
+                
+
+
+            }
+        })
+
+    }
+
+    
+
+    function htmlTableToExcel(type){
+ var data = document.getElementById('attendance');
+ var excelFile = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
+ XLSX.write(excelFile, { bookType: type, bookSST: true, type: 'base64' });
+ XLSX.writeFile(excelFile, 'attendance.' + type);
+}
+    
+       
+        
+    
+    
 </script>
 
 
