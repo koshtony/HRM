@@ -13,6 +13,7 @@ from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm
 from .models import *
+from payroll.models import PayRoll
 from datetime import datetime,date
 import time
 # Create your views here.
@@ -22,10 +23,13 @@ def home(request):
     for todo in Applications.objects.all():
         if request.user.username in todo.approvers.split(','):
             apps = [
-                 todo.pk,todo.approvers,todo.created,todo.remarks
+                 todo.pk,todo.approvers,todo.created,todo.remarks,todo.attachment.url
             ]
             todos.append(apps)
-    context = {"todos":todos,"employees":Employee.objects.all()}
+    event = Events.objects.last()
+    department = Department.objects.all()
+    payrolls = PayRoll.objects.filter(employee_id = request.user.username)
+    context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls}
     return render(request,'management/index.html',context)
 @login_required
 def register(request):
@@ -352,7 +356,18 @@ def approve(request):
 
         return JsonResponse("approved successfully",safe=False)
 
+@login_required
+def reject_approval(request):
 
+    if request.POST:
+
+        id = request.POST.get("id")
+        application = Applications.objects.get(pk=id)
+        application.status = "rejected"
+        application.approvers = ''
+        application.save()
+
+        return JsonResponse("rejected successfully",safe=False)
 @login_required
 def profile(request):
 
@@ -377,9 +392,15 @@ def profile(request):
 
 
 
-def Events(request):
+def Event(request):
 
-    return render(request,'management/events.html')
+    events = Events.objects.all()
+
+    context = {
+                "events":events
+    }
+
+    return render(request,'management/events.html',context)
 
 def Post(request):
 

@@ -309,7 +309,7 @@
             </a>
             <div class="collapse" id="icons">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="pages/icons/mdi.html">sema</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">sema</a></li>
               </ul>
             </div>
           </li>
@@ -328,6 +328,7 @@
               </ul>
             </div>
           </li>
+          {% if user.is_staff %}
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="icon-ban menu-icon"></i>
@@ -341,6 +342,8 @@
               </ul>
             </div>
           </li>
+          {% endif %}
+          {% if user.is_staff %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'payroll-reports' %}">
               <i class="icon-paper menu-icon"></i>
@@ -353,6 +356,7 @@
               </ul>
             </div>
           </li>
+          {% endif %}
         </ul>
       </nav>
       

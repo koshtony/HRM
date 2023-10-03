@@ -66,9 +66,17 @@
                               <td>
                                 {{application.created}}
                               </td>
-                              <td>
+                              {% if application.status == "rejected" %}
+                              <td style="color:red">
                                 {{application.status}}
                               </td>
+                              {% else %}
+
+                              <td style="color:green">
+                                {{application.status}}
+                              </td>
+                              {% endif %}
+
                             </tr>
 
                             {% endfor %}

@@ -126,6 +126,7 @@
                         </div>
                     </div>
                     <div id="grid-view" class="tab-pane fade col-lg-12">
+                        <button class="btn btn-outline" onclick="htmlTableToExcelto('xlsx')"><i class="ti-download"></i></button>
                         <div class="row">
                             <div class="table-responsive">
                                 <table  class="table table-striped"  id="payroll">
@@ -161,7 +162,7 @@
                                         
                                         <tr>
                                             <td>
-                                                <a href="{% url 'payroll-payslip' val.sign_id %}"><i class="ti-download"></i></a>
+                                                <a href="{% url 'payroll-payslip' val.sign_id %}" download><i class="ti-download"></i></a>
                                             </td>
                                             <td>
                                                 {{val.created}}
@@ -424,6 +425,13 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
  var excelFile = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
  XLSX.write(excelFile, { bookType: type, bookSST: true, type: 'base64' });
  XLSX.writeFile(excelFile, 'attendance.' + type);
+}
+
+function htmlTableToExcelto(type){
+ var data = document.getElementById('payroll');
+ var excelFile = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
+ XLSX.write(excelFile, { bookType: type, bookSST: true, type: 'base64' });
+ XLSX.writeFile(excelFile, 'payroll.' + type);
 }
     
        
