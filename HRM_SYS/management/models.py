@@ -157,7 +157,8 @@ class Applications(models.Model):
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
     approvers = models.TextField(default="")
     details = models.TextField()
-    created = models.DateField(default=timezone.now)
+    created_date = models.DateField(default=timezone.now)
+    created_time = models.TimeField(default=timezone.now)
     attachment = models.FileField(default='attachment',upload_to='ápproval_files')
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
     stage = models.IntegerField(default=0)
@@ -166,6 +167,19 @@ class Applications(models.Model):
 
     def __str__(self):
         return self.type.name
+    
+class approvalTrack(models.Model):
+
+    application = models.ForeignKey(Applications,on_delete=models.PROTECT)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
+    comments = models.TextField(default="no comment")
+    status = models.CharField(max_length=100,default="pending")
+    date = models.DateField(default=timezone.now)
+    time = models.TimeField(default=timezone.now)
+
+    def __str__(self):
+
+        return self.application.type.name
 
 class Process(models.Model):
 
@@ -179,8 +193,6 @@ class Process(models.Model):
     def __str__(self):
 
         return self.applicant.username
-
-
 
     
 class Leave(models.Model):

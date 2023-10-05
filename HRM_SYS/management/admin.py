@@ -29,7 +29,7 @@ class ApprovalsAdmin(admin.ModelAdmin):
 
 
 class ApplicationsAdmin(admin.ModelAdmin):
-        list_display = ("type","details","created","attachment")
+        list_display = ("type","details","created_date","created_time","attachment")
         list_filter = ("type",)
         search_fields = ["approvers"]
 

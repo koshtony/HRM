@@ -76,7 +76,7 @@
       <div class="main-panel">        
         <div class="content-wrapper">
           <div class="row">
-            <div class="col-6 grid-margin stretch-card">
+            <div class="col-12 grid-margin stretch-card" style="height:500px; overflow-y: scroll;">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">approvals process</h4>
@@ -86,25 +86,21 @@
                   <li>
                       <span><i class="icon-calendar"></i>{{application.type.name}} </span>
                       <ul>
-                        
+                        {% for track in tracks %}
+                            {% if track.application.pk == application.pk %}
                           <li>
-                            <span class="badge badge-success"><i class="icon-minus-sign"></i>{{application.created}}</span>
+                            <span class="badge badge-success"><i class="icon-minus-sign"></i>{{track.date}}</span>
                               <ul>
                                   <li>
-                                    <a href=""><span><i class="icon-time"></i> 8.00</span> &ndash; Changed CSS to accomodate...</a>
+                                    <a href=""><span><i class="ti-timer"></i> {{track.time}}</span><img style="width: 50px; border-radius: 50%;" src="{{track.user.profile.image.url}}"><p>{{track.user.username}}</p> &ndash; {{track.comments}}</a>
                                   </li>
                               </ul>
                           </li>
+                          {% endif %}
+                          {% endfor %}
                           
                           
-                          <li>
-                            <span class="badge badge-important"><i class="icon-minus-sign"></i> Wednesday, January 9: 4.00 hours</span>
-                              <ul>
-                                  <li>
-                                    <a href=""><span><i class="icon-time"></i> 2.00</span> &ndash; Create component that...</a>
-                                  </li>
-                              </ul>
-                          </li>
+                          
                       </ul>
                   </li>
                   {% endfor %}
@@ -115,7 +111,7 @@
                 </div>
                 </div>
               
-            <div class="col-6 grid-margin stretch-card">
+            <div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">My approvals</h4>

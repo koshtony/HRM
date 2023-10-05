@@ -177,6 +177,8 @@
                               </div>
                               &nbsp;&nbsp;&nbsp;&nbsp;
                               <a href="{{todo.4}}" download><i class="remove ti-download"></i>attachment</a>
+                              &nbsp;&nbsp;&nbsp;
+                              <a onclick="approveModal('{{todo.0}}')"><i class="ti-eye"></i></a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               <a class="btn btn-danger" onclick="reject('{{todo.0}}');"><i class="remove ti-close"></i></a>
                             </li>
@@ -251,6 +253,51 @@
                 </div>
               </div>
             </div>
+        </div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#approveModal" id="approveModalBtn" style="display:none">
+          
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">approve</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form class="forms-sample">
+                  <div class="form-group">
+                    <label for="exampleInputName1">id</label>
+                    <input type="text" class="form-control" id="approvePk" placeholder="Name">
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="exampleSelectGender">status</label>
+                      <select class="form-control" id="approveStatus"> 
+                        <option value="approve">Approve</option>
+                        <option value="reject">Reject</option>
+                      </select>
+                    </div>
+                  
+                 
+                  <div class="form-group">
+                    <label for="exampleTextarea1">Textarea</label>
+                    <textarea class="form-control" id="approveComments" rows="4"></textarea>
+                  </div>
+                  <button type="button" class="btn btn-primary mr-2" onclick="doneApprove()">Submit</button>
+                
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" >Save changes</button>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
@@ -335,7 +382,36 @@
         },
       });
      
+// approval modal
+function approveModal(id){
+    
+  $("#approveModalBtn").click()
 
+  $("#approvePk").val(id)
+}
+
+function doneApprove(){
+
+  $.ajax({
+    type:"post",
+    url:"{% url 'management_approve_by_details' %}",
+    data:{
+
+      id:$("#approvePk").val(),
+      status:$("#approveStatus").val(),
+      comments:$("#approveComments").val(),
+      csrfmiddlewaretoken:'{{ csrf_token }}'
+
+
+
+    },
+    success:function(data,status){
+      alert(data)
+    }
+     
+  })
+
+}
     // approve todo 
 function getPk(id){
  

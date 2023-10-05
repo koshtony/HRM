@@ -23,7 +23,7 @@ def home(request):
     for todo in Applications.objects.all():
         if request.user.username in todo.approvers.split(','):
             apps = [
-                 todo.pk,todo.approvers,todo.created,todo.remarks,todo.attachment.url
+                 todo.pk,todo.approvers,todo.created_date,todo.remarks,todo.attachment.url
             ]
             todos.append(apps)
     event = Events.objects.last()
@@ -62,7 +62,11 @@ def approvals(request):
 
 def view_approvals(request):
 
-    context = {"applications":Applications.objects.all()}
+    context = {
+        "applications":Applications.objects.all().order_by('-created_date'),
+        "tracks":approvalTrack.objects.all()
+        
+        }
 
     return render(request,'management/approval_list.html',context)
 
@@ -307,8 +311,9 @@ def upload_leave(request):
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers)
-                
+    
             )
+
             application.save()
             return JsonResponse("application submitted successfully",safe=False)
 @login_required    
@@ -327,6 +332,7 @@ def upload_process(request):
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
+                created = datetime.now()
                
                 
             )
@@ -354,6 +360,8 @@ def approve(request):
         application.status = "pending"
         application.save()
 
+
+
         return JsonResponse("approved successfully",safe=False)
 
 @login_required
@@ -368,6 +376,55 @@ def reject_approval(request):
         application.save()
 
         return JsonResponse("rejected successfully",safe=False)
+@login_required() 
+def approve_by_details(request):
+
+    if request.POST:
+        id = request.POST.get("id")
+        status = request.POST.get("status")
+        comments = request.POST.get("comments")
+
+        if status == "approve":
+            application = Applications.objects.get(pk=id)
+            application.approvers = ",".join([i for i in application.approvers.split(',') if i!=request.user.username])
+            print(application.approvers)
+
+            application.stage +=1
+            if application.stage == application.expected:
+                application.status = "completed"
+            
+            application.status = "pending"
+            application.save()
+             
+            track = approvalTrack(
+                application = Applications.objects.get(pk=id),
+                user = request.user,
+                comments = comments,
+                status = status,
+                date = date.today(),
+                time = datetime.now()
+            )
+            track.save()
+        
+            return JsonResponse("approved successfully",safe=False)
+        elif status == "reject":
+            application = Applications.objects.get(pk=id)
+            application.status = "rejected"
+            application.approvers = ''
+            application.save()
+
+            track = approvalTrack(
+                application = Applications.objects.get(pk=id),
+                user = request.user,
+                comments = comments,
+                status = status,
+                date = date.today(),
+                time = datetime.now()
+            )
+            track.save()
+
+            return JsonResponse("application rejected successfully",safe=False)
+
 @login_required
 def profile(request):
 
