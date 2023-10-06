@@ -4,7 +4,7 @@ from .views import home,clock,add_department,\
       add_roles,add_employee,add_info,approvals,list_employee,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
-      get_employee,reject_approval,approve_by_details
+      get_employee,reject_approval,approve_by_details,get_notify
       
 
 urlpatterns = [
@@ -30,8 +30,9 @@ urlpatterns = [
       path('posts',views.Post,name="management_post"),
       path('register',views.register,name="management_register"),
       path('list_files',views.list_files,name="management_files"),
-       path('profile',views.profile,name="management_profile"),
-        path('edit_employee/<int:pk>',EditEmpView.as_view(),name="management-edit-employee"),
-        path('password-reset', ResetPasswordView.as_view(), name='password_reset')
+      path('profile',views.profile,name="management_profile"),
+      path('get_notify',views.get_notify, name='management_get_notify'),
+      path('edit_employee/<int:pk>',EditEmpView.as_view(),name="management-edit-employee"),
+      path('password-reset', ResetPasswordView.as_view(), name='password_reset'),
 
 ]

@@ -162,6 +162,7 @@ class Applications(models.Model):
     attachment = models.FileField(default='attachment',upload_to='ápproval_files')
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
     stage = models.IntegerField(default=0)
+    rate = models.IntegerField(default=0)
     expected = models.IntegerField(default=0)
     remarks = models.TextField()
 
@@ -235,4 +236,18 @@ class Events(models.Model):
 
     def __str__(self):
 
-        return self.title
+        return self.title 
+    
+class Notifications(models.Model):
+
+    recipient = models.ForeignKey(User,on_delete=models.PROTECT)
+    info = models.TextField()
+    url = models.CharField(max_length=100,default='')
+    date = models.DateField(default=timezone.now)
+    time = models.TimeField(default=timezone.now)
+    seen = models.BooleanField(default=False)
+
+    def __str__(self):
+
+        return self.recipient.username
+    

@@ -16,6 +16,7 @@ from .models import *
 from payroll.models import PayRoll
 from datetime import datetime,date
 import time
+import json
 # Create your views here.
 @login_required
 def home(request):
@@ -315,6 +316,8 @@ def upload_leave(request):
             )
 
             application.save()
+
+
             return JsonResponse("application submitted successfully",safe=False)
 @login_required    
 def upload_process(request):
@@ -326,17 +329,32 @@ def upload_process(request):
             form.save()
             approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
+            print(approvers)
+            for approve in approvers:
+                print(approve)
+                notify = Notifications(
+                    recipient = User.objects.get(username=approve),
+                    info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
+                    date = datetime.now(),
+                    time = datetime.now(),
+         
+                )
+
+                notify.save()
           
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("approvals")),
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
-                created = datetime.now()
+                created_date = datetime.now(),
+                created_time = datetime.now()
                
                 
             )
             application.save()
+
+            
             return JsonResponse("application submitted successfully",safe=False)
     
 
@@ -356,8 +374,11 @@ def approve(request):
         application.stage +=1
         if application.stage == application.expected:
             application.status = "completed"
+            application.rate = 100
+            application.save()
         
         application.status = "pending"
+        application.rate = int((application.stage / application.expected)*100)
         application.save()
 
 
@@ -392,8 +413,11 @@ def approve_by_details(request):
             application.stage +=1
             if application.stage == application.expected:
                 application.status = "completed"
+                application.rate = 100
+                application.save()
             
             application.status = "pending"
+            application.rate = int((application.stage // application.expected)*100)
             application.save()
              
             track = approvalTrack(
@@ -463,6 +487,19 @@ def Post(request):
 
     return render(request,'management/post.html')
 
+def get_notify(request):
+
+    notifications = Notifications.objects.filter(recipient=request.user)[0]
+
+    notifications = {
+        "image":request.user.profile.image.url,"info":notifications.info,
+        "date":notifications.date,"time":notifications.time
+        
+        }
+    notifications = json.dumps(notifications,default=str)
+
+    return JsonResponse(notifications,safe=False)
+
 class EditEmpView(LoginRequiredMixin,UpdateView):
     
     model = Employee
@@ -483,3 +520,5 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('management-home')    
+
+

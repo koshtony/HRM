@@ -83,8 +83,9 @@
             <div class="tree">
               <ul>
                 {% for application in applications %}
+                {% if application.applicant.username == request.user.username %}
                   <li>
-                      <span><i class="icon-calendar"></i>{{application.type.name}} </span>
+                      <span style="background-color:aquamarine"><i class="icon-calendar"></i>{{application.type.name}} -> {{application.created_time}} -> {{application.created_date}} </span>
                       <ul>
                         {% for track in tracks %}
                             {% if track.application.pk == application.pk %}
@@ -103,6 +104,9 @@
                           
                       </ul>
                   </li>
+                  {% else%}
+                  <span style="background-color:orange"> no new approvals</span>
+                  {% endif %}
                   {% endfor %}
                   
               </ul>
@@ -136,12 +140,16 @@
                                 created
                               </th>
                               <th>
+                                time
+                              </th>
+                              <th>
                                 status
                               </th>
                             </tr>
                           </thead>
                           <tbody>
                             {% for application in applications %}
+                            {% if application.applicant.username == request.user.username %}
                             <tr>
                               <td class="py-1">
                                  {{application.type}}
@@ -154,11 +162,13 @@
                               </td>
                               <td>
                                 <div class="progress">
-                                  <div class="progress-bar bg-success" role="progressbar" style="width: 3%" aria-valuenow="3" aria-valuemin="0" aria-valuemax="3"></div>
+                                  <div class="progress-bar bg-success" role="progressbar" style="width: {{ application.rate }}%" aria-valuenow="3" aria-valuemin="0" aria-valuemax="3"></div>
                                 </div>
                               </td>
                               <td>
-                                {{application.created}}
+                                {{application.created_date}}
+                              </td> <td>
+                                {{application.created_time}}
                               </td>
                               {% if application.status == "rejected" %}
                               <td style="color:red">
@@ -172,6 +182,7 @@
                               {% endif %}
 
                             </tr>
+                            {% endif %}
 
                             {% endfor %}
                  
