@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from payroll.models import PayRollSetting
-from datetime import date
+from datetime import date,datetime
 import time
 # Create your models here.
 class Profile(models.Model):
@@ -164,6 +164,9 @@ class Applications(models.Model):
     stage = models.IntegerField(default=0)
     rate = models.IntegerField(default=0)
     expected = models.IntegerField(default=0)
+    start = models.DateField(default=datetime.now())
+    end = models.DateField(default=datetime.now())
+    days = models.FloatField(default=0.0)
     remarks = models.TextField()
 
     def __str__(self):

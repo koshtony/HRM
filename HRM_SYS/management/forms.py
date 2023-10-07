@@ -50,8 +50,10 @@ class LeaveForm(forms.ModelForm):
         widgets = {
             'start': DateInput(),
             'end': DateInput(),
+            'Approvals_type': forms.Select(attrs={'class': 'form-select'})
 
         }
+        
 
 class filesForm(forms.ModelForm):
 

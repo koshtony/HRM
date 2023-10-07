@@ -362,19 +362,20 @@
        success:function(data,status){
 
         var data = JSON.parse(data)
+        for(key in data){
          $("#notify").append(
 
           `
-          <a class="dropdown-item preview-item" onclick="goTo()">
+          <a class="dropdown-item preview-item" onclick="goTo(${data[key].id})">
                 <div class="preview-thumbnail">
                   <div class="preview-icon bg-success">
-                    <img src="${data.image}">
+                    <img src="${data[key].image}">
                   </div>
                 </div>
                 <div class="preview-item-content">
-                  <h6 class="preview-subject font-weight-normal">${data.info}</h6>
+                  <h6 class="preview-subject font-weight-normal">${data[key].info}</h6>
                   <p class="font-weight-light small-text mb-0 text-muted">
-                    ${data.date} ${data.time}
+                    ${data[key].date} ${data[key].time}
                   </p>
                 </div>
             </a>
@@ -382,28 +383,53 @@
           `
          )
        }
+       display(data)
+      }
   })
 
-  const showNotification = () => {
-    // create a new notification
-    const notification = new Notification('JavaScript Notification API', {
-        body: 'This is a JavaScript Notification API demo',
+  const showNotification = (data) => {
+
+    for(key in data){
+    const notification = new Notification('Beezy new notification', {
+        body: data[key].info,
+        icon: data[key].image,
        
         vibrate: true
     });
    }
+  }
 
- Notification.requestPermission().then(function (permission) {
+  function display(data){
+        Notification.requestPermission().then(function (permission) {
 
-   if(permission=="granted"){
+          if(permission=="granted"){
 
-    showNotification()
+            showNotification(data)
 
-   }
-       
-    
+          }
+              
+            
 
-});
+        });
+  }
+
+function goTo(id){
+  $.ajax({
+
+        type:"post",
+        url:"{% url 'management_get_notify' %}",
+        data:{
+
+           id:id,
+           csrfmiddlewaretoken:'{{ csrf_token }}',
+
+        },
+        success:function(data,status){
+
+          location.href = "{% url 'management_list_approvals' %}"
+        }
+  })
+}
 </script>
 
   <!-- End custom js for this page-->

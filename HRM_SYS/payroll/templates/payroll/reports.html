@@ -352,10 +352,10 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             success:function(data,status){
               
                 var data = JSON.parse(data)
-
+                $("#payrollFilt").html('')
                 for(key in data){
                    console.log(data[key])
-                    $("#payrollFilt").html(
+                    $("#payrollFilt").append(
                         `
                         <tr>
 

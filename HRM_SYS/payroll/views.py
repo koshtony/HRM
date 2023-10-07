@@ -38,7 +38,7 @@ def monthly_payroll(request):
 
                     total_hours += attendance.hours
                     leave_days += sum([leave.days for leave in Leave.objects.filter(applicant=User.objects.get(username=employee.emp_id)) if leave.status=="completed"])
-                    days += attendance.days
+                    days += attendance.counts
                     
                  
                 data = {
@@ -55,7 +55,7 @@ def monthly_payroll(request):
                     "basic_salary":employee.salary,
                     "allowance":employee.allowance,
                     "add_ons":employee.add_ons,
-                    "total_hours":total_hours,
+                    "total_hours":days,
                     "leave_days":leave_days,
                     "deductions":round(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day,2),
                     "gross_pay":round((employee.salary+employee.allowance+employee.add_ons)-deductions,2),
@@ -70,7 +70,8 @@ def monthly_payroll(request):
                         -tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0)\
                         -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
-                    "created": datetime.datetime.now()
+                    "created": datetime.datetime.now(),
+                    
 
 
                 }
