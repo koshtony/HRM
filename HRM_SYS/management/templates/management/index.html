@@ -162,7 +162,7 @@
             <div class="col-md-4 stretch-card grid-margin">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">Notifications</p>
+                  <p class="card-title">my todo</p>
                                                                                                                                                                                           
                     
                         <div class="list-wrapper px-3">
@@ -178,7 +178,7 @@
                               &nbsp;&nbsp;&nbsp;&nbsp;
                               <a href="{{todo.4}}" download><i class="remove ti-download"></i>attachment</a>
                               &nbsp;&nbsp;&nbsp;
-                              <a onclick="approveModal('{{todo.0}}')"><i class="ti-eye"></i></a>
+                              <a onclick="approveModal('{{todo.0}}','{{todo.3}}','{{todo.4}}')"><i class="ti-eye"></i></a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               <a class="btn btn-danger" onclick="reject('{{todo.0}}');"><i class="remove ti-close"></i></a>
                             </li>
@@ -269,6 +269,12 @@
                 </button>
               </div>
               <div class="modal-body">
+                <a onclick="showDetails()"><i class="ti-arrow-circle-down"></i></a>
+                <div style="color:yellowgreen; background-color:grey; display:none" id="detDiv">
+                  <p id="det"></p>
+                  <a href="" download><i class="ti-download" id="attach"></i></a>
+                </div>
+                <br><br>
                 <form class="forms-sample">
                   <div class="form-group">
                     <label for="exampleInputName1">id</label>
@@ -383,11 +389,18 @@
       });
      
 // approval modal
-function approveModal(id){
+function approveModal(id,remarks,link){
     
   $("#approveModalBtn").click()
 
   $("#approvePk").val(id)
+  $("#det").html(remarks)
+  $("#attach").href(link)
+}
+
+function showDetails(){
+    
+  document.getElementById("detDiv").style.display = 'block'
 }
 
 function doneApprove(){

@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from payroll.models import PayRollSetting
-from datetime import date,datetime
+from datetime import date
 import time
 # Create your models here.
 class Profile(models.Model):
@@ -20,7 +20,7 @@ class Profile(models.Model):
     
 class Department(models.Model):
     name = models.CharField(max_length=50,default="None")
-    hod = models.CharField(max_length=50,default="None")
+    hod_username = models.CharField(max_length=50,default="None")
     size = models.FloatField(default=1)
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
@@ -31,7 +31,7 @@ class Roles(models.Model):
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
 
-    
+dep_choices = tuple([(dep.name,dep.name) for dep in Department.objects.all()])
 class Employee(models.Model):
    
     emp_id = models.CharField(max_length=50,default="None")
@@ -53,7 +53,7 @@ class Employee(models.Model):
  # HR admin section
 
     role = models.CharField(max_length=50,default="None")
-    department = models.CharField(max_length=50,default="None")
+    departments = models.CharField(choices=dep_choices,max_length=50,default="None")
     education_level = models.CharField(max_length=50,default="None")
     doj = models.DateField(default=timezone.now)
     dol = models.DateField(default=timezone.now)
@@ -164,9 +164,6 @@ class Applications(models.Model):
     stage = models.IntegerField(default=0)
     rate = models.IntegerField(default=0)
     expected = models.IntegerField(default=0)
-    start = models.DateField(default=datetime.now())
-    end = models.DateField(default=datetime.now())
-    days = models.FloatField(default=0.0)
     remarks = models.TextField()
 
     def __str__(self):

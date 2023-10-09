@@ -14,7 +14,7 @@ from django.contrib.auth.views import PasswordResetView
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm
 from .models import *
 from payroll.models import PayRoll
-from datetime import datetime,date,timedelta
+from datetime import datetime,date
 import time
 import json
 # Create your views here.
@@ -24,7 +24,7 @@ def home(request):
     for todo in Applications.objects.all():
         if request.user.username in todo.approvers.split(','):
             apps = [
-                 todo.pk,todo.approvers,todo.created_date,todo.remarks,todo.attachment.url
+                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url
             ]
             todos.append(apps)
     event = Events.objects.last()
@@ -110,7 +110,22 @@ def leave(request):
 
         return JsonResponse("applied successfully",safe=False)
     
-   
+# create departments overview
+def departments(request):
+
+    departments = Department.objects.all()
+
+    context =  {'departments':departments}
+
+    return render(request,'management/departments.html',context)
+
+def dep_details(request,name):
+
+    details = Employee.objects.filter(departments = name)
+
+    context = {"details":details}
+
+    return render(request,'management/dep_details.html',context)
 
 
 def add_department(request):
@@ -225,7 +240,7 @@ def clock(request):
                     lat =lat ,long=long,image1=image_info,
                     lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
                     deductions  = 0,
-                    days = 1.0
+                    days = 1
 
                     
 
@@ -311,13 +326,7 @@ def upload_leave(request):
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
-                approvers = ",".join(approvers),expected = len(approvers),
-                start = form.cleaned_data.get("start"),
-                end = form.cleaned_data.get("end"),
-                days = form.cleaned_data.get("days"),
-                created_date = datetime.now(),
-                created_time = datetime.now(),
-
+                approvers = ",".join(approvers),expected = len(approvers)
     
             )
 
@@ -343,6 +352,7 @@ def upload_process(request):
                     info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
                     date = datetime.now(),
                     time = datetime.now(),
+                    url = "{}"
          
                 )
 
@@ -381,18 +391,6 @@ def approve(request):
         if application.stage == application.expected:
             application.status = "completed"
             application.rate = 100
-            if "leave" in application.type.name:
-                for i in range(int(application.days)):
-                    leave_set = Attendance(
-                        employee = Employee.objects.get(emp_id = application.applicant.username),
-                        is_leave = True,
-                        created = application.start + timedelta(days=i),
-                        day = application.start + timedelta(days=i),
-                        counts = 1,
-                        remarks = str(application.type.name) + " from "+str(application.start) + " to "+ str(application.start)
-                    )
-                    leave_set.save()
-
             application.save()
         
         application.status = "pending"
@@ -432,18 +430,8 @@ def approve_by_details(request):
             if application.stage == application.expected:
                 application.status = "completed"
                 application.rate = 100
-                if "leave" in application.type.name:
-                    for i in range(int(application.days)):
-                        leave_set = Attendance(
-                            employee = Employee.objects.get(emp_id = application.applicant.username),
-                            is_leave = True,
-                            created = application.start + timedelta(days=i),
-                            day = application.start + timedelta(days=i),
-                            counts = 1,
-                            remarks = str(application.type.name) + " from "+str(application.start) + " to "+ str(application.start)
-                        )
-                        leave_set.save()
                 application.save()
+
                 track = approvalTrack(
                 application = Applications.objects.get(pk=id),
                 user = request.user,
@@ -452,7 +440,6 @@ def approve_by_details(request):
                 date = date.today(),
                 time = datetime.now()
                 )
-                track.save()
             
             application.status = "pending"
             application.rate = int((application.stage // application.expected)*100)
@@ -527,27 +514,16 @@ def Post(request):
 
 def get_notify(request):
 
-    if request.POST:
-        id = request.POST.get("id")
-        Notifications.objects.get(pk=id).delete()
+    notifications = Notifications.objects.filter(recipient=request.user)[0]
 
-        return JsonResponse("seen",safe=False)
+    notifications = {
+        "image":request.user.profile.image.url,"info":notifications.info,
+        "date":notifications.date,"time":notifications.time
+        
+        }
+    notifications = json.dumps(notifications,default=str)
 
-    notifications = Notifications.objects.filter(recipient=request.user).order_by('-pk')[:4]
-    
-    notify_list = []
-    for notification in notifications:
-        notif = {
-            "id":notification.pk,
-            "image":request.user.profile.image.url,"info":notification.info,
-            "date":notification.date,"time":notification.time
-            
-            }
-        notify_list.append(notif)
-    print(notify_list)
-    notifs = json.dumps(notify_list,default=str)
-
-    return JsonResponse(notifs,safe=False)
+    return JsonResponse(notifications,safe=False)
 
 class EditEmpView(LoginRequiredMixin,UpdateView):
     

@@ -6,13 +6,13 @@ Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events
 
 class EmpAdmin(admin.ModelAdmin):
         list_display = ("emp_id","first_name","second_name","email","phone","dob")
-        list_filter = ("department",)
-        search_fields = ["empid"]
+        list_filter = ("departments",)
+        search_fields = ["emp_id"]
 
 class DepAdmin(admin.ModelAdmin):
-        list_display = ("name","hod","size","created","remarks")
+        list_display = ("name","hod_username","size","created","remarks")
         list_filter = ("name",)
-        search_fields = ["hod"]
+        search_fields = ["hod_username"]
 
 class RolesAdmin(admin.ModelAdmin):
         list_display = ("name","requirements","created","remarks")
