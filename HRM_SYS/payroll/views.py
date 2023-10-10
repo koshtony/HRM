@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib import messages
+from django.views.generic import UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.db.models import Sum,Count
 from management.models import * 
 from .formula import tax_amount
@@ -12,10 +14,13 @@ import json
 
 def gen_payroll(request):
     attendance = Attendance.objects.all()
-    payroll_report = PayRoll.objects.all()
+
+    payroll_report = PayRoll.objects.all().order_by('-created')
+
     grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('net_pay'))
-    print(grouped_payroll)
+
     context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll}
+
     return render(request,"payroll/reports.html",context)
 
 def monthly_payroll(request):
@@ -108,6 +113,7 @@ def payroll_details(request):
         print(id)
         details = PayRoll.objects.filter(payroll_id=id)
         
+        cost,size,org= 0,0,[]
         payrolls = []
         for detail in details:
 
@@ -121,11 +127,29 @@ def payroll_details(request):
                 "net_pay":detail.net_pay,
                 "created":detail.created,
             }
+            cost+=detail.gross_pay
+            size+=1
+            org.append(detail.org_name)
+
+           
 
             payrolls.append(info)
-        print(payrolls)
-        return JsonResponse(json.dumps(payrolls,default=str),safe=False)
+        summary = {"cost":cost,"size":size,"org":org}
+        return JsonResponse(json.dumps(summary,default=str),safe=False)
 
+
+'''  
+    ===================================================================================
+        create view where payroll master can change info manually
+'''
+
+class EditPayrollView(LoginRequiredMixin,UpdateView):
+
+    model = PayRoll 
+    template_name = 'payroll/edit_payroll.html'
+    fields = '__all__'
+    raise_exception = True
+    success_url = '/reports'
 
 
     

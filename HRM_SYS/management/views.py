@@ -514,14 +514,19 @@ def Post(request):
 
 def get_notify(request):
 
-    notifications = Notifications.objects.filter(recipient=request.user)[0]
-
-    notifications = {
-        "image":request.user.profile.image.url,"info":notifications.info,
-        "date":notifications.date,"time":notifications.time
+    notifications = Notifications.objects.filter(recipient=request.user)
+    popups = []
+    for notification in notifications:
+        notifs = {
+            "image":request.user.profile.image.url,"info":notification.info,
+            "date":notification.date,"time":notification.time
+            
+            }
+        popups.append(notifs)
         
-        }
-    notifications = json.dumps(notifications,default=str)
+    
+    notifications = json.dumps(popups,default=str)
+
 
     return JsonResponse(notifications,safe=False)
 
