@@ -8,7 +8,7 @@
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sumModal" style="display:none" id="detailModal">details</button>
 
 <div class="modal fade" id="sumModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-lg" role="document">
       <div class="modal-content">
         <div class="modal-header"  style="background-color:yellowgreen">
           <h5 class="modal-title" id="exampleModalLongTitle" id="orgName"></h5>
@@ -17,6 +17,7 @@
           </button>
         </div>
         <div class="modal-body">
+            <button onclick="approvePay();"> <i class="ti-check"></i></button>
             <strong id="payId"> </strong>
             <span>Total Amount</span>: KES<span id="totalCost"></span>
         </div>
@@ -124,6 +125,9 @@
                     <div id="grid-view" class="tab-pane fade col-lg-12">
                         <button class="btn btn-outline" onclick="htmlTableToExcelto('xlsx')"><i class="ti-download"></i></button>
                         <button class="btn btn-outline" onclick="htmlTableToExcelto('xlsx')"><i class="ti-check"></i>approve</button>
+                        <div>
+                      
+                        </div>
                         <div class="row">
                             <div class="table-responsive">
                                 <table  class="table table-striped"  id="payroll">
@@ -132,6 +136,7 @@
                                             <th>docs</th>
                                             <th>audit details</th>
                                             <th>created</th>
+                                            <th>status</th>
                                             <th>payroll id</th>
                                             <th>employee id</th>
                                             
@@ -169,6 +174,15 @@
                                             <td>
                                                 {{val.created}}
                                             </td>
+                                            {% if val.status == "audited" %}
+                                            <td style="background-color: green;">
+                                                {{val.status}}
+                                            </td>
+                                            {% else %}
+                                            <td style="background-color:red;">
+                                                {{val.status}}
+                                            </td>
+                                            {% endif %}
                                             <td>
                                                 {{val.payroll_id}}
                                             </td>
@@ -380,6 +394,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
 
 
     function showDetails(id){
+        $("#payId").html(id)
        $("#detailModal").click()
       
         $.ajax({
@@ -402,6 +417,25 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             }
         })
 
+    }
+
+
+    function approvePay(){
+        
+        var payroll_id = $("#payId").html()
+
+        $.ajax({
+            type:"post",
+            url:"{% url 'payroll-check' %}",
+            data:{
+                id:payroll_id,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+            success:function(data,status){
+
+                alert(data)
+            }
+        })
     }
 
     

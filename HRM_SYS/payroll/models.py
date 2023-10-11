@@ -31,21 +31,20 @@ class PayRoll(models.Model):
     others = models.FloatField(default=0.0)
     net_pay = models.FloatField(default=0.0)
     created = models.DateField(default=datetime.date.today())
+    status = models.CharField(max_length=100,default="audit")
+    pay_run = models.CharField(max_length=200,default='')
 
     def __str__(self):
 
         return self.payroll_id
 
-tax_formula = '''24000=10%
-8333=25%
-467667=30%
-300000=32.5%
-'''
+tax_formula = '''24000=10%,8333=25%,467667=30%,300000=32.5%'''
 class PayRollSetting(models.Model):
     
     org_name = models.CharField(max_length=100,default="")
     category = models.CharField(max_length=100)
     tax_rate = models.TextField(default=tax_formula)
+    relief = models.FloatField(default=2400.00)
     nssf = models.FloatField()
     nhif = models.FloatField()
     health_insurance = models.FloatField(default=0.0)

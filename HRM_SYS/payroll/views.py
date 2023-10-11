@@ -43,11 +43,11 @@ def monthly_payroll(request):
 
                     total_hours += attendance.hours
                     leave_days += sum([leave.days for leave in Leave.objects.filter(applicant=User.objects.get(username=employee.emp_id)) if leave.status=="completed"])
-                    days += attendance.counts
+                    days += attendance.days
                     
                  
                 data = {
-                    "org_name":"",
+                    "org_name":employee.payroll_settings.org_name,
                     "payroll_id":payroll_id,
                     "employee_id":employee.emp_id,
                     "sign_id":str(payroll_id)+str(employee.emp_id),
@@ -65,7 +65,7 @@ def monthly_payroll(request):
                     "deductions":round(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day,2),
                     "gross_pay":round((employee.salary+employee.allowance+employee.add_ons)-deductions,2),
                     "taxable_income":round(((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),2),
-                    "tax": round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0),2),
+                    "tax": round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2),
                     "nhif":employee.payroll_settings.nhif,
                     "nssf":employee.payroll_settings.nssf,
                     "insurance":employee.payroll_settings.health_insurance,
@@ -76,6 +76,7 @@ def monthly_payroll(request):
                         -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
                     "created": datetime.datetime.now(),
+                    "pay_run": str(date1)+" - "+str(date2)
                     
 
 
@@ -136,6 +137,22 @@ def payroll_details(request):
             payrolls.append(info)
         summary = {"cost":cost,"size":size,"org":org}
         return JsonResponse(json.dumps(summary,default=str),safe=False)
+    
+def payroll_check(request):
+
+    if request.POST:
+
+        id = request.POST.get("id")
+        print(id)
+
+        payrolls = PayRoll.objects.filter(payroll_id = id)
+        for payroll in payrolls:
+
+            payroll.status = "audited"
+
+            payroll.save()
+
+        return JsonResponse("audit completed",safe=False)
 
 
 '''  
