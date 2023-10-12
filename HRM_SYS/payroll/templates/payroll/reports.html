@@ -29,6 +29,18 @@
     </div>
   </div>
 
+<!-- edit modal iframe-->
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#largeModal" id="iframeBtn" style="display:none">edit modal</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="largeModal" style="width:1000px;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <iframe id="eFrame" width="1000" height="500"></iframe>
+    </div>
+  </div>
+</div>
+
 <div class="main-panel">
     <!-- row -->
     <div class="content-wrapper">
@@ -169,7 +181,7 @@
                                                 <a href="{% url 'payroll-payslip' val.sign_id %}" download><i class="ti-download"></i></a>
                                             </td>
                                             <td>
-                                                <a href="{% url 'payroll-edit-payroll' val.pk %}"><i class="ti-pencil"></i></a>
+                                                <a onclick="editIframe('{{val.pk}}')"><i class="ti-pencil"></i></a>
                                             </td>
                                             <td>
                                                 {{val.created}}
@@ -437,8 +449,17 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             }
         })
     }
-
     
+    function editIframe(id){
+        
+        $("#iframeBtn").click()
+        document.getElementById("eFrame").src = 'edit_payroll/'+id
+       
+        
+        
+        
+
+    }
 
     function htmlTableToExcel(type){
  var data = document.getElementById('attendance');
