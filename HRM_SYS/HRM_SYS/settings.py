@@ -43,6 +43,7 @@ INSTALLED_APPS = [
       'colorfield',
     'crispy_forms',
     'crispy_bootstrap5',
+    'searchableselect',
    
     'management.apps.ManagementConfig',
     'payroll.apps.PayrollConfig',

@@ -6,7 +6,37 @@
      
 
 
+<style>
+  @keyframes glow {
+  0% {
+    box-shadow: 0 0 0 0 $crimson;
+  }
+  
+  50% {
+    box-shadow: 0 0 30px 0 $crimson;
+  }
+}
 
+.btn {
+  background: none;
+  color: inherit;
+  font: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.btn-glow {
+  background: $crimson;
+  color: #fff;
+  font-size: 1.6em;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 16px 34px;
+  box-shadow: 0 0 0 0 $crimson;
+  animation: glow 1.4s ease-out infinite;
+}
+</style>
 
 
 
@@ -65,7 +95,7 @@
                   </div>
                   <button class="btn btn-primary btn-circle" style="margin: 25px;width:200px;height:200px;border-radius:35px; background-color:orange;" >
                      <p style="color:white; font-weight: bold;" id="timenow"></p>
-                     <i class="ti-image"></i>
+                     <i class="fa fa-clock"></i>
                   </button>
                 </div>
               </div>

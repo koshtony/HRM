@@ -40,6 +40,8 @@ def register(request):
         if form.is_valid():
             form.save()
             username=form.cleaned_data.get("username")
+
+
             employee = Employee(
                 emp_id = form.cleaned_data.get("username")
             )
@@ -49,8 +51,15 @@ def register(request):
                 message='username: '+str(form.cleaned_data.get("username"))+'\n'+ "password: "+str(form.cleaned_data.get("password1"))+'\n'+"if you didn't register kindly ignore",
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[form.cleaned_data.get("email")])
+            
+
             employee.save()
+
+            new_profile = Profile(user=User.objects.get(username = username))
+            new_profile.save()
+
             messages.success(request,f'{username} account created')
+            
             return redirect('management-home')
     return render(request,'management/register.html',{'form':form})
 def add_info(request):
@@ -320,13 +329,15 @@ def upload_leave(request):
             form.instance.applicant = request.user
             form.save()
             approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
-            approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
+            approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
            
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
-                approvers = ",".join(approvers),expected = len(approvers)
+                approvers = ",".join(approvers),expected = len(approvers),
+                created_date = datetime.now(),created_time = datetime.now()
+
     
             )
 
@@ -343,7 +354,7 @@ def upload_process(request):
             form.instance.created = datetime.now()
             form.save()
             approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
-            approvers = [app.rstrip() for app in approvers.approvers.split('\n')]
+            approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
             print(approvers)
             for approve in approvers:
                 print(approve)
@@ -389,13 +400,14 @@ def approve(request):
 
         application.stage +=1
         if application.stage == application.expected:
-            application.status = "completed"
+            print("yes")
+            application.status = "complete"
             application.rate = 100
             application.save()
-        
-        application.status = "pending"
-        application.rate = int((application.stage / application.expected)*100)
-        application.save()
+        else:
+            application.status = "pending"
+            application.rate = int((application.stage / application.expected)*100)
+            application.save()
 
 
 
@@ -428,7 +440,7 @@ def approve_by_details(request):
 
             application.stage +=1
             if application.stage == application.expected:
-                application.status = "completed"
+                application.status = "complete"
                 application.rate = 100
                 application.save()
 
@@ -440,20 +452,20 @@ def approve_by_details(request):
                 date = date.today(),
                 time = datetime.now()
                 )
-            
-            application.status = "pending"
-            application.rate = int((application.stage // application.expected)*100)
-            application.save()
+            else:
+                application.status = "pending"
+                application.rate = int((application.stage // application.expected)*100)
+                application.save()
              
-            track = approvalTrack(
-                application = Applications.objects.get(pk=id),
-                user = request.user,
-                comments = comments,
-                status = status,
-                date = date.today(),
-                time = datetime.now()
-            )
-            track.save()
+                track = approvalTrack(
+                    application = Applications.objects.get(pk=id),
+                    user = request.user,
+                    comments = comments,
+                    status = status,
+                    date = date.today(),
+                    time = datetime.now()
+                )
+                track.save()
         
             return JsonResponse("approved successfully",safe=False)
         elif status == "reject":
@@ -473,6 +485,23 @@ def approve_by_details(request):
             track.save()
 
             return JsonResponse("application rejected successfully",safe=False)
+        
+def recall_approval(request):
+
+    if request.POST:
+
+        pk = request.POST.get("id")
+
+        if Applications.objects.get(pk=pk).stage > 0:
+
+            return JsonResponse("application already read cannot be recalled, add comment instead",safe=False)
+        else:
+
+            application = Applications.objects.get(pk=pk)
+            application.status = "cancelled"
+            application.save()
+
+            return JsonResponse("recalled successful",safe=False)
 
 @login_required
 def profile(request):
@@ -497,16 +526,52 @@ def profile(request):
     return render(request,'management/profile.html',context)
 
 
-
+''''
+    displays both announcements and events
+'''
 def Event(request):
 
-    events = Events.objects.all()
+    events = Events.objects.all().order_by('-created')
 
     context = {
-                "events":events
+                "events":events,
     }
 
     return render(request,'management/events.html',context)
+
+'''
+    saves created post
+'''
+def add_event(request):
+
+    if request.POST:
+        
+        title = request.POST.get("title"),
+        category = request.POST.get("category")
+        content = request.POST.get("content")
+        print(content)
+
+        events = Events(
+
+              title = title , details = content , category =  category,
+              created = datetime.now() , creator = request.user
+        )
+        events.save()
+
+        
+
+        return JsonResponse("created successfully",safe=False)
+
+
+def del_event(request):
+
+    if request.POST:
+
+        pk = request.POST.get("pk")
+
+        Events.objects.get(pk=pk).delete()
+
+        return JsonResponse("deleted successfully",safe=False)
 
 def Post(request):
 

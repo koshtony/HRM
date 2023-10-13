@@ -68,7 +68,43 @@
 }
 </style>
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recallModal" style="display:none"  id="recallModalBtn">
+ 
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="recallModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <button class="btn btn-danger" onclick="Recall()"><i class="ti-times"></i>recall</button>
+        <form class="forms-sample">
+          <div class="form-group">
+            <label for="exampleInputName1">id</label>
+            <input type="text" class="form-control" id="approvalId" placeholder="Name" readonly>
+          </div>
+          
+         
+          <div class="form-group">
+            <label for="exampleTextarea1">Textarea</label>
+            <textarea class="form-control" id="approvalRemaeks" rows="4"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary mr-2" onclick="addComment()">Submit</button>
+        
+        </form>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
      
 
 
@@ -145,6 +181,9 @@
                               <th>
                                 status
                               </th>
+                              <th>
+                                action
+                              </th>
                             </tr>
                           </thead>
                           <tbody>
@@ -180,6 +219,9 @@
                                 {{application.status}}
                               </td>
                               {% endif %}
+                              <td>
+                                 <button class="btn btn-secondary" onclick="openRecallModal('{{application.pk}}');"> recall </button>
+                              </td>
 
                             </tr>
                             {% endif %}
@@ -220,6 +262,31 @@
         e.stopPropagation();
     });
 });
+
+function openRecallModal(id){
+  alert(id)
+
+    $("#recallModalBtn").click()
+    $("#approvalId").val(id)
+      
+}
+function Recall(){
+
+    $.ajax({
+
+       type:"post",
+       url:"{% url 'management_recall_approval' %}",
+       data:{
+              id:$("#approvalId").val(),
+              csrfmiddlewaretoken:'{{ csrf_token }}'
+
+       },
+       success:function(data,status){
+           
+             alert(data)
+       }
+    })
+}
     
     </script>
   {% endblock content %}

@@ -2,6 +2,7 @@ from django import forms
 from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from searchableselect.widgets import SearchableSelect
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -61,6 +62,9 @@ class filesForm(forms.ModelForm):
 
         model = EmpFiles
         fields = "__all__"
+        widgets = {
+            'employee': SearchableSelect(model='management.Employee', search_field='emp_id', limit=10)
+        }
     
     
 

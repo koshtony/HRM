@@ -18,6 +18,17 @@
                           <div class="col-md-12 col-xl-3 d-flex flex-column justify-content-start">
                             <div class="ml-xl-4 mt-3">
                             <p class="card-title">created</p>
+                            <div id="loaders2" style="display: none;">
+                              <div class="spinner-grow text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                              <div class="spinner-grow text-secondary" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                              <div class="spinner-grow text-success" role="status">
+                                <span class="sr-only">Loading...</span>
+                              </div>
+                              </div>
                              
                               <h3 class="font-weight-500 mb-xl-4 text-primary"></h3>
                               <p class="mb-2 mb-xl-0"></p>
@@ -32,17 +43,19 @@
                                       <td class="text-muted">announcements + posts</td>
                                       <td class="w-100 px-0">
                                         <div class="progress progress-md mx-4">
-                                          <div class="progress-bar bg-primary" role="progressbar" style="width: '{{events | length}}'0%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                          <div class="progress-bar bg-primary" role="progressbar" style="width: {{events | length}}%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                       </td>
                                       <td><h5 class="font-weight-bold mb-0">{{events | length}}</h5></td>
                                     </tr>
                                     
                                   </table>
+                                
+
                                 </div>
                               </div>
                               <div class="col-md-6 mt-3">
-                                <img>
+                                <button class="btn btn-success" data-toggle="modal" data-target="#postModal" ><i class="fa fa-plus"></i> new post</button>
                               </div>
                             </div>
                           </div>
@@ -74,16 +87,77 @@
                             <small>{{event.created}}</small>
                           </div>
                         </div>
+                        {% if event.creator == request.user %}
+                  <a class="btn btn-danger" onclick="delPost('{{event.pk}}')"><i class="fa fa-times"></i></a>
+                  {% endif %}
                       </li>
                       
                      
                     
                       
                     </ul>
+                    
                   </div>
+                  
                 </div>
+                
               </div>
               {% endfor %}
+          </div>
+
+          <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">create post</h5>
+                  <div id="loaders" style="display: none;">
+                  <div class="spinner-grow text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-secondary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  </div>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  
+                  <br><br>
+                  <form class="forms-sample" method="post" onsubmit="createPost()">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      <label for="exampleInputName1">title</label>
+                      <input type="text" class="form-control" id="postTitle" placeholder="title">
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="exampleSelectGender">status</label>
+                        <select class="form-control" id="postCat"> 
+                          <option value="announcement">announcement</option>
+                          <option value="events">events</option>
+                        </select>
+                      </div>
+                    
+                   
+                    <div class="form-group">
+                      <label for="exampleTextarea1">content</label>
+                      <textarea class="form-control" id="postContent" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                  
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  
+                </div>
+              </div>
+            </div>
           </div>
           
           
@@ -96,4 +170,68 @@
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
+<script>
+
+function createPost(){
+        $.ajax({
+
+             type:"post",
+             url:"{% url 'management_add_event' %}",
+             data:{
+                
+              title:$("#postTitle").val(),
+              category:$("#postCat").val(),
+              content:$("#postContent").val(),
+              csrfmiddlewaretoken:'{{ csrf_token }}',
+
+                
+             },
+             beforeSend:function(){
+                $("#loaders").show()
+             },
+
+             success:function(data,status){
+
+                 alert(data)
+             },
+             complete:function(){
+                
+              $("#loaders").hide()
+
+             }
+
+        })
+      }
+function delPost(pk){
+
+  $.ajax({
+
+          type:"post",
+          url:"{% url 'management_del_event' %}",
+          data:{
+            
+          pk:pk,
+          csrfmiddlewaretoken:'{{ csrf_token }}',
+
+            
+          },
+          beforeSend:function(){
+            $("#loaders2").show()
+          },
+
+          success:function(data,status){
+
+              alert(data)
+          },
+          complete:function(){
+            
+          $("#loaders2").hide()
+
+          }
+
+  })
+     
+}
+</script>
+
    {% endblock %}
