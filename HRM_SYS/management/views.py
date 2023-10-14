@@ -15,6 +15,7 @@ from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm
 from .models import *
 from payroll.models import PayRoll
 from datetime import datetime,date
+import folium
 import time
 import json
 # Create your views here.
@@ -43,7 +44,8 @@ def register(request):
 
 
             employee = Employee(
-                emp_id = form.cleaned_data.get("username")
+                emp_id = form.cleaned_data.get("username"),
+                status = 'incomplete'
             )
        
             send_mail(
@@ -131,8 +133,8 @@ def departments(request):
 def dep_details(request,name):
 
     details = Employee.objects.filter(departments = name)
-
-    context = {"details":details}
+    dep_attendance = Attendance.objects.filter(employee__departments = name)
+    context = {"details":details,"attendances":dep_attendance}
 
     return render(request,'management/dep_details.html',context)
 
@@ -595,6 +597,30 @@ def get_notify(request):
 
     return JsonResponse(notifications,safe=False)
 
+def show_map(request,coords):
+   
+   coords = [float(cord) for cord in coords.split('_')]
+   print(coords)
+   map = folium.Map(coords)
+   folium.Marker(coords).add_to(map)
+   folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
+   folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+   folium.LayerControl().add_to(map)
+
+  
+   map = map._repr_html_()
+
+   context = {
+       'map':map
+   }
+   
+   return render(request,'management/map.html',context)
+
+
+
+
+
 class EditEmpView(LoginRequiredMixin,UpdateView):
     
     model = Employee
@@ -602,7 +628,7 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
     fields = '__all__'
     
     raise_exception = True
-    success_url = '/list_employee'
+   
 
     def form_valid(self,form):
         return super().form_valid(form)

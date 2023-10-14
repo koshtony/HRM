@@ -6,7 +6,80 @@
 
 <!--details modal-->
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="editIframeBtn" style="display:none">
+   edit employee
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Employee</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="editFrame" width="100%" height="1000" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageModal" id="imageIframeBtn" style="display:none">
+    show Image
+   </button>
+
+  <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">show image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <img id="imageFrame" width="100%" style="overflow-x: scroll;">
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mapModal" id="mapIframeBtn" style="display:none">
+    show map
+   </button>
+
+  <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">show location</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="mapFrame" width="100%" height="800" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="main-panel">
     <!-- row -->
@@ -24,9 +97,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i></a></li>
-                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary"><i class="ti-list"></i></a></li>
-                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="ti-filter"></i></a></li>
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="fa fa-list"></i></a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="fa fa-pause"></i></a></li>
+                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: red;"><i class="fa fa-times"></i></a></li>
+                    <li class="nav-item"><a href="#today" data-toggle="tab" class="nav-link btn-primary" style="background-color:green;"><i class="fa fa-calender"></i></a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
@@ -37,8 +111,8 @@
                             <div class="card-body">
                        
                                 <div class="table-responsive">
-                                    <table  class="table table-striped"  id="attendance">
-                                        <thead>
+                                    <table  class="table table-striped"  id="employee" style="zoom: 85%; font-weight: bolder;">
+                                        <thead style="background-color:azure">
                                             <tr>
                                                 <th>#</th>
                                                 <th>image</th>
@@ -92,9 +166,11 @@
                                                 <td>
                                                     {{detail.doj}}
                                                 </td>
+                                                {% if request.user.is_staff %}
                                                 <td>
-                                                    <a class="ti-pencil">more</a>
+                                                    <a class="ti-pencil" onclick="editDepEmp('{{detail.pk}}')">audit</a>
                                                 </td>
+                                                {% endif %}
                                             </tr>
                                            {% endfor %}
                                             
@@ -106,19 +182,244 @@
                     </div>
                     <div id="grid-view" class="tab-pane fade col-lg-12">
                         
-                        <div class="row">
-                            <iframe src="https://chitchatter.im/public/9f0cdb5a-8ea3-4af1-b1a8-00d0289f38a2?embed=1" allow="camera;microphone;display-capture;fullscreen" width="800" height="800" id="videoFrame">
-                                </iframe>
+                    
+                            <div class="card">
                             
-                        </div>
+                                <div class="card-body">
+                           
+                                    <div class="table-responsive">
+                                        <table  class="table table-striped"  id="incomplete" style="zoom: 85%; font-weight: bolder;">
+                                            <thead style="background-color:orange">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>image</th>
+                                                    <th>first name</th>
+                                                    <th>second name</th>
+                                                    <th>email</th>
+                                                    <th>phone number</th>
+                                                    <th>role</th>
+                                                   
+                                                    <th>status</th>
+                                                    <th>doj</th>
+                                                    <th>more</th>
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                               {% for detail in details %}
+                                                  {% if detail.status == "incomplete" %}
+                                                <tr>
+    
+                                                    <td>
+                                                       {{detail.emp_id}}
+    
+                                                        
+                                                    </td>
+                                                    <td>
+                                                        <img src="{{detail.image.url}}">
+                                                   
+                                                    </td>
+                                                    <td>
+                                                         {{detail.first_name}}
+                                                    </td>
+                                                    <td>
+                                                        {{detail.second_name}}
+                                                     
+                                                    </td>
+                                                    
+                                                    <td>
+                                                         {{detail.email}}
+                                                    </td>
+                                                    <td>
+                                                          {{detail.phone}}
+                                                    </td>
+                                                    <td>
+                                                         {{detail.role}}
+                                                        
+                                                    </td>
+                                                    
+                                                    <td>
+    
+                                                       {{detail.status}}
+                                                    </td>
+                                                    <td>
+                                                        {{detail.doj}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="ti-pencil" onclick="editDepEmp('{{detail.pk}}')">audit</a>
+                                                    </td>
+                                                </tr>
+                                                   {% endif %}
+                                               {% endfor %}
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+               
                     </div>
                     <div id="settings" class="tab-pane fade col-lg-12">
-                       <div class="row">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                       
+                                <div class="table-responsive">
+                                    <table  class="table table-striped"  id="removed" style="zoom: 85%; font-weight: bolder;">
+                                        <thead style="background-color:red">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>image</th>
+                                                <th>first name</th>
+                                                <th>second name</th>
+                                                <th>email</th>
+                                                <th>phone number</th>
+                                                <th>role</th>
+                                               
+                                                <th>status</th>
+                                                <th>doj</th>
+                                                <th>more</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           {% for detail in details %}
+                                              {% if detail.status == "resigned" or detail.status == "terminated"  %}
+                                            <tr>
 
+                                                <td>
+                                                   {{detail.emp_id}}
 
+                                                    
+                                                </td>
+                                                <td>
+                                                    <img src="{{detail.image.url}}">
+                                               
+                                                </td>
+                                                <td>
+                                                     {{detail.first_name}}
+                                                </td>
+                                                <td>
+                                                    {{detail.second_name}}
+                                                 
+                                                </td>
+                                                
+                                                <td>
+                                                     {{detail.email}}
+                                                </td>
+                                                <td>
+                                                      {{detail.phone}}
+                                                </td>
+                                                <td>
+                                                     {{detail.role}}
+                                                    
+                                                </td>
+                                                
+                                                <td>
 
-                       </div>
+                                                   {{detail.status}}
+                                                </td>
+                                                <td>
+                                                    {{detail.doj}}
+                                                </td>
+                                                <td>
+                                                    <a class="ti-pencil" onclick="editDepEmp('{{detail.pk}}')">audit</a>
+                                                </td>
+                                            </tr>
+                                               {% endif %}
+                                           {% endfor %}
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
             </div>
+            <div id="today" class="tab-pane fade col-lg-12">
+                <div class="card">
+                    
+                    <div class="card-body">
+               
+                        <div class="table-responsive">
+                            <table  class="table table-striped"  id="attendance" style="zoom: 85%; font-weight: bolder;">
+                                <thead style="background-color:aquamarine">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>first name</th>
+                                        <th>second name</th>
+                                        <th>day</th>
+                                        <th>clock in</th>
+                                        <th>clock out</th>
+                                        <th>clock in location</th>
+                                        <th>clock out location</th>
+                                       
+                                        <th>image</th>
+                                        <th>deductions</th>
+                                        <th>hours</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                   {% for attendance in attendances %}
+                                      {% if attendance.employee.emp_id == request.user.username or request.user.is_staff %}
+                                    <tr>
+
+                                        <td>
+                                           {{attendance.employee.emp_id}}
+
+                                            
+                                        </td>
+                                        <td>
+                                           {{attendance.employee.first_name}}
+                                       
+                                        </td>
+                                        <td>
+                                            {{attendance.employee.second_name}}
+                                        </td>
+                                        <td>
+                                            {{attendance.day}}
+                                         
+                                        </td>
+                                        
+                                        <td>
+                                            {{attendance.clock_in}}
+                                        </td>
+                                        <td>
+                                            {{attendance.clock_out}}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline" onclick="showMap('{{attendance.lat}}','{{attendance.long}}')"><i class="fa fa-map-marker"></i></button>
+                                            
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline" onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}')"><i class="fa fa-map-marker"></i></button>
+                                            
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
+                                                <i class="fa fa-image"></i>
+
+                                            </button>
+                                        </td>
+                                        
+                                        <td>
+
+                                           {{attendance.deductions}}
+                                        </td>
+                                        <td>
+                                            {{attendance.hours}}
+                                        </td>
+                                    
+                                    </tr>
+                                       {% endif %}
+                                   {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+    </div>
         </div>
        
     </div>
@@ -129,7 +430,39 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-    console.log($("#videoFrame").contents())
+
+new DataTable('#attendance');
+     new DataTable('#employee');
+     new DataTable('#incomplete');
+     new DataTable('#removed');
+
+    function editDepEmp(id){
+        
+        $("#editIframeBtn").click()
+        window.history.pushState({}, document.title, "/")
+        document.getElementById("editFrame").src = 'edit_employee/'+id
+       
+        
+        
+        
+
+    }
+
+function showImage(image_url){
+  
+    $("#imageIframeBtn").click()
+    document.getElementById("imageFrame").src = image_url
+}
+
+
+function showMap(lat,long){
+     
+    $("#mapIframeBtn").click()
+    var new_url = lat+"_"+long
+    window.history.pushState({}, document.title, "/");
+    document.getElementById("mapFrame").src = 'show_map/'+new_url
+}
+
     
  </script>
 

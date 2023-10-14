@@ -69,7 +69,7 @@ class Employee(models.Model):
 
 # account management 
 
-    status = models.CharField(max_length=50,default="None")
+    status = models.CharField(max_length=50,choices=(('incomplete',"incomplete"),('active',"active"),('resigned',"resigned"),('terminated',"terminated"),('suspended',"suspended")),default="None")
     image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
 
 

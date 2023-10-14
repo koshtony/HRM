@@ -31,15 +31,78 @@
 
 <!-- edit modal iframe-->
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#largeModal" id="iframeBtn" style="display:none">edit modal</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#payrollDetailModal" id="iframeBtn" style="display:none">edit modal</button>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="largeModal" style="width:1000px;">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <iframe id="eFrame" width="1000" height="500"></iframe>
+<div class="modal fade" id="payrollDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">check details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="eFrame" width="100%" height="1000" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageGenModal" id="imageGenIframeBtn" style="display:none">
+    show Image
+   </button>
+
+  <div class="modal fade" id="imageGenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <img id="imageGenFrame" width="100%" style="overflow-x: scroll;">
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mapGenModal" id="mapGenIframeBtn" style="display:none">
+    show map
+   </button>
+
+  <div class="modal fade" id="mapGenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">show location</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="mapGenFrame" width="100%" height="800" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="main-panel">
     <!-- row -->
@@ -70,8 +133,8 @@
                             <div class="card-body">
                                 <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx')"><i class="ti-download"></i></button>
                                 <div class="table-responsive">
-                                    <table  class="table table-striped"  id="attendance">
-                                        <thead>
+                                    <table  class="table table-striped"  id="attendance" style="zoom: 85%; font-weight: bolder;">
+                                        <thead style="background-color: aqua;">
                                             <tr>
                                                 <th>#</th>
                                                 <th>day</th>
@@ -105,16 +168,22 @@
                                                     {{attendance.clock_out}}
                                                 </td>
                                                 <td>
-                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="ti-map">show map</i></button>
+                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">show map</i></button>
                                                 </td>
                                                 <td>
-                                                    {{attendance.lat1 }},{{attendance.long1}}
+                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">show map</i></button>
                                                 </td>
                                                 <td>
-                                                    <img src="{{attendance.image1}}">
+                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
+                                                        <i class="fa fa-image"></i>
+        
+                                                    </button>
                                                 </td>
                                                 <td>
-                                                    <img src="{{attendance.image2}}">
+                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
+                                                        <i class="fa fa-image"></i>
+        
+                                                    </button>
                                                 </td>
                                                 <td>
                                                     {{attendance.status}}
@@ -142,7 +211,7 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive">
-                                <table  class="table table-striped"  id="payroll">
+                                <table  class="table table-striped"  id="payroll" style="zoom: 85%; font-weight: bolder;">
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
                                             <th>docs</th>
@@ -277,7 +346,7 @@
                          
                             </div>
                             <a class="btn btn-primary" onclick="filter()">filter</a>
-                            <table  class="table table-striped"  id="paySummary" >
+                            <table  class="table table-striped"  id="paySummary" style="zoom: 85%; font-weight: bolder;">
                                 <thead style="background-color: yellowgreen;">
                                     <tr>
                                         <th>payroll id</th>
@@ -302,7 +371,7 @@
                                     
                             </div>
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent" style="overflow-x: scroll;">
-                                <table  class="table table-striped"  id="paygen" >
+                                <table  class="table table-striped"  id="paygen" style="zoom: 85%; font-weight: bolder;">
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
                                             <th>payroll id</th>
@@ -476,8 +545,21 @@ function htmlTableToExcelto(type){
 }
     
        
-        
-    
+function showMap(lat,long){
+     
+     $("#mapGenIframeBtn").click()
+     var new_url = lat+"_"+long
+  
+   
+     document.getElementById("mapGenFrame").src = 'show_map/'+new_url
+ }
+
+ 
+ function showImage(image_url){
+    alert(image_url)
+    $("#imageGenIframeBtn").click()
+    document.getElementById("imageGenFrame").src = image_url
+}
     
 </script>
 

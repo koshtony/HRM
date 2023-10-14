@@ -1,0 +1,43 @@
+
+{% extends 'management/base2.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <!-- create camera modal here-->
+
+     
+
+
+
+
+
+
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">show location</h4>
+                    {{map | safe}}
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+
+    <script>
+     
+
+    </script>
+  {% endblock content %}
+
+  
