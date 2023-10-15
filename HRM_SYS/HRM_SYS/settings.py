@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-+bo43m_vcns%1t_9u(n3f$8!t+0^b=99s7&ppvi(tyxw@53@=&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
@@ -94,7 +94,9 @@ DATABASES = {
     }
 }
 
-DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropboxStorage"
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -136,11 +138,26 @@ STATIC_URL = 'static/'
 
 #STATICFILES_STORAGE = "storages.backends.dropbox.DropboxStorage"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 MEDIA_URL = 'media/'
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+    "mediafiles": {
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
+    },
+}
+
+
 LOGIN_REDIRECT_URL = 'management-home'
 LOGIN_URL = 'login'
 
