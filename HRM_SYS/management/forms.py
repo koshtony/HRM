@@ -62,10 +62,7 @@ class filesForm(forms.ModelForm):
 
         model = EmpFiles
         fields = "__all__"
-        widgets = {
-            'employee': SearchableSelect(model='management.Employee', search_field='emp_id', limit=10)
-        }
-    
+        
     
 
 class profileForm(forms.ModelForm):

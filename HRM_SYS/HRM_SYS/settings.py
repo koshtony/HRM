@@ -47,7 +47,8 @@ INSTALLED_APPS = [
    
     'management.apps.ManagementConfig',
     'payroll.apps.PayrollConfig',
-    'hrm_users.apps.HrmUsersConfig'
+    'hrm_users.apps.HrmUsersConfig',
+    'storages'
 
 ]
 
@@ -93,7 +94,7 @@ DATABASES = {
     }
 }
 
-
+DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropboxStorage"
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -133,7 +134,9 @@ STATIC_ROOT =  os.path.join(BASE_DIR,'management/static')
 
 STATIC_URL = 'static/'
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+#STATICFILES_STORAGE = "storages.backends.dropbox.DropboxStorage"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
@@ -165,3 +168,13 @@ EMAIL_HOST_PASSWORD = 'llmb kxvj iblk vvii'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+# dropbox configurations 
+
+DROPBOX_ACCESS_TOKEN = 'sl.Bn8fV-EMhs68duxFUZIcCObLQE-jcQ21vHT97HzzqolDtIC80dLBuJ_7TQClmxx6_SPcroegfHwwDjbMeNxXjvYipT41IHj9HvMYEu8mZhmUuIh6f0oqfn7v6ftPLnSJHtczMZ6kd7x3NQ8eJUBPCuI'
+
+DROPBOX_APP_KEY = '878rh9tt2lqnbwc'
+
+DROPBOX_APP_SECRET = 'p1z60sqyjy1gpjx'
+
+DROPBOX_OAUTH2_REFRESH_TOKEN = 'OB6GXurPyhcAAAAAAAAAAWbYbxfp9e1izkfBVFr3UQiyGclINpl71M0fVfwO0vf5'

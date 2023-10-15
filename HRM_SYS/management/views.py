@@ -190,6 +190,7 @@ def get_emp_files(request):
 
     if request.POST:
         emp_id = request.POST.get("emp_id")
+        print(emp_id)
         my_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id=emp_id))
         all_my_files = []
         for my_file in my_files:
