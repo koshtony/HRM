@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils import *
+from django.utils import timezone
 import datetime
 
 # Create your models here.
@@ -30,7 +30,7 @@ class PayRoll(models.Model):
     housing = models.FloatField(default=0.0)
     others = models.FloatField(default=0.0)
     net_pay = models.FloatField(default=0.0)
-    created = models.DateField(default=datetime.date.today())
+    created = models.DateField(default=timezone.now)
     status = models.CharField(max_length=100,default="audit")
     pay_run = models.CharField(max_length=200,default='')
 

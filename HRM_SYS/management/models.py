@@ -117,7 +117,7 @@ class Attendance(models.Model):
 
     employee = models.ForeignKey(Employee,on_delete=models.PROTECT)
     is_leave = models.BooleanField(default=False)
-    day = models.DateField(default=date.today())
+    day = models.DateField(default=timezone.now)
     clock_in = models.CharField(max_length=1000,default="")
     clock_out = models.CharField(max_length=1000,default="")
     lat = models.CharField(max_length=10,default="")
