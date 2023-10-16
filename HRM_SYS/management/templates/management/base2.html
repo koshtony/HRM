@@ -23,6 +23,33 @@
   <link rel="shortcut icon" href="{% static 'logo/logo.jpg' %}" />
   <!-- endinject -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+  <style>
+    #indicator {
+       position: absolute;
+       top: 0;
+       bottom: 0;
+       left: 0;
+       right: 0; 
+       margin: auto;
+       border: 10px solid grey;
+       border-radius: 50%;
+       border-top: 10px solid red;
+       width: 100px;
+       height: 100px;
+       animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+       0% {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg);
+       }
+       100% {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+       }
+    }
+ </style>
   
 
 </head>
@@ -72,8 +99,19 @@
 
 
   <!-- End custom js for this page-->
-
+  <script>
+    $('body').append('<div style = "" id = "indicator"> <div class="loader"> </div> </div>');
+    $(window).on('load', function () {
+       setTimeout(removeLoader, 2000);
+    });
+    function removeLoader() {
+       $("#indicator").fadeOut(1000, function () {
+          $("#indicator").remove();
+       });
+    }
+  </script>
 </body>
+
 
 </html>
 

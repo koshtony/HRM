@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -190,8 +190,9 @@ def get_emp_files(request):
 
     if request.POST:
         emp_id = request.POST.get("emp_id")
-        print(emp_id)
-        my_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id=emp_id))
+        emp_id = str(emp_id)
+        my_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id="001"))
+        print(my_files)
         all_my_files = []
         for my_file in my_files:
             file_inst ={
@@ -203,6 +204,18 @@ def get_emp_files(request):
             all_my_files.append(file_inst)
         print(all_my_files)
         return JsonResponse(all_my_files,safe=False)
+    
+def files_details(request,id):
+
+        emp_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id=id))
+        app_files = Applications.objects.filter(applicant = User.objects.get(username = id ))
+        
+        context = {
+            "emp_files":emp_files,
+            "app_files":app_files
+        }
+
+        return render(request,'management/files_details.html',context)
 
 @login_required
 def clock(request):

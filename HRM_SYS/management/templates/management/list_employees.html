@@ -699,6 +699,30 @@
         </div>
 
 
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filesDetailModal" id="fileIframeBtn" style="display:none">edit modal</button>
+
+<div class="modal fade" id="filesDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">check details</h5>
+          <div id="loadingMessage">Loading...</div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="fileFrame" width="100%" height="1000" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
         <!-- content-wrapper ends -->
@@ -717,57 +741,21 @@
     new DataTable('#EmpTab');
 
     function viewFiles(id){
-      alert(id)
-   
-       $("#modalBtn").click()
+      
+    $("#fileIframeBtn").click()
 
-       $.ajax({
-          url:"{% url 'management_get_files' %}",
-          type:"post",
-          data:{
-             emp_id: id,
-             csrfmiddlewaretoken:'{{ csrf_token }}',
-          },
-          success:function(data,status){
-             
-            // alert(data)
-            for( key in data){
-             $("#fileCols").append(
-              `
-              <div class="file-item">
-                            <div class="file-item-select-bg bg-primary"></div>
-                            <label class="file-item-checkbox custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" />
-                                <span class="custom-control-label"></span>
-                            </label>
-                            <div>
-                                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0 0 100 100">
-                                        <polygon fill="#4b4dff" points="74,82 26,82 26,20 61,20 74,33"></polygon><polygon fill="#edf7f5" points="73,38 56,38 56,21 60,21 60,34 73,34"></polygon><path fill="#4343bf" d="M77,85H23V17h40.313L77,31.827V85z M29,79h42V34.173L60.687,23H29V79z"></path><rect width="20" height="4" x="40" y="43" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="54" fill="#edf7f5"></rect><rect width="20" height="4" x="40" y="64" fill="#edf7f5"></rect><polygon fill="#3abcf8" points="71,89 20,89 20,13 60,13 60,23 30,23 30,79 71,79"></polygon>
-                                        </svg>
-                            </div>
-                            <a href="${data[key]["document"]}" class="file-item-name" download>
-                                ${data[key]["file_name"]}
-                            </a>
-                            <div class="file-item-changed">02/17/2018</div>
-                            <div class="file-item-actions btn-group">
-                                <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="javascript:void(0)">Rename</a>
-                                   
-                                    <a class="dropdown-item" href="javascript:void(0)">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                 
-              `
-             )
-                      }
+    document.getElementById("fileFrame").src = "files_details/"+id
 
-          }
-       })
 
         
     }
+
+    $('#fileFrame').ready(function () {
+    $('#loadingMessage').css('display', 'none');
+});
+$('#fileFrame').load(function () {
+    $('#loadingMessage').css('display', 'none');
+});
 
     function Profile(id){
 

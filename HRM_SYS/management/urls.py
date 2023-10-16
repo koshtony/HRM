@@ -5,7 +5,7 @@ from .views import home,clock,add_department,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,\
-            add_event,del_event,show_map
+            add_event,del_event,show_map,files_details
 
       
 
@@ -23,6 +23,7 @@ urlpatterns = [
        path('department_details/<str:name>',views.dep_details,name="management_departments_details"),
        path('get_employee',views.get_employee,name="management_get_employee"),
       path('get_files',views.get_employee,name="management_get_files"),
+      path('files_details/<str:id>',views.files_details,name="management_files_details"),
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
       path('leave',views.leave,name="management_leave"),
       path('upload_leave',views.upload_leave,name="management_upload_leave"),

@@ -147,13 +147,13 @@ MEDIA_URL = 'media/'
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
     "mediafiles": {
-        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
+        "BACKEND": "storages.backends.dropbox.DropboxStorage",
     },
 }
 

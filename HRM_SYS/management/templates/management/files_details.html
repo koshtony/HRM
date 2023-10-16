@@ -1,0 +1,148 @@
+
+{% extends 'management/base2.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <!-- create camera modal here-->
+
+     
+
+
+     <style>
+        #indicator {
+           position: absolute;
+           top: 0;
+           bottom: 0;
+           left: 0;
+           right: 0; 
+           margin: auto;
+           border: 10px solid grey;
+           border-radius: 50%;
+           border-top: 10px solid red;
+           width: 100px;
+           height: 100px;
+           animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+           0% {
+              -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+           }
+           100% {
+              -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+           }
+        }
+     </style>
+
+
+
+
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            
+               
+            
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">employee files</h4>
+                    <table class="table table-striped" id="EmpTabFiles">
+                        <thead>
+                            <tr>
+                                <th>download</th>
+                                <th>file name</th>
+                                <th>category</th>
+                                <th>properties</th>
+                                <th>created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in emp_files %}
+                            <tr>
+                                <td>
+                                    <a href="{{file.document.url}}" download><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    {{file.file_name}}
+                                </td>
+                                <td>
+                                    {{file.category}}
+                                </td>
+                                <td>
+                                    {{file.properties}}
+                                </td>
+                                <td>
+                                    {{file.created}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Approval files</h4>
+                    <table class="table table-striped" id="appTabFiles">
+                        <thead>
+                            <tr>
+                                <th>download</th>
+                                <th>approvers</th>
+                                <th>category</th>
+                                <th>status</th>
+                                <th>created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in app_files %}
+                            <tr>
+                                <td>
+                                    <a href="{{file.attachment.url}}" download><i class="fa fa-download"></i></a>
+                                </td>
+                                <td>
+                                    {{file.approvers}}
+                                </td>
+                                <td>
+                                    {{file.type.name}}
+                                </td>
+                                <td>
+                                    {{file.status}} - {{file.rate}}
+                                </td>
+                                <td>
+                                    {{file.created_date}}: {{ file.created_time}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                     
+                    
+                  </div>
+                </div>
+            </div>
+         
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+      <script>
+        $('body').append('<div style = "" id = "indicator"> <div class="loader"> </div> </div>');
+        $(window).on('load', function () {
+           setTimeout(removeLoader, 2000);
+        });
+        function removeLoader() {
+           $("#indicator").fadeOut(1000, function () {
+              $("#indicator").remove();
+           });
+        }
+     </script>
+  {% endblock content %}
+
+  
