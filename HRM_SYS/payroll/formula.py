@@ -11,17 +11,17 @@ def tax_amount(rates,amount,relief):
     tax=0
     if amount > first and amount <= first+second :
 
-       tax += (first*first_rate)+(second*second_rate)
+       tax += ((first*first_rate)+(second*second_rate))-relief
 
     elif amount > (first+second):
         
-        tax += ((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate)
+        tax += (((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate))-relief
 
     elif amount <= first and amount > 0:
 
-        tax += (amount*first_rate)
+        tax += 0
 
-    return tax-relief
+    return tax
 
 
 

@@ -329,8 +329,10 @@ def upload_leave(request):
     if request.POST:
        form = LeaveForm(request.POST,request.FILES)
        if form.is_valid():
+            '''
             form.instance.applicant = request.user
             form.save()
+            '''
             approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
            
@@ -353,9 +355,11 @@ def upload_process(request):
     if request.POST:
        form = ApprovalForm(request.POST,request.FILES)
        if form.is_valid():
+            ''''
             form.instance.applicant = request.user
             form.instance.created = datetime.now()
             form.save()
+            '''
             approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
             print(approvers)
@@ -629,6 +633,8 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
     fields = '__all__'
     
     raise_exception = True
+
+    success_url = '/list_employee'
    
 
     def form_valid(self,form):

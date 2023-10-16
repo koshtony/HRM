@@ -15,11 +15,13 @@ import json
 def gen_payroll(request):
     attendance = Attendance.objects.all()
 
-    payroll_report = PayRoll.objects.all().order_by('-created')
+    settings = PayRollSetting.objects.all()
 
-    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('net_pay'))
+    payroll_report = PayRoll.objects.all().order_by('-pk')
 
-    context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll}
+    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('net_pay')).values('payroll_id','size','total_amount','created')
+
+    context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll,"settings":settings}
 
     return render(request,"payroll/reports.html",context)
 
@@ -42,7 +44,7 @@ def monthly_payroll(request):
                 for attendance in attendances:
 
                     total_hours += attendance.hours
-                    leave_days += sum([leave.days for leave in Leave.objects.filter(applicant=User.objects.get(username=employee.emp_id)) if leave.status=="completed"])
+                    leave_days += sum([leave.days for leave in Applications.objects.filter(applicant=User.objects.get(username=employee.emp_id)).filter(type__name = "leave") if leave.status=="complete"])
                     days += attendance.days
                     
                  
@@ -111,11 +113,11 @@ def payroll_details(request):
     if request.POST:
 
         id = request.POST.get("id")
-        print(id)
+    
         details = PayRoll.objects.filter(payroll_id=id)
         
         cost,size,org= 0,0,[]
-        payrolls = []
+        payrolls,created = [],[]
         for detail in details:
 
             info = {
@@ -131,11 +133,12 @@ def payroll_details(request):
             cost+=detail.gross_pay
             size+=1
             org.append(detail.org_name)
+            created.append(detail.created)
 
            
 
             payrolls.append(info)
-        summary = {"cost":cost,"size":size,"org":org}
+        summary = {"cost":cost,"size":size,"org":org,"created":created[0]}
         return JsonResponse(json.dumps(summary,default=str),safe=False)
     
 def payroll_check(request):
