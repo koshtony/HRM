@@ -159,7 +159,7 @@ class Applications(models.Model):
     details = models.TextField()
     created_date = models.DateField(default=timezone.now)
     created_time = models.TimeField(default=timezone.now)
-    attachment = models.FileField(default='attachment',upload_to='ápproval_files')
+    attachment = models.FileField(default='attachment',upload_to='approval_files')
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")
     stage = models.IntegerField(default=0)
     rate = models.IntegerField(default=0)

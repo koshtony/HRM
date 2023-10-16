@@ -152,11 +152,9 @@ STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
-  
     "mediafiles": {
         "BACKEND": "storages.backends.dropbox.DropboxStorage",
     },
-    
 }
 
 
