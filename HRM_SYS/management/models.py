@@ -164,6 +164,10 @@ class Applications(models.Model):
     stage = models.IntegerField(default=0)
     rate = models.IntegerField(default=0)
     expected = models.IntegerField(default=0)
+    start = models.DateField(default=timezone.now)
+    end = models.DateField(default=timezone.now)
+    days = models.IntegerField(default = 0)
+
     remarks = models.TextField()
 
     def __str__(self):

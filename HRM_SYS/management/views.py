@@ -192,7 +192,6 @@ def get_emp_files(request):
         emp_id = request.POST.get("emp_id")
         emp_id = str(emp_id)
         my_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id="001"))
-        print(my_files)
         all_my_files = []
         for my_file in my_files:
             file_inst ={
@@ -340,12 +339,12 @@ def get_attendance(request):
 @login_required
 def upload_leave(request):
     if request.POST:
-       form = LeaveForm(request.POST,request.FILES)
+       form = LeaveForm(request.POST)
        if form.is_valid():
-            '''
+            
             form.instance.applicant = request.user
             form.save()
-            '''
+            
             approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
            
@@ -354,7 +353,9 @@ def upload_leave(request):
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
-                created_date = datetime.now(),created_time = datetime.now()
+                created_date = datetime.now(),created_time = datetime.now(),
+                start = form.cleaned_data.get("start"), end = form.cleaned_data.get("end"),
+                days = form.cleaned_data.get("days")
 
     
             )
@@ -420,10 +421,23 @@ def approve(request):
 
         application.stage +=1
         if application.stage == application.expected:
-            print("yes")
+        
             application.status = "complete"
             application.rate = 100
             application.save()
+            if application.type.name == "leave":
+                
+                att = Attendance(
+                    employee = Employee.objects.get(emp_id = application.applicant.username),
+                    is_leave = True,
+                    days = application.days,
+                    counts = application.days,
+                    remarks = "leave "+str(application.start)+" to "+str(application.end),
+                    image1 = "", 
+                    image2 = ""
+                )
+
+                att.save()
         else:
             application.status = "pending"
             application.rate = int((application.stage / application.expected)*100)
@@ -463,6 +477,19 @@ def approve_by_details(request):
                 application.status = "complete"
                 application.rate = 100
                 application.save()
+                if application.type.name == "leave":
+                
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = ""
+                    )
+
+                    att.save()
 
                 track = approvalTrack(
                 application = Applications.objects.get(pk=id),
@@ -603,7 +630,7 @@ def get_notify(request):
     popups = []
     for notification in notifications:
         notifs = {
-            "image":request.user.profile.image.url,"info":notification.info,
+            "image":notification.recipient.profile.image.url,"info":notification.info,
             "date":notification.date,"time":notification.time
             
             }
