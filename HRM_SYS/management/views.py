@@ -314,6 +314,8 @@ def get_attendance(request):
                 "m1":att_settings.start.minute,
                 "h2":att_settings.end.hour,
                 "m2":att_settings.end.minute,
+                "lat1":att_settings.clock_in_latitude,
+                "long1":att_settings.clock_in_longitude
             }
 
             return JsonResponse(details,safe=False)
@@ -324,7 +326,10 @@ def get_attendance(request):
                 "m2":att_settings.end.minute,
                 "clock_in":"",
                 "clock_out":"",
+                "lat1":att_settings.clock_in_latitude,
+                "long1":att_settings.clock_in_longitude
             }
+        print(details)
         return JsonResponse(details,safe=False)
     else:
 
