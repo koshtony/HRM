@@ -30,7 +30,8 @@ class PayRoll(models.Model):
     housing = models.FloatField(default=0.0)
     others = models.FloatField(default=0.0)
     net_pay = models.FloatField(default=0.0)
-    created = models.DateField(default=timezone.now)
+    created_date = models.DateField(default=timezone.now)
+    created_time = models.TimeField(default=timezone.now)
     status = models.CharField(max_length=100,default="audit")
     pay_run = models.CharField(max_length=200,default='')
 

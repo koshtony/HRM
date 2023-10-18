@@ -277,7 +277,7 @@
                                                 <a onclick="editIframe('{{val.pk}}')"><i class="ti-pencil"></i></a>
                                             </td>
                                             <td>
-                                                {{val.created}}
+                                                {{val.created_date}} {{val.created_time}}
                                             </td>
                                             {% if val.status == "audited" %}
                                             <td style="background-color: green;">
@@ -359,7 +359,9 @@
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                             <div class="card"  style="width:400px; overflow-x: scroll;">
                                     <div class="card-body">
+                                        <h4> pay period</h4>
                                         <div class="form-group row">
+                                            
                                        
                                             <label>from</label>
                             <input type="date" class="form-control" id="date1">
@@ -367,9 +369,14 @@
                            
                             <label>to</label>
                             <input type="date" class="form-control" id="date2">
+                            <label>payroll id</label>
+                            <input type="text" class="form-control" id="payId">
+
                          
                             </div>
                             <a class="btn btn-primary" onclick="filter()">filter</a>
+
+                            <h3>preview</h3>
                             <table  class="table table-striped"  id="paySummary" style="zoom: 85%; font-weight: bolder;">
                                 <thead style="background-color: yellowgreen;">
                                     <tr>
@@ -394,8 +401,10 @@
                                     </div>
                                     
                             </div>
-                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent" style="overflow-x: scroll;">
-                                <table  class="table table-striped"  id="paygen" style="zoom: 85%; font-weight: bolder;">
+                            
+                            <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent" style="overflow-x: scroll;" id="pSum">
+                               
+                                <table  class="table table-striped"  id="paygen" style="zoom: 100%; font-weight: bolder;">
                                     <thead style="background-color: yellowgreen;">
                                         <tr>
                                             <th>payroll id</th>
@@ -403,27 +412,29 @@
                                             <th>size</th>
                                             <th>created</th>
                                             <th>view all</th>
+                                            <th>Action</th>
                                           
                                             
                                            
                                            
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="payrollGroup">
                                         {% for payroll in by_payroll_ids  %}
                                         <tr>
                                             <td>{{payroll.payroll_id}}</td>
                                             <td>{{payroll.total_amount}}</td>
                                             <td>{{payroll.size}}</td>
-                                            <td>{{payroll.created}}</td>
-                                            <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-eye"></i></a></td>
+                                            <td>{{payroll.created_date}} {{payroll.created_time}}</td>
+                                            <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-check"></i></a></td>
+                                            <td><a><i class="fa fa-envelope"></i>email</a></td>
                                            
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                 
-                                </div>
+                               
+                            </div>
                        </div>
                        <div class="row">
 
@@ -431,7 +442,7 @@
 
                        </div>
             </div>
-            <div id="groups" class="tab-pane fade active show col-lg-12">
+            <div id="groups" class="tab-pane fade show col-lg-12">
                 <div class="card">
                     <div class="row">
                         <div class="table-responsive">
@@ -505,6 +516,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                  
                 date1: $("#date1").val(),
                 date2: $("#date2").val(),
+                payId: $("#payId").val(),
                 csrfmiddlewaretoken:'{{ csrf_token }}',
 
                 
@@ -530,6 +542,18 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                         `
                     )
                 }
+                document.getElementById("pSum").innerHTML = ''
+                fetch("{% url 'payroll-grouped' %}",
+                {
+                    method:"GET"
+                }
+                
+                ).then(resp =>{
+                    return resp.text()
+                }).then(table =>{
+                    
+                    document.getElementById("pSum").innerHTML = table;
+                })
                 
             }
         })
@@ -623,6 +647,8 @@ function showMap(lat,long){
     $("#imageGenIframeBtn").click()
     document.getElementById("imageGenFrame").src = image_url
 }
+
+$("#payId").val(Math.trunc(Date.now() + Math.random()))
     
 </script>
 

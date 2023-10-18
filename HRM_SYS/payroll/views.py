@@ -7,6 +7,8 @@ from django.db.models import Sum,Count
 from management.models import * 
 from .formula import tax_amount
 from .models import *
+import datetime
+from datetime import datetime,date, timedelta
 import pandas as pd
 import json
 # Create your views here.
@@ -19,7 +21,7 @@ def gen_payroll(request):
 
     payroll_report = PayRoll.objects.all().order_by('-pk')
 
-    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('net_pay')).values('payroll_id','size','total_amount','created')
+    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('gross_pay'))
 
     context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll,"settings":settings}
 
@@ -29,12 +31,13 @@ def monthly_payroll(request):
     if request.POST:
         date1 = request.POST.get("date1")
         date2 = request.POST.get("date2")
-        print(date1)
+        payroll_id = request.POST.get("payId")
+        print(payroll_id)
+        
+        date2 = datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1)
+        
         
         payrolls = []
-        payroll_id = hash(datetime.datetime.now())
-        if payroll_id < 0:
-            payroll_id = payroll_id*-1
         for employee in Employee.objects.all():
             
             attendances = Attendance.objects.filter(employee=employee).filter(created__range = [date1,date2])
@@ -77,7 +80,8 @@ def monthly_payroll(request):
                         -tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0)\
                         -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
-                    "created": datetime.datetime.now(),
+                    "created_date": datetime.now(),
+                    "created_time":datetime.now(),
                     "pay_run": str(date1)+" - "+str(date2)
                     
 
@@ -101,7 +105,7 @@ def gen_payslip(request,signid):
     
     emp_payroll = PayRoll.objects.get(sign_id=signid)
 
-    print(emp_payroll)
+  
 
     context = {"details":emp_payroll}
 
@@ -128,17 +132,18 @@ def payroll_details(request):
                 "gross_pay":detail.gross_pay,
                 "paye":detail.tax,
                 "net_pay":detail.net_pay,
-                "created":detail.created,
+                "created":detail.created_date,
             }
             cost+=detail.gross_pay
             size+=1
             org.append(detail.org_name)
-            created.append(detail.created)
+            created.append(detail.created_date)
 
            
 
             payrolls.append(info)
         summary = {"cost":cost,"size":size,"org":org,"created":created[0]}
+        print(summary)
         return JsonResponse(json.dumps(summary,default=str),safe=False)
     
 def payroll_check(request):
@@ -162,6 +167,18 @@ def payroll_check(request):
     ===================================================================================
         create view where payroll master can change info manually
 '''
+
+def grouped_payroll(request):
+
+    grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('gross_pay'))
+
+    context = {"by_payroll_ids":grouped_payroll}
+
+    return render(request,'payroll/grouped_table.html',context)
+
+
+
+
 
 class EditPayrollView(LoginRequiredMixin,UpdateView):
 

@@ -1,0 +1,28 @@
+<table  class="table table-striped"  id="paygen" style="zoom: 100%; font-weight: bolder;">
+    <thead style="background-color: yellowgreen;">
+        <tr>
+            <th>payroll id</th>
+            <th>total payable</th>
+            <th>size</th>
+            <th>created</th>
+            <th>view all</th>
+            <th>Action</th>
+          
+            
+           
+           
+        </tr>
+    </thead>
+    <tbody>
+        {% for payroll in by_payroll_ids  %}
+        <tr>
+            <td>{{payroll.payroll_id}}</td>
+            <td>{{payroll.total_amount}}</td>
+            <td>{{payroll.size}}</td>
+            <td>{{payroll.created_date}} {{payroll.created_time}}</td>
+            <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-check"></i></a></td>
+            <td><a><i class="fa fa-envelope"></i>email</a></td>
+           
+        </tr>
+        {% endfor %}
+  
