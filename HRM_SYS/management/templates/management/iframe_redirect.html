@@ -1,0 +1,50 @@
+
+{% extends 'management/base2.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <!-- create camera modal here-->
+
+     <style>
+        .container {
+          height: 200px;
+          position: relative;
+          border: 3px solid green;
+        }
+        
+        .center {
+          margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+        }
+        </style>
+
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            
+            <div class="container">
+                <div class="center">
+            
+            
+        <button class="btn btn-circle" style="font-size: 100px; margin:100px;"><i class="fa fa-check" style="font-size: 200px;"></i></button>
+        <h4> successfully edited close the modal</h4>
+                    
+               </div>
+               </div>
+            
+         
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+     
+  {% endblock content %}
+
+  

@@ -5,7 +5,7 @@ from .views import home,clock,add_department,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,\
-            add_event,del_event,show_map,files_details
+            add_event,del_event,show_map,files_details,iframe_redirect
 
       
 
@@ -38,6 +38,7 @@ urlpatterns = [
       path('posts',views.Post,name="management_post"),
       path('register',views.register,name="management_register"),
       path('list_files',views.list_files,name="management_files"),
+      path('iframe_redirect',views.iframe_redirect,name="management_iframe_redirect"),
       path('profile',views.profile,name="management_profile"),
       path('get_notify',views.get_notify, name='management_get_notify'),
       path('show_map/<str:coords>',views.show_map, name='management_show_map'),

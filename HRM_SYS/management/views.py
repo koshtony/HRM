@@ -667,7 +667,9 @@ def show_map(request,coords):
    
    return render(request,'management/map.html',context)
 
+def iframe_redirect(request):
 
+    return render(request,'management/iframe_redirect.html')
 
 
 
@@ -679,11 +681,12 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
     
     raise_exception = True
 
-    success_url = '/list_employee'
+    success_url = '/iframe_redirect'
    
 
     def form_valid(self,form):
         return super().form_valid(form)
+    
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'management/password_reset.html'
     email_template_name = 'management/password_reset_email.html'

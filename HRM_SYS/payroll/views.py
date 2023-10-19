@@ -177,7 +177,15 @@ def grouped_payroll(request):
     return render(request,'payroll/grouped_table.html',context)
 
 
+def re_calculate(request):
 
+    if request.POST:
+
+        sign_id = request.POST.get("sign_id")
+        print(sign_id)
+
+        return JsonResponse("done calculating",safe=False)
+# class views
 
 
 class EditPayrollView(LoginRequiredMixin,UpdateView):
@@ -186,7 +194,10 @@ class EditPayrollView(LoginRequiredMixin,UpdateView):
     template_name = 'payroll/edit_payroll.html'
     fields = '__all__'
     raise_exception = True
-    success_url = '/reports'
+    success_url = '/iframe_redirect'
+
+
+
 
 
     

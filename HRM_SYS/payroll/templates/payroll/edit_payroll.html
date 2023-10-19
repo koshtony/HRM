@@ -4,20 +4,12 @@
 
 {% block content %}
      <!-- create camera modal here-->
-
-     
-
-
-
-
-
-
       <!-- partial -->
-      <div class="main-panel">        
-        <div class="content-wrapper">
+<div class="main-panel">        
+      <div class="content-wrapper">
           <div class="row">
             
-            <div class="col-12 grid-margin">
+           
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">payroll personal info</h4>
@@ -40,12 +32,15 @@
                         
                       </div>
                       
-                      <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                      <button type="submit" class="btn btn-primary mr-2">Edit</button>
                       
                     </form>
+                    <br>
+                    <button type="button" class="btn btn-success mr-2" onclick="Calculate()">Re-Calculate</button>
+                    
                   </div>
                 </div>
-            </div>
+          
             
           </div>
         </div>
@@ -57,6 +52,41 @@
 
     <script>
      
+     function Calculate(){
+         
+      alert($("#id_org_name").val())
+         $.ajax({
+           
+            type:"POST",
+            url:"{% url 'payroll-re-calculate' %}",
+            data:{
+               
+              org_name:$("#id_org_name").val(),
+              sign_id:$("#id_sign_id").val(),
+              pin_no:$("#id_pin_no").val(),
+              basic_salary: $("#id_basic_salary").val(),
+              allowance:$("#id_allowance").val(),
+              add_ons:$("#id_add_ons").val(),
+              total_hours:$("#id_total_hours").val(),
+              leave_days:$("#id_leave_days").val(),
+              deductions:$("#id_deductions").val(),
+              nhif:$("#id_nhif").val(),
+              nssf:$("#id_nssf").val(),
+              insurance:$("#id_insurance").val(),
+              housing:$("#id_housing").val(),
+              others:$("#id_sign_id").val(),
+    
+
+              csrfmiddlewaretoken:'{{ csrf_token }}'
+                
+            },
+            success:function(data,status){
+                
+                alert(data)
+            }
+             
+         })
+     }
 
     </script>
   {% endblock content %}
