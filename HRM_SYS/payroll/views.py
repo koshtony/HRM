@@ -77,7 +77,7 @@ def monthly_payroll(request):
                     "housing": employee.payroll_settings.housing,
                     "others": employee.payroll_settings.others,
                     "net_pay":round( ((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)\
-                        -tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),0)\
+                        -round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2)\
                         -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
                     "created_date": datetime.now(),
@@ -182,7 +182,53 @@ def re_calculate(request):
     if request.POST:
 
         sign_id = request.POST.get("sign_id")
-        print(sign_id)
+        org_name = request.POST.get("org_name")
+        pin_no = request.POST.get("pin_no")
+        basic_salary = float(request.POST.get("basic_salary"))
+        add_ons = float(request.POST.get("add_ons"))
+        total_hours = float(request.POST.get("total_hours"))
+        leave_days = float(request.POST.get("leave_days"))
+        deductions = float(request.POST.get("deductions"))
+        nhif = float(request.POST.get("nhif"))
+        nssf = float(request.POST.get("nssf"))
+        insurance = float(request.POST.get("insurance"))
+        housing = float(request.POST.get("housing"))
+        others = float(request.POST.get("others"))
+        allowance = float(request.POST.get("allowance"))
+        
+        employee = Employee.objects.get(emp_id = PayRoll.objects.get(sign_id=sign_id).employee_id)
+        
+        filt_payroll = PayRoll.objects.get(sign_id = sign_id)
+        filt_payroll.org_name = org_name
+        filt_payroll.pin_no = pin_no 
+        filt_payroll.basic_salary = basic_salary
+        filt_payroll.total_hours = total_hours 
+        filt_payroll.leave_days = leave_days 
+        filt_payroll.deductions = deductions 
+        filt_payroll.add_ons = add_ons 
+        filt_payroll.nhif = nhif 
+        filt_payroll.nssf = nssf 
+        filt_payroll.insurance = insurance 
+        filt_payroll.housing = housing
+        filt_payroll.others = others
+        filt_payroll.allowance = allowance
+        filt_payroll.gross_pay = round((basic_salary+allowance+add_ons)-deductions,2)
+        filt_payroll.taxable_income = round(((basic_salary+allowance+add_ons)-deductions)-(nssf),2)
+        filt_payroll.tax = round(tax_amount(employee.payroll_settings.tax_rate,((basic_salary+allowance+add_ons)-deductions)-(nssf),employee.payroll_settings.relief),2)
+        filt_payroll.net_pay = round(((basic_salary+allowance+add_ons)-deductions)-(nssf)\
+                        -round(tax_amount(employee.payroll_settings.tax_rate,((basic_salary+allowance+add_ons)-deductions)-(nssf),employee.payroll_settings.relief),2)\
+                        -nhif-insurance-housing-others,2)
+        
+
+        filt_payroll.status = "audited"
+        filt_payroll.created_date = datetime.now()
+        filt_payroll.created_time = datetime.now()
+        
+
+        filt_payroll.save()
+
+
+
 
         return JsonResponse("done calculating",safe=False)
 # class views
