@@ -11,7 +11,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixi
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm
+from django.views.decorators.csrf import csrf_exempt
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm,ChatForm
 from .models import *
 from payroll.models import PayRoll
 from datetime import datetime,date
@@ -672,6 +673,105 @@ def iframe_redirect(request):
     return render(request,'management/iframe_redirect.html')
 
 
+def live_chat(request):
+
+    profiles = Profile.objects.all()
+    contxt = {
+        
+        "profiles":profiles
+    }
+    return render(request,'management/chats.html',contxt)
+
+
+def live_chat_user(request,pk):
+    
+    
+    ind_profile = Profile.objects.get(user_id=pk)
+    profiles = Profile.objects.all()
+    chats = ChatMessage.objects.all()
+    in_chats = ChatMessage.objects.filter(sender = ind_profile , recep = request.user.profile)
+    in_chats.update(seen=True)
+    chat_form = ChatForm()
+
+    contxt = {
+        "profiles":profiles,
+        "ind":ind_profile,
+        "chats":chats,
+        "counts":in_chats.count(),
+        "form": chat_form
+    }
+    if request.method=="POST":
+        c_form = ChatForm(request.POST)
+        if c_form.is_valid():
+            chat_msg = c_form.save(commit=False)
+            chat_msg.sender = request.user.profile 
+            chat_msg.recep = ind_profile 
+            chat_msg.save()
+            
+            
+    
+    return render(request,'management/chat.html',contxt)
+@csrf_exempt
+def sent_msg(request,pk):
+    
+        ind_profile = Profile.objects.get(user_id=pk)
+        
+        data = json.loads(request.body)
+        
+        # filter chat from the req body
+        chat = data["msg"]
+        anony = data["anony"]
+      
+        if anony == "yes":
+
+            new_chat = ChatMessage(
+               body = chat , 
+               sender = Profile.objects.get(user__username="hummingbird"),
+               recep = ind_profile,
+               sent = datetime.now(),
+               seen = False
+               
+            )
+            
+        else:
+            new_chat = ChatMessage(
+                body = chat , 
+                sender = request.user.profile,
+                recep = ind_profile,
+                sent = datetime.now(),
+                seen = False
+                
+            )
+        new_chat.save()
+      
+        return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
+
+
+def recv_msg(request,pk):
+    
+    ind_profile = Profile.objects.get(user_id=pk)
+    
+    chats = ChatMessage.objects.filter(sender = ind_profile , recep = request.user.profile)
+    
+    chats_arr = []
+    
+    for chat in chats:
+        
+        chats_arr.append(chat.body)
+        
+    return JsonResponse(chats_arr,safe=False)
+
+def del_chat(request):
+
+    if request.POST:
+
+        id = request.POST.get("id")
+
+        mssg_del = ChatMessage.objects.get(pk=id)
+
+        mssg_del.delete()
+
+        return JsonResponse("message deleted",safe=False)
 
 class EditEmpView(LoginRequiredMixin,UpdateView):
     

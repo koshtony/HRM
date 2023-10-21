@@ -1,6 +1,7 @@
 from django.urls import path 
 from . import views 
-from .views import gen_payroll,monthly_payroll,gen_payslip,payroll_details,payroll_check,grouped_payroll,EditPayrollView,re_calculate
+from .views import gen_payroll,monthly_payroll,gen_payslip,payroll_details,\
+      payroll_check,grouped_payroll,EditPayrollView,re_calculate
 
 
 urlpatterns = [

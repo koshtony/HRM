@@ -1,8 +1,9 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from searchableselect.widgets import SearchableSelect
+from tinymce.widgets import TinyMCE
+
 
 class DateInput(forms.DateInput):
     input_type = 'date'
@@ -94,3 +95,18 @@ class UserUpdate(forms.ModelForm):
     class Meta:
         model = User 
         fields = ['username','email']
+
+class ChatForm(forms.ModelForm):
+
+    body = forms.CharField(widget=TinyMCE(
+            attrs={'required': False, 'cols': 5, 'rows': 2})
+    )
+    
+    class Meta:
+        
+        model = ChatMessage
+        fields = [
+            
+            "body",
+        ]
+       

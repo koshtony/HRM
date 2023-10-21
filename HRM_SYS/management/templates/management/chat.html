@@ -1,0 +1,371 @@
+
+{% extends 'management/base2.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<style>
+	.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+
+
+.chat-online {
+    color: #34ce57
+}
+
+.chat-offline {
+    color: #e4606d
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    max-height: 800px;
+    overflow-y: scroll
+}
+
+.chat-message-left,
+.chat-message-right {
+    display: flex;
+    flex-shrink: 0
+}
+
+.chat-message-left {
+    margin-right: auto
+}
+
+.chat-message-right {
+    flex-direction: row-reverse;
+    margin-left: auto
+}
+.py-3 {
+    padding-top: 1rem!important;
+    padding-bottom: 1rem!important;
+}
+.px-4 {
+    padding-right: 1.5rem!important;
+    padding-left: 1.5rem!important;
+}
+.flex-grow-0 {
+    flex-grow: 0!important;
+}
+.border-top {
+    border-top: 1px solid #dee2e6!important;
+}
+
+
+
+
+</style>
+
+<div class="main-panel">
+	<div class="content-wrapper">
+
+    <div class="container p-0">
+
+		<h4 class="h3 mb-3">Messages</h4>
+
+		<div class="d-flex align-items-center py-1">
+			<div class="position-relative">
+				<img src="{{ind.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+			</div>
+			<div class="flex-grow-1 pl-3">
+				<strong>{{ind.user.username}}</strong>
+				<div class="text-muted small"><em></em></div>
+			</div>
+			<label class="switch" >
+				<input type="checkbox" id="anony" value="yes" checked>
+				<span class="slider round" style="background-color:black"></span>
+			  </label>
+			<div>
+				
+
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="row g-0">
+				<div class="col-12 col-lg-5 col-xl-3 border-right">
+
+					<div class="px-4 d-none d-md-block">
+						
+					</div>
+                   
+                   
+
+					<hr class="d-block d-lg-none mt-1 mb-0">
+				</div>
+				<div class="col-12 col-lg-7 col-xl-9" style="margin-top:50px">
+					<div class="py-2 px-4 border-bottom d-none d-lg-block">
+						
+					</div>
+
+					<div class="position-relative">
+						<div class="chat-messages p-4" id="chat-bdy">
+                        {% for chat in chats %}
+                        
+						   {% if chat.sender.user.username == user.username and chat.recep.user.username == ind.user.username %}
+							<div class="chat-message-right pb-4" id="chat{{chat.pk}}">
+								<div>
+									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									<div class="text-muted small text-nowrap mt-2">{{chat.sent}}</div>
+								</div>
+								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3" style="background-color:grey">
+									<div class="font-weight-bold mb-1">You</div>
+									{{chat.body | safe}} <a onclick="delMssg('{{chat.pk}}');" style="color:red"> <i class="fa fa-trash"></i></a>
+								</div>
+
+							</div>
+
+							{% elif chat.sender.user.username == ind.user.username and chat.recep.user.username == user.username %}
+
+							<div class="chat-message-left pb-4" >
+								<div>
+									<img src="{{ind.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									<div class="text-muted small text-nowrap mt-2">{{chat.sent}}</div>
+								</div>
+								<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
+									<div class="font-weight-bold mb-1">{{ind.user.username}}@{{ind.user.first}}</div> 
+									{{chat.body | safe}}
+								</div>
+							</div>
+							{% endif %}
+                        {% endfor %}  
+
+						</div>
+					</div>
+
+					<div class="flex-grow-0 py-3 px-4 border-top">
+						<form method="POST" id="msg_form">
+							{% csrf_token %}
+						<div class="input-group">
+							
+							{{form.media}}
+                            {{form.body}}
+							
+							
+						</div>
+						<br>
+							<br>
+							<button type="submit" class="btn btn-primary"><i class="fa fa-plane"></i></button>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+
+
+<script>
+	function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+var form = document.getElementById("msg_form")
+
+form.addEventListener("submit",sendMsg)
+
+function sendMsg(event){
+
+	event.preventDefault()
+ 
+
+   
+    tinyMCE.triggerSave();
+	var chat = $('#id_body').val()
+    var anony = $("#anony").val()
+	alert(anony)
+
+	
+    var data  = {"msg":chat,"anony":anony}
+	var url = "{% url 'management_sent_msg' ind.user.id %}"
+
+	fetch(url,{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken': csrftoken
+		},
+		body:JSON.stringify(data),
+		
+	}
+
+
+	).then(response => response.json()).then(
+		data => {
+			console.log('Success:',data)
+            var chatBody = document.getElementById("chat-bdy")
+			var chatBox = document.createElement('div')
+			chatBox.classList.add("chat-message-right")
+			chatBox.innerHTML = `
+			<div>
+									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									<div class="text-muted small text-nowrap mt-2">${data["date"]}</div>
+								</div>
+								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+									<div class="font-weight-bold mb-1">You</div>
+									${data["mssg"]}
+								</div>
+
+			`
+			document.getElementById("id_body").value = ""
+           chatBody.append(chatBox)
+
+		}
+	).catch((error) => {
+		console.error('Error:',error)
+	})
+
+}
+
+setInterval(recvMsg,3000)
+
+ var counter = {{counts}}
+
+function recvMsg(){
+    
+	var url = "{% url 'management_recv_msg' ind.user.id %}"
+
+	fetch(url).then(response => response.json())
+	.then(data=>{
+		console.log("Success",data)
+        if (data.length==0){}
+		else{
+			var curMsg = data[data.length-1]
+			if (counter == data.length ){
+
+				console.log("no new message")
+			}
+			else{
+
+				var chatBody = document.getElementById("chat-bdy")
+			var chatBox = document.createElement('div')
+			chatBox.classList.add("chat-message-left")
+			chatBox.innerHTML = `
+			<div>
+									<img src="{{ind.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									<div class="text-muted small text-nowrap mt-2"></div>
+								</div>
+								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+									<div class="font-weight-bold mb-1">{{ind.user.username}}</div>
+									${curMsg}
+								</div>
+
+			`
+			document.getElementById("id_body").value = ""
+           chatBody.append(chatBox)
+			}
+		}
+		counter = data.length
+
+	}).catch((error)=>{
+
+		console.error('Error:',error)
+
+	})
+}
+
+function delMssg(id){
+	alert(id)
+
+	$.ajax({
+
+		type:"POST",
+		url : "{% url 'chat-del' %}" ,
+		data : {
+
+			id:id,
+
+			csrfmiddlewaretoken: '{{ csrf_token }}',
+		},
+		success: function(data,status){
+             
+             document.getElementById("chat"+id).style.display = "none"
+
+		}
+	})
+}
+
+$(document).ready(function () {
+    $(".django-ckeditor-widget").css("width", "10%")
+ });
+</script>
+
+
+
+{% endblock content %}

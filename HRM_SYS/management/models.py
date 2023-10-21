@@ -2,12 +2,13 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from payroll.models import PayRollSetting
+from tinymce.models import HTMLField
 from datetime import date
 import time
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User,on_delete = models.CASCADE)
-    image = models.ImageField(default='default.jpg',upload_to='profile_images')
+    image = models.ImageField(default='user.jpeg',upload_to='profile_images')
     first = models.CharField(max_length=50,default="None")
     surname = models.CharField(max_length=50,default="None")
     email = models.EmailField(default="user@gmail.com")
@@ -254,4 +255,20 @@ class Notifications(models.Model):
     def __str__(self):
 
         return self.recipient.username
+    
+
+class ChatMessage(models.Model):
+    
+    body = HTMLField()
+    anonymous = models.BooleanField(default=False)
+    sender = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="msg_sender")
+    anonymous_sender = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="anonymous_sender",null=True)
+    recep = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="msg_recepient")
+    sent = models.DateTimeField(default=timezone.now())
+    seen = models.BooleanField(default=False)
+    file = models.FileField(null=True,upload_to="chat_files")
+    
+    def __str__(self):
+        
+        return self.sender.user.username
     

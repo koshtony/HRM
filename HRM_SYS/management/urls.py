@@ -5,7 +5,7 @@ from .views import home,clock,add_department,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,\
-            add_event,del_event,show_map,files_details,iframe_redirect
+            add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat
 
       
 
@@ -41,6 +41,11 @@ urlpatterns = [
       path('iframe_redirect',views.iframe_redirect,name="management_iframe_redirect"),
       path('profile',views.profile,name="management_profile"),
       path('get_notify',views.get_notify, name='management_get_notify'),
+      path('live_chat',views.live_chat, name='management_live_chat'),
+      path('live_chat/live_chat_user/<int:pk>',views.live_chat_user, name='management_live_chat_user'),
+      path('live_chat/sent_msg/<int:pk>',views.sent_msg, name='management_sent_msg'),
+      path('live_chat/recv_msg/<int:pk>',views.recv_msg, name='management_recv_msg'),
+      path('del_chat',views.del_chat,name='chat-del'),
       path('show_map/<str:coords>',views.show_map, name='management_show_map'),
       path('edit_employee/<int:pk>',EditEmpView.as_view(),name="management-edit-employee"),
       path('password-reset', ResetPasswordView.as_view(), name='password_reset'),
