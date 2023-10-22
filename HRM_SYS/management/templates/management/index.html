@@ -107,7 +107,7 @@
                         {% for payroll in payrolls %}
                         <tr>
                           <td class="pl-0">{{payroll.employee_id}}</td>
-                          <td><p class="mb-0"><span class="font-weight-bold mr-2"></span>{{payroll.created}}</p></td>
+                          <td><p class="mb-0"><span class="font-weight-bold mr-2"></span>{{payroll.created_date}}{{payroll.created_time}}</p></td>
                           <td class="text-muted"><a href="{% url 'payroll-payslip' payroll.sign_id %}" download><i class="ti-download"></i></a></td>
                         </tr>
                         {% endfor %}
@@ -227,7 +227,7 @@
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <p class="card-title">New Employees</p>
+                  <p class="card-title">My attendance</p>
                   <div class="row">
                     <div class="col-12">
                       <div class="table-responsive">
@@ -235,16 +235,31 @@
                           <thead>
                             <tr>
                               <th>Employee #</th>
-                              <th>Name</th>
-                              <th>Date of joining </th>
-                              <th>Role</th>
-                              <th>Department</th>
-                              <th>Status</th>
-                              <th>Date of joining </th>
-                              <th>Left Date</th>
-                              <th></th>
+                              <th>day</th>
+                              <th>days</th>
+                              <th>hours</th>
+                              <th>deductions</th>
+                              <th>remaining leave_days</th>
+                              <th>status</th>
+                          
+                              <th>remarks</th>
                             </tr>
                           </thead>
+                          <tbody>
+                            {% for att in attendance %}
+                            <tr>
+                                
+                                <td>{{att.employee.emp_id}}</td>
+                                <td>{{att.employee.day}}</td>
+                                <td>{{att.days}}</td>
+                                <td>{{att.hours}}</td>
+                                <td>{{att.deductions}}</td>
+                                <td>{{att.leave_days}}</td>
+                                <td>{{att.status}}</td>
+                                <td>{{att.remarks}}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
                       </table>
                       </div>
                     </div>

@@ -66,12 +66,12 @@ class filesForm(forms.ModelForm):
         
     
 
-class profileForm(forms.ModelForm):
+class profileUpdateForm(forms.ModelForm):
 
     class Meta:
 
         model = Profile 
-        fields = '__all__'
+        fields = ['image','first','email','surname','phone','activation']
 
 
 class UserRegForm(UserCreationForm):

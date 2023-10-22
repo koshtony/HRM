@@ -171,6 +171,9 @@
                                                 <th>status</th>
                                                 <th>count</th>
                                                 <th>deduction</th>
+                                                <th>leave?</th>
+                                                <th>leave days</th>
+                                                <th>remarks</th>
                                                
                                             </tr>
                                         </thead>
@@ -192,10 +195,10 @@
                                                     {{attendance.clock_out}}
                                                 </td>
                                                 <td>
-                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">show map</i></button>
+                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
                                                 </td>
                                                 <td>
-                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">show map</i></button>
+                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
                                                 </td>
                                                 <td>
                                                     <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
@@ -217,6 +220,15 @@
                                                 </td>
                                                 <td>
                                                     {{attendance.deductions}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.is_leave}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.leave_days}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.remarks}}
                                                 </td>
                                             </tr>
                                             {% endfor %}

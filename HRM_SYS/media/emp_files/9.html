@@ -1,0 +1,1859 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title></title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="/static/management/vendors/feather/feather.css">
+  <link rel="stylesheet" href="/static/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="/static/vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <link rel="stylesheet" href="/static/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+  <link rel="stylesheet" href="/static/management/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" type="text/css" href="/static/management/js/select.dataTables.min.css">
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="/static/management/css/vertical-layout-light/style.css">
+  <link rel="shortcut icon" href="/static/logo/logo.jpg" />
+  <!-- endinject -->
+  
+
+</head>
+<body>
+  <div class="container-scroller">
+    <!-- partial:partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo mr-5" href=""><img src="https://www.koshtech.site/static/img/logo.png" class="mr-2" alt="logo"/></a>
+        <a class="navbar-brand brand-logo-mini" href=""><img src="https://www.koshtech.site/static/img/logo.png" alt="logo"/></a>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+          <span class="icon-menu"></span>
+        </button>
+        <ul class="navbar-nav mr-lg-2">
+          <li class="nav-item nav-search d-none d-lg-block">
+            <div class="input-group">
+              <div class="input-group-prepend hover-cursor" id="navbar-search-icon">
+                <span class="input-group-text" id="search">
+                  <i class="icon-search"></i>
+                </span>
+              </div>
+              <input type="text" list="searches" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
+              <datalist  id="searches">
+                <option value="data">
+
+              </datalist>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <li class="nav-item dropdown">
+            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+              <i class="icon-bell mx-0"></i>
+              <span class="count">10</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="notify">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+              
+          
+            </div>
+          </li>
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+              <img src="https://www.koshtech.site/static/img/logo.png" alt="profile"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item" href="/clock">
+                <i class="ti-timer text-primary"></i>
+                attendance
+              </a>
+              <a class="dropdown-item" href="/profile">
+                <i class="ti-user text-primary"></i>
+                My profile
+              </a>
+              
+              <a class="dropdown-item" href="/admin">
+                <i class="ti-settings text-primary"></i>
+                Admin
+              </a>
+              
+              <a class="dropdown-item" href="/logout/">
+                <i class="ti-power-off text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+          <li class="nav-item nav-settings d-none d-lg-flex">
+            <a class="nav-link" href="#">
+              <i class="icon-ellipsis"></i>
+            </a>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+          <span class="icon-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:partials/_settings-panel.html -->
+      <div class="theme-setting-wrapper">
+        <div id="settings-trigger"><i class="ti-settings"></i></div>
+        <div id="theme-settings" class="settings-panel">
+          <i class="settings-close ti-close"></i>
+          <p class="settings-heading">Process bar</p>
+          <div class="sidebar-bg-options selected" id="sidebar-light-theme"><div class="img-ss rounded-circle bg-light border mr-3"></div>Light</div>
+          <div class="sidebar-bg-options" id="sidebar-dark-theme"><div class="img-ss rounded-circle bg-dark border mr-3"></div>Dark</div>
+          <p class="settings-heading mt-2"></p>
+          <div class="color-tiles mx-0 px-4">
+            <div class="tiles success"></div>
+            <div class="tiles warning"></div>
+            <div class="tiles danger"></div>
+            <div class="tiles info"></div>
+            <div class="tiles dark"></div>
+            <div class="tiles default"></div>
+          </div>
+        </div>
+      </div>
+      <div id="right-sidebar" class="settings-panel">
+        <i class="settings-close ti-close"></i>
+        <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
+          </li>
+        </ul>
+        <div class="tab-content" id="setting-content">
+          <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel" aria-labelledby="todo-section">
+            <div class="add-items d-flex px-3 mb-0">
+              <form class="form w-100">
+                <div class="form-group d-flex">
+                  <input type="text" class="form-control todo-list-input" placeholder="Add To-do">
+                  <button type="submit" class="add btn btn-primary todo-list-add-btn" id="add-task">Add</button>
+                </div>
+              </form>
+            </div>
+            <div class="list-wrapper px-3">
+              <ul class="d-flex flex-column-reverse todo-list">
+                <li>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="checkbox" type="checkbox">
+                      Team review meeting at 3.00 PM
+                    </label>
+                  </div>
+                  <i class="remove ti-close"></i>
+                </li>
+                <li>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="checkbox" type="checkbox">
+                      Prepare for presentation
+                    </label>
+                  </div>
+                  <i class="remove ti-close"></i>
+                </li>
+                
+                
+                
+              </ul>
+            </div>
+            <h4 class="px-3 text-muted mt-5 font-weight-light mb-0">Events</h4>
+            <div class="events pt-4 px-3">
+              <div class="wrapper d-flex mb-2">
+                <i class="ti-control-record text-primary mr-2"></i>
+                <span>Sept 19 2023</span>
+              </div>
+              <p class="mb-0 font-weight-thin text-gray">upcoming meeting</p>
+              <p class="text-gray mb-0">Agenda: attaendance</p>
+            </div>
+           
+          </div>
+          <!-- To do section tab ends -->
+          <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
+            <div class="d-flex align-items-center justify-content-between border-bottom">
+              <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
+              <small class="settings-heading border-top-0 mb-3 pt-0 border-bottom-0 pb-0 pr-3 font-weight-normal">See All</small>
+            </div>
+            <ul class="chat-list">
+              <li class="list active">
+                <div class="profile"><img src="https://www.koshtech.site/static/img/logo.png" alt="image"><span class="online"></span></div>
+                <div class="info">
+                  <p>Antony</p>
+                  <p>Available</p>
+                </div>
+                <small class="text-muted my-auto">19 min</small>
+              </li>
+              <li class="list">
+                <div class="profile"><img src="https://www.koshtech.site/static/img/logo.png" alt="image"><span class="offline"></span></div>
+                <div class="info">
+                  <div class="wrapper d-flex">
+                    <p>Alex</p>
+                  </div>
+                  <p>Away</p>
+                </div>
+                <div class="badge badge-success badge-pill my-auto mx-2">4</div>
+                <small class="text-muted my-auto">23 min</small>
+              </li>
+              
+              
+            </ul>
+          </div>
+          <!-- chat tab ends -->
+        </div>
+      </div>
+      <!-- partial -->
+      <!-- partial:partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <i class="icon-grid menu-icon"></i>
+              <span class="menu-title">Homee page</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+              <i class="ti-desktop"></i>&nbsp;
+              <span class="menu-title">Broadcast</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/events">feeds</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">bulky sms</a></li>
+                <li class="nav-item"> <a class="nav-link" href="">bulky emails</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
+              <i class="icon-columns menu-icon"></i>
+              <span class="menu-title">Applications</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="form-elements">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="/approvals">Initiate</a></li>
+                <li class="nav-item"><a class="nav-link" href="/list_approvals">view</a></li>
+              </ul>
+            </div>
+          </li>
+         
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
+              <i class="ti-user"></i>&nbsp;
+              <span class="menu-title">Employees</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="tables">
+              <ul class="nav flex-column sub-menu">
+                
+                <li class="nav-item"> <a class="nav-link" href="/list_files">Employee files</a></li>
+                
+                <li class="nav-item"> <a class="nav-link" href="/list_employee">View Employees</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
+              <i class="ti-comments"></i>&nbsp;
+              <span class="menu-title">Interactions</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="icons">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="">sema</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="icon-head menu-icon"></i>
+              <span class="menu-title">User Pages</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/logout/"> Logout </a></li>
+                
+                <li class="nav-item"> <a class="nav-link" href="/register"> Register </a></li>
+                
+              </ul>
+            </div>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
+              <i class="icon-ban menu-icon"></i>
+              <span class="menu-title">system logs</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="error">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href=""> logs </a></li>
+                
+              </ul>
+            </div>
+          </li>
+          
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/reports">
+              <i class="icon-paper menu-icon"></i>
+              <span class="menu-title">Reports</span>
+            </a>
+            <div class="collapse" id="error">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href=""> attendance </a></li>
+                <li class="nav-item"> <a class="nav-link" href=""> payroll </a></li>
+              </ul>
+            </div>
+          </li>
+          
+        </ul>
+      </nav>
+      
+      
+<style>
+    .img-account-profile {
+    height: 10rem;
+}
+.rounded-circle {
+    border-radius: 50% !important;
+}
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+}
+.card .card-header {
+    font-weight: 500;
+}
+.card-header:first-child {
+    border-radius: 0.35rem 0.35rem 0 0;
+}
+.card-header {
+    padding: 1rem 1.35rem;
+    margin-bottom: 0;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(33, 40, 50, 0.125);
+}
+.form-control, .dataTable-input {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: #69707a;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: 0.35rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.nav-borders .nav-link.active {
+    color: #0061f2;
+    border-bottom-color: #0061f2;
+}
+.nav-borders .nav-link {
+    color: #69707a;
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+</style>
+<div class="main-panel">
+    <!-- row -->
+    <div class="content-wrapper">
+            
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Reports</h4>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-pills mb-3">
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active">My profile</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary">others</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-12">
+                <div class="row tab-content">
+                    <div id="list-view" class="tab-pane fade active show col-lg-12">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <div class="container-xl px-4 mt-4">
+                                        <!-- Account page navigation-->
+                                        <nav class="nav nav-borders">
+                                   
+                                        </nav>
+                                        <hr class="mt-0 mb-4">
+                                        <div class="row">
+                                            <div class="col-xl-4">
+                                                <!-- Profile picture card-->
+                                                <div class="card mb-4 mb-xl-0">
+                                                    <div class="card-header">Profile Picture</div>
+                                                    <div class="card-body text-center">
+                                                        <!-- Profile picture image-->
+                                                        <img class="img-account-profile rounded-circle mb-3" src="/media/profile_images/autumn-season-leafs-plant-scene-generative-ai.jpg" alt="">
+                                                        <!-- Profile picture help block-->
+                                                        <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                                                        <!-- Profile picture upload button-->
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-8">
+                                                <!-- Account details card-->
+                                                <div class="card mb-4">
+                                                    <div class="card-header">Account Details</div>
+                                                    <div class="card-body">
+                                                        <form class="form-sample" method="POST">
+                                                            <input type="hidden" name="csrfmiddlewaretoken" value="vaWyYOUgKThrkzmFk1cH2EwC3UtCjp5V0OF8vCH0n42RoCb6gMagz72H6apeZHyH">
+                                                            <p class="card-description">
+                                                              Personal info
+                                                            </p>
+                                                            <div class="row">
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_org_name" class="mb-3">
+        
+           
+            <label for="id_org_name" class="form-label requiredField">
+                Org name<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="org_name" maxlength="100" class="textinput form-control" required id="id_org_name">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_payroll_id" class="mb-3">
+        
+           
+            <label for="id_payroll_id" class="form-label requiredField">
+                Payroll id<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="payroll_id" value="-858308900032085122" maxlength="100" class="textinput form-control" required id="id_payroll_id">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_employee_id" class="mb-3">
+        
+           
+            <label for="id_employee_id" class="form-label requiredField">
+                Employee id<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="employee_id" value="001" maxlength="100" class="textinput form-control" required id="id_employee_id">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_sign_id" class="mb-3">
+        
+           
+            <label for="id_sign_id" class="form-label requiredField">
+                Sign id<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="sign_id" maxlength="100" class="textinput form-control" required id="id_sign_id">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_name" class="mb-3">
+        
+           
+            <label for="id_name" class="form-label requiredField">
+                Name<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="name" value="Antony Kungu" maxlength="100" class="textinput form-control" required id="id_name">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_id_no" class="mb-3">
+        
+           
+            <label for="id_id_no" class="form-label requiredField">
+                Id no<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="id_no" value="35704078" maxlength="100" class="textinput form-control" required id="id_id_no">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_pin_no" class="mb-3">
+        
+           
+            <label for="id_pin_no" class="form-label requiredField">
+                Pin no<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="pin_no" maxlength="100" class="textinput form-control" required id="id_pin_no">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_phone" class="mb-3">
+        
+           
+            <label for="id_phone" class="form-label requiredField">
+                Phone<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="phone" value="0712110972" maxlength="100" class="textinput form-control" required id="id_phone">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_role" class="mb-3">
+        
+           
+            <label for="id_role" class="form-label requiredField">
+                Role<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="role" value="seller" maxlength="100" class="textinput form-control" required id="id_role">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_account_no" class="mb-3">
+        
+           
+            <label for="id_account_no" class="form-label requiredField">
+                Account no<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="account_no" value="None" maxlength="100" class="textinput form-control" required id="id_account_no">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_basic_salary" class="mb-3">
+        
+           
+            <label for="id_basic_salary" class="form-label requiredField">
+                Basic salary<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="basic_salary" value="20000.0" step="any" class="numberinput form-control" required id="id_basic_salary">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_allowance" class="mb-3">
+        
+           
+            <label for="id_allowance" class="form-label requiredField">
+                Allowance<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="allowance" value="0.0" step="any" class="numberinput form-control" required id="id_allowance">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_add_ons" class="mb-3">
+        
+           
+            <label for="id_add_ons" class="form-label requiredField">
+                Add ons<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="add_ons" value="0.0" step="any" class="numberinput form-control" required id="id_add_ons">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_total_hours" class="mb-3">
+        
+           
+            <label for="id_total_hours" class="form-label requiredField">
+                Total hours<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="total_hours" value="0.0" step="any" class="numberinput form-control" required id="id_total_hours">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_leave_days" class="mb-3">
+        
+           
+            <label for="id_leave_days" class="form-label requiredField">
+                Leave days<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="leave_days" value="0.0" step="any" class="numberinput form-control" required id="id_leave_days">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_deductions" class="mb-3">
+        
+           
+            <label for="id_deductions" class="form-label requiredField">
+                Deductions<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="deductions" value="334.5" step="any" class="numberinput form-control" required id="id_deductions">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_gross_pay" class="mb-3">
+        
+           
+            <label for="id_gross_pay" class="form-label requiredField">
+                Gross pay<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="gross_pay" value="19665.5" step="any" class="numberinput form-control" required id="id_gross_pay">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_taxable_income" class="mb-3">
+        
+           
+            <label for="id_taxable_income" class="form-label requiredField">
+                Taxable income<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="taxable_income" value="18585.5" step="any" class="numberinput form-control" required id="id_taxable_income">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_tax" class="mb-3">
+        
+           
+            <label for="id_tax" class="form-label requiredField">
+                Tax<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="tax" value="1858.5500000000002" step="any" class="numberinput form-control" required id="id_tax">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_nhif" class="mb-3">
+        
+           
+            <label for="id_nhif" class="form-label requiredField">
+                Nhif<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="nhif" value="500.0" step="any" class="numberinput form-control" required id="id_nhif">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_nssf" class="mb-3">
+        
+           
+            <label for="id_nssf" class="form-label requiredField">
+                Nssf<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="nssf" value="0.0" step="any" class="numberinput form-control" required id="id_nssf">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_insurance" class="mb-3">
+        
+           
+            <label for="id_insurance" class="form-label requiredField">
+                Insurance<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="insurance" value="0.0" step="any" class="numberinput form-control" required id="id_insurance">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_housing" class="mb-3">
+        
+           
+            <label for="id_housing" class="form-label requiredField">
+                Housing<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="housing" value="0.0" step="any" class="numberinput form-control" required id="id_housing">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_others" class="mb-3">
+        
+           
+            <label for="id_others" class="form-label requiredField">
+                Others<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="others" value="0.0" step="any" class="numberinput form-control" required id="id_others">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_net_pay" class="mb-3">
+        
+           
+            <label for="id_net_pay" class="form-label requiredField">
+                Net pay<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="number" name="net_pay" value="16226.95" step="any" class="numberinput form-control" required id="id_net_pay">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              <div class="col-md-6">
+                                                                <div class="form-group row">
+                                                                 
+                                                                  <div class="col-sm-9">
+                                                                    
+
+
+    
+    <div id="div_id_created" class="mb-3">
+        
+           
+            <label for="id_created" class="form-label requiredField">
+                Created<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+            
+                
+                    
+                        <input type="text" name="created" value="2023-10-01" class="dateinput form-control" required id="id_created">
+                    
+                    
+                        
+
+
+    
+
+
+
+
+    
+
+
+
+                    
+                
+            
+        
+    </div>
+    
+
+
+                                                                  </div>
+                                                                </div>
+                                                              </div>
+                                                              
+                                                              
+                                                            </div>
+                                                            
+                                                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                                            
+                                                          </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  
+  <!-- plugins:js -->
+  <script src="/static/management/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="/static/management/vendors/chart.js/Chart.min.js"></script>
+  <script src="/static/management/vendors/datatables.net/jquery.dataTables.js"></script>
+  <script src="/static/management/vendors/datatables.net-bs4/dataTables.bootstrap4.js"></script>
+  <script src="/static/management/js/dataTables.select.min.js"></script>
+
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="/static/management/js/off-canvas.js"></script>
+  <script src="/static/management/js/hoverable-collapse.js"></script>
+  <script src="/static/management/js/template.js"></script>
+  <script src="/static/management/js/settings.js"></script>
+  <script src="/static/management/js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <script src="/static/management/js/dashboard.js"></script>
+  <script src="/static/management/js/Chart.roundedBarCharts.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script>
+  $.ajax({
+
+       type:"get",
+       url:"/get_notify",
+       success:function(data,status){
+
+        var data = JSON.parse(data)
+        for(key in data){
+         $("#notify").append(
+
+          `
+          <a class="dropdown-item preview-item" onclick="goTo(${data[key].id})">
+                <div class="preview-thumbnail">
+                  <div class="preview-icon bg-success">
+                    <img src="${data[key].image}">
+                  </div>
+                </div>
+                <div class="preview-item-content">
+                  <h6 class="preview-subject font-weight-normal">${data[key].info}</h6>
+                  <p class="font-weight-light small-text mb-0 text-muted">
+                    ${data[key].date} ${data[key].time}
+                  </p>
+                </div>
+            </a>
+          
+          `
+         )
+       }
+       display(data)
+      }
+  })
+
+  const showNotification = (data) => {
+
+    for(key in data){
+    const notification = new Notification('Beezy new notification', {
+        body: data[key].info,
+        icon: data[key].image,
+       
+        vibrate: true
+    });
+   }
+  }
+
+  function display(data){
+        Notification.requestPermission().then(function (permission) {
+
+          if(permission=="granted"){
+
+            showNotification(data)
+
+          }
+              
+            
+
+        });
+  }
+
+function goTo(id){
+  $.ajax({
+
+        type:"post",
+        url:"/get_notify",
+        data:{
+
+           id:id,
+           csrfmiddlewaretoken:'vaWyYOUgKThrkzmFk1cH2EwC3UtCjp5V0OF8vCH0n42RoCb6gMagz72H6apeZHyH',
+
+        },
+        success:function(data,status){
+
+          location.href = "/list_approvals"
+        }
+  })
+}
+</script>
+
+  <!-- End custom js for this page-->
+
+</body>
+
+</html>
+

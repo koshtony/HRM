@@ -83,6 +83,7 @@ class AttSettings(models.Model):
     end = models.TimeField()
     deduction_per_day = models.FloatField()
     expected_days =  models.FloatField(default=24.0)
+    leave_days =  models.FloatField(default=21.0)
     remarks = models.TextField()
     clock_in_latitude = models.CharField(max_length=1000,default="")
     clock_in_longitude = models.CharField(max_length=1000,default="")
@@ -99,7 +100,7 @@ class FilesCategory(models.Model):
     
 class EmpFiles(models.Model):
 
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    employee = models.CharField(max_length=100)
     category = models.ForeignKey(FilesCategory,on_delete=models.PROTECT)
     file_name = models.CharField(max_length=100,default="none")
     document = models.FileField(default="document.pdf",upload_to='emp_files')
@@ -131,6 +132,7 @@ class Attendance(models.Model):
     counts = models.IntegerField(default=0)
     hours = models.FloatField(default=0.0)
     days = models.FloatField(default=0.0)
+    leave_days = models.IntegerField(default=21)
     deductions = models.FloatField(default=0.0)
     created = models.DateTimeField(default=timezone.now)
     remarks = models.TextField()

@@ -115,31 +115,16 @@
                                                         <form method="POST" enctype="multipart/form-data" id="profileForm">
                                                             {% csrf_token %}
                                                             <!-- Form Row-->
+                                                            &nbsp; &nbsp;
                                                             <div class="row gx-3 mb-3">
                                                                 <!-- Form Group (first name)-->
-                                                                <div class="col-md-6">
-                                                                    {{profile_form.first | as_crispy_field}}
-                                                                </div>
-                                                                <!-- Form Group (last name)-->
-                                                                <div class="col-md-6">
-                                                                    {{profile_form.surname | as_crispy_field}}
-                                                                </div>
-                                                            </div>
-                                                            
-                                                            <div class="row gx-3 mb-3">
+                                                                
+                                                                    {{profile_form | crispy}}
                                                                
-                                                                <div class="col-md-6">
-                                                                    {{profile_form.email | as_crispy_field}}
-                                                                </div>
-                                                                <!-- Form Group (location)-->
-                                                                <div class="col-md-6">
-                                                                    {{profile_form.phone | as_crispy_field}}
-                                                                </div>
+                                                                <!-- Form Group (last name)-->
+                                                               
                                                             </div>
                                                             
-                                                            <div class="mb-3">
-                                                                {{profile_form.image | as_crispy_field}}
-                                                            </div>
                                                           
                                                             <button class="btn btn-primary" type="submit" onclick="profileUpdate();">Save changes</button>
                                                         </form>
@@ -175,7 +160,7 @@
 <script>
      
      function profileUpdate(){
-       alert("yes")
+    
           
         $("#profileForm").submit(function(e){
    e.preventDefault()
@@ -184,11 +169,11 @@
    var formData = new FormData(this);
  
    $.ajax({
-     method:"post",
+     type:"post",
      url:"{% url 'management_profile' %}",
      data:formData,
      processData: false,
-contentType: false,
+     contentType: false,
      success:function(data,status){
        alert(data)
      }

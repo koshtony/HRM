@@ -12,7 +12,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from django.views.decorators.csrf import csrf_exempt
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileForm,UserUpdateForm,ChatForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm
 from .models import *
 from payroll.models import PayRoll
 from datetime import datetime,date
@@ -31,8 +31,9 @@ def home(request):
             todos.append(apps)
     event = Events.objects.last()
     department = Department.objects.all()
-    payrolls = PayRoll.objects.filter(employee_id = request.user.username)
-    context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls}
+    payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
+    attendance = Attendance.objects.filter(employee_id = request.user.username).order_by('-day')[:5]
+    context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
     return render(request,'management/index.html',context)
 @login_required
 def register(request):
@@ -182,8 +183,10 @@ def list_files(request):
     context ={"files":EmpFiles.objects.all(),"file_form":filesForm()}
     if request.POST:
         file_form = filesForm(request.POST,request.FILES)
+
         if file_form.is_valid():
             file_form.save()
+            print("done")
             return JsonResponse("file uploaded successfully",safe=False)
     return render(request,'management/files.html',context)
 
@@ -433,17 +436,21 @@ def approve(request):
             application.save()
             if application.type.name == "leave":
                 
-                att = Attendance(
-                    employee = Employee.objects.get(emp_id = application.applicant.username),
-                    is_leave = True,
-                    days = application.days,
-                    counts = application.days,
-                    remarks = "leave "+str(application.start)+" to "+str(application.end),
-                    image1 = "", 
-                    image2 = ""
-                )
+                    leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
 
-                att.save()
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = "",
+                        leave_days = leave_days - application.days
+                        
+                    )
+
+                    att.save()
         else:
             application.status = "pending"
             application.rate = int((application.stage / application.expected)*100)
@@ -484,7 +491,10 @@ def approve_by_details(request):
                 application.rate = 100
                 application.save()
                 if application.type.name == "leave":
-                
+                    
+                    leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
+                    
+
                     att = Attendance(
                         employee = Employee.objects.get(emp_id = application.applicant.username),
                         is_leave = True,
@@ -492,7 +502,9 @@ def approve_by_details(request):
                         counts = application.days,
                         remarks = "leave "+str(application.start)+" to "+str(application.end),
                         image1 = "", 
-                        image2 = ""
+                        image2 = "",
+                        leave_days = leave_days - application.days
+                        
                     )
 
                     att.save()
@@ -559,21 +571,23 @@ def recall_approval(request):
 @login_required
 def profile(request):
 
-    profile_form = profileForm(instance=request.user.profile)
-    user_form = UserUpdateForm(instance=request.user)
+    profile_form = profileUpdateForm(instance=request.user.profile)
+
 
     context = {"profile_form":profile_form}
 
-    if request.method=='POST':
+    if request.method == 'POST':
+
     
-        profile_forms = profileForm(request.POST,request.FILES,instance=request.user.profile)
-        user_form = UserUpdateForm(instance=request.user)
-        if profile_forms.is_valid() and user_form.is_valid():
-            user_form.save()
-            profile_forms.save()
+        profile_form = profileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
+        
+        
+        if profile_form.is_valid():
+    
+           profile_form.save()
             
 
-        return JsonResponse("profile updated",safe=False)
+           return JsonResponse("profile updated",safe=False)
 
 
     return render(request,'management/profile.html',context)
@@ -786,6 +800,8 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
 
     def form_valid(self,form):
         return super().form_valid(form)
+    
+
     
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'management/password_reset.html'
