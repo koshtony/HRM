@@ -15,21 +15,21 @@ class PayRoll(models.Model):
     phone = models.CharField(max_length=100,null=True)
     role = models.CharField(max_length=100,null=True)
     account_no = models.CharField(max_length=100,null=True)
-    basic_salary = models.FloatField(default=0.0)
-    allowance =  models.FloatField(default=0.0)
-    add_ons = models.FloatField(default=0.0)
+    basic_salary = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    allowance =  models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    add_ons = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     total_hours = models.FloatField(default=0.0)
     leave_days = models.FloatField(default=0.0)
-    deductions = models.FloatField(default=0.0) 
-    gross_pay  = models.FloatField(default=0.0)
-    taxable_income = models.FloatField(default=0.0)
-    tax = models.FloatField(default=0.0) 
-    nhif = models.FloatField(default=0.0)
-    nssf = models.FloatField(default=0.0)
-    insurance = models.FloatField(default=0.0)
-    housing = models.FloatField(default=0.0)
-    others = models.FloatField(default=0.0)
-    net_pay = models.FloatField(default=0.0)
+    deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2) 
+    gross_pay  = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    taxable_income = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    tax = models.DecimalField(default=0.00,max_digits=10,decimal_places=2) 
+    nhif = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    nssf = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    insurance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    housing = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    others = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    net_pay = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     created_date = models.DateField(default=timezone.now)
     created_time = models.TimeField(default=timezone.now)
     status = models.CharField(max_length=100,default="audit")
@@ -45,15 +45,26 @@ class PayRollSetting(models.Model):
     org_name = models.CharField(max_length=100,default="")
     category = models.CharField(max_length=100)
     tax_rate = models.TextField(default=tax_formula)
-    relief = models.FloatField(default=2400.00)
-    nssf = models.FloatField()
-    nhif = models.FloatField()
-    health_insurance = models.FloatField(default=0.0)
-    housing = models.FloatField(default=0.0)
-    others = models.FloatField()
+    relief = models.DecimalField(default=2400.00,max_digits=10,decimal_places=2)
+    nssf = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    nhif = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    health_insurance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    housing = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    others = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
 
     def __str__(self):
 
         return self.category
 
-    
+class ExtraPayments(models.Model):
+
+    employee_id = models.CharField(max_length=100)
+    overtime_hours = models.FloatField(default=0.0)
+    overtime_rate = models.FloatField(default=0.0)
+    incentive = models.FloatField(default=0.0)
+    performance = models.FloatField(default=0.0)
+    awards = models.FloatField(default=0.0)
+
+    def __str__(self):
+
+        return self.employee

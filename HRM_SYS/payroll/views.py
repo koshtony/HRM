@@ -11,6 +11,7 @@ import datetime
 from datetime import datetime,date, timedelta
 import pandas as pd
 import json
+from decimal import Decimal
 # Create your views here.
 
 
@@ -67,17 +68,17 @@ def monthly_payroll(request):
                     "add_ons":employee.add_ons,
                     "total_hours":days,
                     "leave_days":leave_days,
-                    "deductions":round(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day,2),
-                    "gross_pay":round((employee.salary+employee.allowance+employee.add_ons)-deductions,2),
-                    "taxable_income":round(((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),2),
-                    "tax": round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2),
+                    "deductions":Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day),
+                    "gross_pay":Decimal((employee.salary+employee.allowance+employee.add_ons)-deductions),
+                    "taxable_income":Decimal(Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf)),
+                    "tax": Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf),employee.payroll_settings.relief)),
                     "nhif":employee.payroll_settings.nhif,
                     "nssf":employee.payroll_settings.nssf,
                     "insurance":employee.payroll_settings.health_insurance,
                     "housing": employee.payroll_settings.housing,
                     "others": employee.payroll_settings.others,
-                    "net_pay":round( ((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf)\
-                        -round(tax_amount(employee.payroll_settings.tax_rate,((employee.salary+employee.allowance+employee.add_ons)-deductions)-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2)\
+                    "net_pay":round( Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf)\
+                        -round(tax_amount(employee.payroll_settings.tax_rate,  Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2)\
                         -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
 
                     "created_date": datetime.now(),

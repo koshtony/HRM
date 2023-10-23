@@ -90,10 +90,10 @@
           
          
           <div class="form-group">
-            <label for="exampleTextarea1">Textarea</label>
-            <textarea class="form-control" id="approvalRemaeks" rows="4"></textarea>
+            <label for="exampleTextarea1">remarks</label>
+            <textarea class="form-control" id="approvalRemarks" rows="4"></textarea>
           </div>
-          <button type="button" class="btn btn-primary mr-2" onclick="addComment()">Submit</button>
+          <button type="button" class="btn btn-primary mr-2" onclick="addComment()">Remark</button>
         
         </form>
        
@@ -285,6 +285,26 @@ function Recall(){
              alert(data)
        }
     })
+}
+
+function addComment(){
+
+  $.ajax({
+
+type:"post",
+url:"{% url 'management_recall_by_comment' %}",
+data:{
+      id:$("#approvalId").val(),
+       remark:$("#approvalRemarks").val(),
+       csrfmiddlewaretoken:'{{ csrf_token }}'
+
+},
+success:function(data,status){
+    
+      alert(data)
+}
+})
+
 }
     
     </script>

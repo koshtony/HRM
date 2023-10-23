@@ -1,3 +1,4 @@
+from decimal import Decimal
 tax_formula = '''24000=10,8333=25,467667=30,300000=32.5
 '''
 
@@ -11,11 +12,11 @@ def tax_amount(rates,amount,relief):
     tax=0
     if amount > first and amount <= first+second :
 
-       tax += ((first*first_rate)+(second*second_rate))-relief
+       tax += Decimal((first*first_rate)+(second*second_rate))-relief
 
     elif amount > (first+second):
         
-        tax += (((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate))-relief
+        tax += Decimal(((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate))-relief
 
     elif amount <= first and amount > 0:
 

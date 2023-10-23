@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm
 from .models import *
 from payroll.models import PayRoll
-from datetime import datetime,date
+from datetime import datetime,date,timedelta
 import folium
 import time
 import json
@@ -349,6 +349,23 @@ def view_attendance(request):
     attendances =  Attendance.objects.all().order_by('-pk')
     leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
     #print(attendances)
+    today_leaves = []
+    for leave in leaves:
+        print([datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date() + timedelta(days=i) for i in range((datetime.strptime(leave.remarks.split(' ')[3],'%Y-%m-%d').date() - datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date()).days + 1)])
+        if date.today() in [datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date() + timedelta(days=i) for i in range((datetime.strptime(leave.remarks.split(' ')[3],'%Y-%m-%d').date() - datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date()).days + 1)]:
+
+            today_leaves_dict = {
+                "employee_id":leave.employee.emp_id,
+                "name":leave.employee.first_name+ " "+leave.employee.second_name ,
+                "day":leave.day,
+                "days":leave.days,
+                "leave_days":leave.leave_days,
+                "created":leave.created,
+                "status":leave.status,
+                "remarks":leave.remarks
+            }
+            today_leaves.append(today_leaves_dict)
+
 
     late = []
     for attendance in attendances:
@@ -369,9 +386,39 @@ def view_attendance(request):
 
                 }
                 late.append(late_dict)
+    absents = []
 
-    print(late)
-    context = {"attendances":attendances,"lates":late, "leaves":leaves}
+    for employee in Employee.objects.all():
+        if employee.emp_id not in [att.id for att in Attendance.objects.filter(day = date.today())]:
+            try:
+                absent_dict = {
+                    "employee_id":employee.emp_id,
+                    "name":employee.first_name + employee.second_name ,
+                    "email":employee.email ,
+                    "phone":employee.phone ,
+                    "next_of_kin":employee.next_kin_name,
+                    "next_kin_phone":employee.next_kin_phone,
+                    "address":employee.address + employee.location,
+                    "set_clock_in":AttSettings.objects.get(employee_id = employee.emp_id).start,
+                    "expected_days":AttSettings.objects.get(employee_id = employee.emp_id).expected_days
+                }
+            except:
+                absent_dict = {
+                    "employee_id":employee.emp_id,
+                    "name":employee.first_name + employee.second_name ,
+                    "email":employee.email ,
+                    "phone":employee.phone ,
+                    "next_of_kin":employee.next_kin_name,
+                    "next_kin_phone":employee.next_kin_phone,
+                    "address":employee.address + employee.location,
+                    "set_clock_in":"no settings",
+                    "expected_days":"no settings"
+                }
+
+
+            absents.append(absent_dict)
+
+    context = {"attendances":attendances,"lates":late, "leaves":today_leaves,"absents":absents}
 
     return render(request,'management/list_attendance.html',context)
 
@@ -598,6 +645,25 @@ def recall_approval(request):
             application.save()
 
             return JsonResponse("recalled successful",safe=False)
+
+def recall_by_comment(request):
+
+    if request.POST:
+
+        remark = request.POST.get("remark")
+        id = request.POST.get("id")
+        print(id)
+        application = Applications.objects.get(pk = id)
+        track = approvalTrack(
+            application = application,
+            user = request.user,
+            comments =remark,
+            status = "cancelled",
+            date = datetime.now(),
+            time = datetime.now()
+        )
+        track.save()
+        return JsonResponse("remark added successfully",safe=False)
 
 @login_required
 def profile(request):

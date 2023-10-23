@@ -381,8 +381,7 @@
                            
                             <label>to</label>
                             <input type="date" class="form-control" id="date2">
-                            <label>payroll id</label>
-                            <input type="text" class="form-control" id="payId">
+                           
 
                          
                             </div>
@@ -528,7 +527,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                  
                 date1: $("#date1").val(),
                 date2: $("#date2").val(),
-                payId: $("#payId").val(),
+                payId: Math.trunc(Date.now() + Math.random()) ,
                 csrfmiddlewaretoken:'{{ csrf_token }}',
 
                 
@@ -554,18 +553,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                         `
                     )
                 }
-                document.getElementById("pSum").innerHTML = ''
-                fetch("{% url 'payroll-grouped' %}",
-                {
-                    method:"GET"
-                }
-                
-                ).then(resp =>{
-                    return resp.text()
-                }).then(table =>{
-                    
-                    document.getElementById("pSum").innerHTML = table;
-                })
+                location.reload()
                 
             }
         })
@@ -660,7 +648,7 @@ function showMap(lat,long){
     document.getElementById("imageGenFrame").src = image_url
 }
 
-$("#payId").val(Math.trunc(Date.now() + Math.random()))
+//$("#payId").val(Math.trunc(Date.now() + Math.random()))
     
 </script>
 

@@ -4,7 +4,7 @@ from .views import home,clock,add_department,view_attendance,\
       add_roles,add_employee,add_info,approvals,list_employee,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
-      get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,\
+      get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat
 
       
@@ -32,6 +32,7 @@ urlpatterns = [
       path('reject',views.reject_approval,name="management_reject"),
       path('approve_by_details',views.approve_by_details,name="management_approve_by_details"),
       path('recall_approval',views.recall_approval,name="management_recall_approval"),
+      path('recall_by_comment',views.recall_by_comment,name="management_recall_by_comment"),
       path('upload_process',views.upload_process,name="management_upload_process"),
       path('events',views.Event,name="management_events"),
       path('add_event',views.add_event,name="management_add_event"),

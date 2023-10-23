@@ -235,8 +235,8 @@
                             <tbody>
                                 {% for leave in leaves %}
                                 <tr>
-                                      <td>{{leave.employee.emp_id}}</td>
-                                      <td>{{leave.employee.first_name}} {{leave.employee.first_name}}</td>
+                                      <td>{{leave.employee_id}}</td>
+                                      <td>{{leave.employee.name}}</td>
                                       <td>{{leave.day}}</td>
                                       <td>{{leave.days}}</td>
                                       <td>{{leave.leave_days}}</td>
@@ -255,7 +255,40 @@
             <div id="groups" class="tab-pane fade show col-lg-12">
                 <div class="card">
                     <div class="row">
-                       
+                        <table  class="table table-striped"  id="absent" style="zoom: 85%; font-weight: bolder;">
+                            <thead style="background-color: aqua;">
+                                <tr>
+                                    <th>#</th>
+                                    <th>name</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                    <th>next of kin</th>
+                                    <th>next kin phone</th>
+                                    <th>address</th>
+                                    <th>set time</th>
+                                    <th>expected days</th>
+                                    
+                                    
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for absent in absents %}
+                                <tr>
+                                      <td>{{absent.employee_id}}</td>
+                                      <td>{{absent.name}}</td>
+                                      <td>{{absent.email}}</td>
+                                      <td>{{absent.phone}}</td>
+                                      <td>{{absent.next_of_kin}}</td>
+                                      <td>{{absent.next_kin_phone}}</td>
+                                      <td>{{absent.address}}</td>
+                                      <td>{{absent.set_clock_in}}</td>
+                                      <th>{{absent.expected_days}}</th>
+                                     
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
 
 
             </div>
