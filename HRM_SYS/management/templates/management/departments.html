@@ -14,13 +14,14 @@
       <div class="main-panel">        
         <div class="content-wrapper">
           <div class="row">
+            {% for department in departments %}
             <div class="col-12 grid-margin stretch-card" style="height:500px; overflow-y: scroll;">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title"></h4>
                 
                   <div class="row">
-                    {% for department in departments %}
+                    
                     <div class="col-md-6 stretch-card transparent">
                       <div class="card card-light-danger" style="background-color: darkslategrey;">
                         <div class="card-body">
@@ -33,13 +34,15 @@
                         </div>
                       </div>
                     </div>
-                    {% endfor %}
+                    
+                    &nbsp; &nbsp;
                   </div>
            
                 </div>
                 </div>
                 </div>
-              
+
+                 {% endfor %}
             <div class="col-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">

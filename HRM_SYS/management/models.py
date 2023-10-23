@@ -69,7 +69,7 @@ class Employee(models.Model):
     add_ons = models.FloatField(default=0.0)
 
 # account management 
-
+    other_fields = models.TextField(default="name:value")
     status = models.CharField(max_length=50,choices=(('incomplete',"incomplete"),('active',"active"),('resigned',"resigned"),('terminated',"terminated"),('suspended',"suspended")),default="None")
     image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
 
@@ -237,9 +237,11 @@ class Events(models.Model):
 
     title = models.CharField(max_length=100,default="")
     details = models.TextField()
-    category = models.CharField(max_length=100,choices=(("announcement","announcement"),("events","events")),default="")
+    category = models.CharField(max_length=100,choices=(("announcement","announcement"),("events","events"),("updates","updates")),default="")
+    viewers = models.CharField(max_length=100,choices=(("all","all"),("members","members"),("admins","admins")),default="")
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(User,on_delete=models.CASCADE)
+    files = models.FileField(default='posts.png',upload_to='posts_files')
 
     def __str__(self):
 

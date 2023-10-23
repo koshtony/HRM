@@ -12,7 +12,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from django.views.decorators.csrf import csrf_exempt
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm
 from .models import *
 from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
@@ -698,7 +698,7 @@ def Event(request):
     events = Events.objects.all().order_by('-created')
 
     context = {
-                "events":events,
+                "events":events,"form":PostsForm()
     }
 
     return render(request,'management/events.html',context)
@@ -708,23 +708,19 @@ def Event(request):
 '''
 def add_event(request):
 
-    if request.POST:
+    if request.method == 'POST':
         
-        title = request.POST.get("title"),
-        category = request.POST.get("category")
-        content = request.POST.get("content")
-        print(content)
+       post_form = PostsForm(request.POST,request.FILES)
 
-        events = Events(
+       if post_form.is_valid():
+           
+           instance = post_form.save(commit=False)
+           instance.creator = request.user
+           instance.save()
 
-              title = title , details = content , category =  category,
-              created = datetime.now() , creator = request.user
-        )
-        events.save()
+           print("yes")
 
-        
-
-        return JsonResponse("created successfully",safe=False)
+           return JsonResponse("created successfully",safe=False)
 
 
 def del_event(request):

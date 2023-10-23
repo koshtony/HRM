@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage,Events
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from tinymce.widgets import TinyMCE
@@ -109,4 +109,11 @@ class ChatForm(forms.ModelForm):
             
             "body",
         ]
+
+class PostsForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Events 
+        fields = ['title','details','files','category','viewers']
        
