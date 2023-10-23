@@ -1,6 +1,6 @@
 from django.urls import path 
 from . import views 
-from .views import home,clock,add_department,\
+from .views import home,clock,add_department,view_attendance,\
       add_roles,add_employee,add_info,approvals,list_employee,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
@@ -12,6 +12,7 @@ from .views import home,clock,add_department,\
 urlpatterns = [
      path('',views.home,name="management-home"),
      path('clock',views.clock,name="management-clock"),
+     path('list_attendance',views.view_attendance,name="management_view_attendance"),
      path('get_attendance',views.get_attendance,name="management-get-attendance"),
      path('add_info',views.add_info,name="management_add_info"),
      path('add_departments',views.add_department,name="management_add_department"),

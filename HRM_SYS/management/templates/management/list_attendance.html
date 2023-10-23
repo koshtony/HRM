@@ -1,0 +1,372 @@
+{% extends 'management/base.html' %}
+
+{% block content %} 
+
+
+
+<!--details modal-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageGenModal" id="imageGenIframeBtn" style="display:none">
+    show Image
+   </button>
+
+  <div class="modal fade" id="imageGenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">image</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <img id="imageGenFrame" width="100%" style="overflow-x: scroll;">
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mapGenModal" id="mapGenIframeBtn" style="display:none">
+    show map
+   </button>
+
+  <div class="modal fade" id="mapGenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">show location</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <iframe id="mapGenFrame" width="100%" height="800" style="overflow-x: scroll;"></iframe>
+             
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="main-panel">
+    <!-- row -->
+    <div class="content-wrapper">
+            
+        <div class="row page-titles mx-0">
+            <div class="col-sm-6 p-md-0">
+                <div class="welcome-text">
+                    <h4>Reports</h4>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-pills mb-3">
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i>overall</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-danger"><i class="fa fa-user-minus"></i>Late</a></li>
+                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="fa fa-user-ninja"></i>on leave</a></li>
+                    <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-dark" ><i class="fa fa-user-times"></i>absent</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-12">
+                <div class="row tab-content">
+                    <div id="list-view" class="tab-pane fade active show col-lg-12">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx','attendance','overall_attendance')"><i class="ti-download"></i></button>
+                                <div class="table-responsive">
+                                    <table  class="table table-striped"  id="attendance" style="zoom: 85%; font-weight: bolder;">
+                                        <thead style="background-color: aqua;">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>day</th>
+                                                <th>clock_in</th>
+                                                <th>clock_out</th>
+                                                <th>clock in location</th>
+                                                <th>clock out location</th>
+                                                <th>clock in image</th>
+                                                <th>clock out image</th>
+                                                <th>status</th>
+                                                <th>count</th>
+                                                <th>deduction</th>
+                                                <th>leave?</th>
+                                                <th>leave days</th>
+                                                <th>remarks</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for attendance in attendances %}
+                                            <tr>
+
+                                                <td>
+                                                    {{attendance.employee.emp_id}}
+
+                                                </td>
+                                                <td>
+                                                    {{attendance.day}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.clock_in}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.clock_out}}
+                                                </td>
+                                                <td>
+                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
+                                                </td>
+                                                <td>
+                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
+                                                        <i class="fa fa-image"></i>
+        
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
+                                                        <i class="fa fa-image"></i>
+        
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    {{attendance.status}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.counts}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.deductions}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.is_leave}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.leave_days}}
+                                                </td>
+                                                <td>
+                                                    {{attendance.remarks}}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="grid-view" class="tab-pane fade col-lg-12">
+                        <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx','late','late')"><i class="ti-download"></i></button>
+                       
+                        <div>
+                      
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive">
+                                
+                                    <table  class="table table-striped"  id="late" style="zoom: 85%; font-weight: bolder;">
+                                        <thead style="background-color: aqua;">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>name</th>
+                                                <th>day</th>
+                                                <th>clock_in</th>
+                                                <th>clock_out</th>
+                                                <th>set clock in</th>
+                                                <th>set clock out</th>
+                                                <th>count</th>
+                                                <th>status</th>
+                                                
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for late in lates %}
+                                            <tr>
+                                                  <td>{{late.employee}}</td>
+                                                  <td>{{late.employee_name}}</td>
+                                                  <td>{{late.day}}</td>
+                                                  <td>{{late.clock_in}}</td>
+                                                  <td>{{late.clock_out}}</td>
+                                                  <td>{{late.set_clock_in}}</td>
+                                                  <td>{{late.set_clock_out}}</td>
+                                                  <td>{{late.count}}</td>
+                                                  <td>{{late.status}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        </table>
+                              
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div id="settings" class="tab-pane fade col-lg-12">
+                      
+                       <div class="row">
+                        <table  class="table table-striped"  id="late" style="zoom: 85%; font-weight: bolder;">
+                            <thead style="background-color: aqua;">
+                                <tr>
+                                    <th>#</th>
+                                    <th>name</th>
+                                    <th>day</th>
+                                    <th>days</th>
+                                    <th>remaining leave days</th>
+                                    <th>created</th>
+                                    <th>status</th>
+                                    <th>remarks</th>
+                                    
+                                    
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in leaves %}
+                                <tr>
+                                      <td>{{leave.employee.emp_id}}</td>
+                                      <td>{{leave.employee.first_name}} {{leave.employee.first_name}}</td>
+                                      <td>{{leave.day}}</td>
+                                      <td>{{leave.days}}</td>
+                                      <td>{{leave.leave_days}}</td>
+                                      <td>{{leave.created}}</td>
+                                      <td>{{leave.status}}</td>
+                                      <td>{{leave.remarks}}</td>
+                                     
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            </table>
+
+
+                       </div>
+            </div>
+            <div id="groups" class="tab-pane fade show col-lg-12">
+                <div class="card">
+                    <div class="row">
+                       
+
+
+            </div>
+            </div>
+        </div>
+       
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script>
+     new DataTable('#attendance');
+   
+
+     function showMap(lat,long){
+       
+
+        var mapProp= {
+  center:new google.maps.LatLng(lat,long),
+  zoom:5,
+};
+var map = new google.maps.Map(document.getElementById("Map"),mapProp);
+     }
+
+    
+    function filter(){
+        alert($("#date1").val())
+        $.ajax({
+
+            type:"POST",
+            url:"{% url 'payroll-month' %}",
+            data:{
+                 
+                date1: $("#date1").val(),
+                date2: $("#date2").val(),
+                payId: $("#payId").val(),
+                csrfmiddlewaretoken:'{{ csrf_token }}',
+
+                
+            },
+            success:function(data,status){
+              
+                var data = JSON.parse(data)
+                $("#payrollFilt").html('')
+                for(key in data){
+                   console.log(data[key])
+                    $("#payrollFilt").append(
+                        `
+                        <tr>
+
+                            <td>${data[key]["payroll_id"]}</td>
+                            <td>${data[key]["org_name"]}</td>
+                            <td>${data[key]["employee_id"]}</td>
+                            <td>${data[key]["sign_id"]}</td>
+                            <td>${data[key]["created"]}</td>
+
+                        </tr>
+                        
+                        `
+                    )
+                }
+                document.getElementById("pSum").innerHTML = ''
+                fetch("{% url 'payroll-grouped' %}",
+                {
+                    method:"GET"
+                }
+                
+                ).then(resp =>{
+                    return resp.text()
+                }).then(table =>{
+                    
+                    document.getElementById("pSum").innerHTML = table;
+                })
+                
+            }
+        })
+    }
+
+
+
+    function htmlTableToExcel(type,id,name){
+ var data = document.getElementById(id);
+ var excelFile = XLSX.utils.table_to_book(data, {sheet: "sheet1"});
+ XLSX.write(excelFile, { bookType: type, bookSST: true, type: 'base64' });
+ XLSX.writeFile(excelFile, name+'.' + type);
+}
+
+
+    
+       
+function showMap(lat,long){
+     
+     $("#mapGenIframeBtn").click()
+     var new_url = lat+"_"+long
+  
+   
+     document.getElementById("mapGenFrame").src = 'show_map/'+new_url
+ }
+
+ 
+ function showImage(image_url){
+    
+    $("#imageGenIframeBtn").click()
+    document.getElementById("imageGenFrame").src = image_url
+}
+
+$("#payId").val(Math.trunc(Date.now() + Math.random()))
+    
+</script>
+
+
+{% endblock content %}

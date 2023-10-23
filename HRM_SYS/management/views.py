@@ -344,6 +344,37 @@ def get_attendance(request):
         
         return JsonResponse(details,safe=False)
 
+def view_attendance(request):
+
+    attendances =  Attendance.objects.all().order_by('-pk')
+    leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
+    #print(attendances)
+
+    late = []
+    for attendance in attendances:
+         if attendance.clock_in != '':
+            if datetime.strptime(attendance.clock_in, '%Y-%m-%d %H:%M:%S.%f').time() > AttSettings.objects.get(employee_id = attendance.employee.emp_id).start:
+             
+                late_dict = {
+                    "employee":attendance.employee.emp_id,
+                    "employee_name":attendance.employee.first_name + " "+attendance.employee.second_name,
+                    "day":attendance.day,
+                    "clock_in":attendance.clock_in,
+                    "clock_out":attendance.clock_out,
+                    "set_clock_in":AttSettings.objects.get(employee_id = attendance.employee.emp_id).start,
+                    "set_clock_out":AttSettings.objects.get(employee_id = attendance.employee.emp_id).end,
+                    "count": attendance.days,
+                    "status":attendance.status,
+                    
+
+                }
+                late.append(late_dict)
+
+    print(late)
+    context = {"attendances":attendances,"lates":late, "leaves":leaves}
+
+    return render(request,'management/list_attendance.html',context)
+
 
 @login_required
 def upload_leave(request):

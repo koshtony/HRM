@@ -219,7 +219,7 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'management-home' %}">
               <i class="icon-grid menu-icon"></i>
-              <span class="menu-title">Homee page</span>
+              <span class="menu-title">Home page</span>
             </a>
           </li>
           <li class="nav-item">
@@ -305,12 +305,13 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#error" aria-expanded="false" aria-controls="error">
               <i class="icon-ban menu-icon"></i>
-              <span class="menu-title">system logs</span>
+              <span class="menu-title">Reports</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="error">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href=""> logs </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'management_view_attendance' %}"> attendance </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'payroll-reports' %}"> payroll </a></li>
                 
               </ul>
             </div>
@@ -318,16 +319,11 @@
           {% endif %}
           {% if user.is_staff %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'payroll-reports' %}">
+            <a class="nav-link" href="">
               <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">Reports</span>
+              <span class="menu-title">systems logs</span>
             </a>
-            <div class="collapse" id="error">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href=""> attendance </a></li>
-                <li class="nav-item"> <a class="nav-link" href=""> payroll </a></li>
-              </ul>
-            </div>
+            
           </li>
           {% endif %}
         </ul>
