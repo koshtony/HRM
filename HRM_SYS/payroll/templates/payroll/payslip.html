@@ -1,3 +1,5 @@
+<html>
+	<head>
 <style>
     body {
 	background: #f0f0f0;
@@ -153,19 +155,20 @@
 }
 
 </style>
+	</head>
 <div id="payslip">
 	<div id="title">{{details.org_name}}</div>
 	<div id="scope">
 		<div class="scope-entry">
 			<div class="title">PAY RUN</div>
-			<div class="value">{{details.created}}</div>
+			<div class="value">{{details.created_date}}</div>
 		</div>
 		<div class="scope-entry">
 			<div class="title">PAY PERIOD</div>
 			<div class="value">{{details.pay_run}}</div>
 		</div>
 	</div>
-	<div class="content">
+	<div class="content" >
 		<div class="left-panel">
 			<div id="employee">
 				<div id="name">
@@ -178,32 +181,29 @@
 			<div class="details">
 				<div class="entry">
 					<div class="label">Employee ID</div>
-					<div class="value">{{details.employee_id}}</div>
+					<div class="value"> {{details.employee_id}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">National ID</div>
-					<div class="value">{{details.id_no}}</div>
+					<div class="value"> {{details.id_no}}</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">KRA pin</div>
-					<div class="value">{{details.pin_no}}</div>
+					<div class="value"> {{details.pin_no}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Position</div>
-					<div class="value">{{details.role}}</div>
+					<div class="value"> {{details.role}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Department</div>
-					<div class="value">1st String</div>
+					<div class="value"> </div>
 				</div>
-				<div class="entry">
-					<div class="label">Rank</div>
-					<div class="value">MVP</div>
-				</div>
+				
 				<div class="entry">
 					<div class="label">Payroll Cycle</div>
-					<div class="value">Monthly</div>
+					<div class="value"> Monthly</div>
 				</div>
 				
 				<div class="entry">
@@ -215,63 +215,65 @@
 				<div class="title">Gross Income</div>
 				<div class="entry">
 					<div class="label"></div>
-					<div class="value">Kes {{details.gross_pay}}</div>
+					<div class="value"> {{details.gross_pay}}</div>
 				</div>
 			</div>
 			<div class="contributions">
 				<div class="title">Employer Contribution</div>
 				<div class="entry">
 					<div class="label">NSSF</div>
-					<div class="value">{{detail.nssf}}</div>
+					<div class="value"> {{detail.nssf}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">NHIF</div>
-					<div class="value">{{details.nhif}}</div>
+					<div class="value"> {{details.nhif}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">housing</div>
-					<div class="value">{{details.housing}}</div>
+					<div class="value"> {{details.housing}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">insurance</div>
-					<div class="value">{{details.insurance}}</div>
+					<div class="value"> {{details.insurance}}</div>
+				</div>
+				<div class="entry">
+					<div class="label">welfare</div>
+					<div class="value"> {{details.welfare_deductions}}</div>
 				</div>
 			</div>
 			<div class="ytd">
 				<div class="title">summary Figures</div>
                 <div class="entry">
 					<div class="label">Basic Income</div>
-					<div class="value">{{details.basic_salary}}</div>
+					<div class="value"> {{details.basic_salary}}</div>
+				</div>
+				<div class="entry">
+					<div class="label">Allowance</div>
+					<div class="value">{ {details.allowance}}</div>
+				</div>
+				<div class="entry">
+					<div class="label">Incentives</div>
+					<div class="value"> {{details.incentives}}</div>
+				</div>
+				
+				<div class="entry">
+					<div class="label">overtime</div>
+					<div class="value">{{details.overtime_pay}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Gross Income</div>
-					<div class="value">{{details.gross_pay}}</div>
+					<div class="value"> {{details.gross_pay}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Taxable Income</div>
-					<div class="value">{{details.taxable}}</div>
+					<div class="value"> {{details.taxable}}</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">Net Pay</div>
-					<div class="value">{{details.net_pay}}</div>
+					<div class="value"> {{details.net_pay}}</div>
 				</div>
-				<div class="entry">
-					<div class="label">Allowance</div>
-					<div class="value">{{details.allowance}}</div>
-				</div>
-				<div class="entry">
-					<div class="label">Bonus</div>
-					<div class="value">{{details.add_ons}}</div>
-				</div>
-				<div class="entry">
-					<div class="label">Commission</div>
-					<div class="value">5,500.00</div>
-				</div>
-				<div class="entry">
-					<div class="label">Deduction</div>
-					<div class="value">{{details.deductions}}</div>
-				</div>
+				
 				
 				
 			</div>
@@ -318,23 +320,10 @@
 						<div class="label"></div>
 						<div class="detail">Add ons</div>
 						<div class="rate"></div>
-						<div class="amount">{{details.add}}</div>
-					</div>
-				</div>
-				<div class="taxable_bonus">
-					<div class="entry">
-						<div class="label">Taxable Bonus</div>
-						<div class="detail"></div>
-						<div class="rate"></div>
-						<div class="amount"></div>
-					</div>
-					<div class="entry">
-						<div class="label"></div>
-						<div class="detail">add_ons</div>
-						<div class="rate"></div>
 						<div class="amount">{{details.add_ons}}</div>
 					</div>
 				</div>
+				
 				<div class="taxable_commission"></div>
 				<div class="contributions">
 					<div class="entry">
@@ -414,9 +403,9 @@
 					</div>
 					<div class="entry">
 						<div class="label"></div>
-						<div class="detail">Commission</div>
+						<div class="detail">Others</div>
 						<div class="rate"></div>
-						<div class="amount">-</div>
+						<div class="amount">(0.00)</div>
 					</div>
 					
 				</div>
@@ -433,3 +422,4 @@
 		</div>
 	</div>
 </div>
+</html>

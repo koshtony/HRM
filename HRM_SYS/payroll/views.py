@@ -3,6 +3,9 @@ from django.http import JsonResponse
 from django.contrib import messages
 from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.template.loader import render_to_string,get_template
+from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from django.db.models import Sum,Count
 from management.models import * 
 from .formula import tax_amount
@@ -12,6 +15,7 @@ from datetime import datetime,date, timedelta
 import pandas as pd
 import json
 from decimal import Decimal
+import pytz
 # Create your views here.
 
 
@@ -29,15 +33,16 @@ def gen_payroll(request):
     return render(request,"payroll/reports.html",context)
 
 def monthly_payroll(request):
+    utc=pytz.UTC
     if request.POST:
         date1 = request.POST.get("date1")
         date2 = request.POST.get("date2")
         payroll_id = request.POST.get("payId")
         print(payroll_id)
         
-        date2 = datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1)
-        date1 = datetime.strptime(date1, '%Y-%m-%d')
-        print(type(date1))
+        date2 = utc.localize(datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1))
+        date1 = utc.localize(datetime.strptime(date1, '%Y-%m-%d'))
+        
         
         payrolls = []
         for employee in Employee.objects.all():
@@ -59,7 +64,7 @@ def monthly_payroll(request):
                 welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
                 deductions = Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day)
                 
-                gross_pay = Decimal(employee.salary+employee.allowance+employee.add_ons+incentives)+Decimal(overtime_pay)
+                gross_pay = Decimal(Decimal(employee.salary)+Decimal(employee.allowance)+Decimal(employee.add_ons)+Decimal(incentives))+Decimal(overtime_pay)
         
                 taxable_income  = Decimal(Decimal(gross_pay)-(employee.payroll_settings.nssf))
                 tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(gross_pay-employee.payroll_settings.nssf),employee.payroll_settings.relief))
@@ -193,6 +198,35 @@ def grouped_payroll(request):
     context = {"by_payroll_ids":grouped_payroll}
 
     return render(request,'payroll/grouped_table.html',context)
+
+def email_payroll(request):
+
+    if request.POST:
+
+        payroll_id = request.POST.get("payroll_id")
+        payrolls = PayRoll.objects.filter(payroll_id = payroll_id)
+        
+        for payroll in payrolls:
+
+            subject = payrolls[0].org_name + " payroll "+payrolls[0].pay_run
+
+            
+
+            html_body = render_to_string("payroll/payslip.html",{ 'details': PayRoll.objects.get(sign_id=payroll.sign_id)} )
+
+            message = EmailMultiAlternatives(
+            subject=subject,
+            body="",
+            from_email="koshtech.site@gmail.com",
+            to=[Employee.objects.get(emp_id = payroll.employee_id).email]
+            )
+            message.attach_alternative(html_body, "text/html")
+            message.send(fail_silently=False)
+
+        return JsonResponse("emailed successfully",safe=False)
+
+            
+
 
 
 def re_calculate(request):

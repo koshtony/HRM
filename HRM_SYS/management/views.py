@@ -696,14 +696,22 @@ def profile(request):
 def Event(request):
     
     events = Events.objects.all().order_by('-created')
-    all_users = [user.username for user in User.objects.all()]
-    admin_users = [user.username for user in User.objects.all() if user.is_staff]
-    #member_users = [user.username for user in User.objects.all() if Employee.objects.get(emp_id = user.username).departments == Employee.objects.get(emp_id = request.user.username).departments]
-    print(admin_users)
-    context = {
-                "events":events,"form":PostsForm(),"admins":admin_users,
-                "uzers":all_users
-    }
+    all_events = []
+    for event in events:
+
+        event_dict = {
+
+            "title":event.title,
+            "details":event.details,
+            "created":event.created,
+            "image":event.creator.profile.image.url,
+            "file":event.files.url,
+            "viewers_list":event.viewers_list.split(','),
+            "viewers":event.viewers
+        }
+        all_events.append(event_dict)
+    
+    context = {"events":all_events,"form":PostsForm()}
 
     return render(request,'management/events.html',context)
 
@@ -724,6 +732,11 @@ def add_event(request):
                instance.viewers_list = ",".join([user.username for user in User.objects.all()])
            elif instance.viewers == "admins":
                instance.viewers_list = ",".join([user.username for user in User.objects.all() if user.is_staff])
+           elif instance.viewers == "members":
+               department = Employee.objects.get(emp_id=request.user.username).departments
+             
+               instance.viewers_list = ",".join([emp.emp_id for emp in Employee.objects.filter(departments=department)])
+
            instance.save()
 
            #print("yes")
@@ -940,5 +953,3 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('management-home')    
-
-

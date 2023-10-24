@@ -77,6 +77,44 @@
     </div>
   </div>
 
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#emailModal" id="emailBtn" style="display:none">edit modal</button>
+
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">sure you want to email?</h5>
+          <div id="loaders2" style="display: none;">
+            <div class="spinner-grow text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-secondary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <div class="spinner-grow text-success" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            
+             <input type="text" class="form-control" id="emailPayrollId">
+
+             <button type="button" class="btn btn-outline" onclick="emailPayroll()" style="margin-left:200px;"><i class="fa fa-plane" style="color:green"></i></button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#imageGenModal" id="imageGenIframeBtn" style="display:none">
     show Image
    </button>
@@ -144,102 +182,15 @@
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
 
-                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary"><i class="ti-list"></i>general</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active"><i class="ti-list"></i>general</a></li>
                     <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="ti-filter"></i>generate</a></li>
                     <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-primary" style="background-color: blue;"><i class="fa fa-wrench"></i>groups</a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
                 <div class="row tab-content">
-                    <div id="list-view" class="tab-pane fade active show col-lg-12">
-                        <div class="card">
-                            
-                            <div class="card-body">
-                                <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx')"><i class="ti-download"></i></button>
-                                <div class="table-responsive">
-                                    <table  class="table table-striped"  id="attendance" style="zoom: 85%; font-weight: bolder;">
-                                        <thead style="background-color: aqua;">
-                                            <tr>
-                                                <th>#</th>
-                                                <th>day</th>
-                                                <th>clock_in</th>
-                                                <th>clock_out</th>
-                                                <th>clock in location</th>
-                                                <th>clock out location</th>
-                                                <th>clock in image</th>
-                                                <th>clock out image</th>
-                                                <th>status</th>
-                                                <th>count</th>
-                                                <th>deduction</th>
-                                                <th>leave?</th>
-                                                <th>leave days</th>
-                                                <th>remarks</th>
-                                               
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for attendance in attendances %}
-                                            <tr>
-
-                                                <td>
-                                                    {{attendance.employee.emp_id}}
-
-                                                </td>
-                                                <td>
-                                                    {{attendance.day}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.clock_in}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.clock_out}}
-                                                </td>
-                                                <td>
-                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
-                                                </td>
-                                                <td>
-                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
-                                                        <i class="fa fa-image"></i>
-        
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
-                                                        <i class="fa fa-image"></i>
-        
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    {{attendance.status}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.counts}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.deductions}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.is_leave}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.leave_days}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.remarks}}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="grid-view" class="tab-pane fade col-lg-12">
+                   
+                    <div id="grid-view" class="tab-pane fade show active col-lg-12">
                         <button class="btn btn-outline" onclick="htmlTableToExcelto('xlsx')"><i class="ti-download"></i></button>
                         <button class="btn btn-outline" onclick="htmlTableToExcelto('xlsx')"><i class="ti-check"></i>approve</button>
                         <div>
@@ -386,6 +337,17 @@
                         <div class="row">
                             <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                             <div class="card"  style="width:400px; overflow-x: scroll;">
+                                <div id="loaders3" style="display: none;">
+                                    <div class="spinner-grow text-primary" role="status">
+                                      <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div class="spinner-grow text-secondary" role="status">
+                                      <span class="sr-only">Loading...</span>
+                                    </div>
+                                    <div class="spinner-grow text-success" role="status">
+                                      <span class="sr-only">Loading...</span>
+                                    </div>
+                                    </div>
                                     <div class="card-body">
                                         <h4> pay period</h4>
                                         <div class="form-group row">
@@ -454,7 +416,7 @@
                                             <td>{{payroll.size}}</td>
                                             <td>{{payroll.created_date}} {{payroll.created_time}}</td>
                                             <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-check"></i></a></td>
-                                            <td><a><i class="fa fa-envelope"></i>email</a></td>
+                                            <td><a onclick="emailModal('{{payroll.payroll_id}}')"><i class="fa fa-envelope"></i>email</a></td>
                                            
                                         </tr>
                                         {% endfor %}
@@ -548,6 +510,9 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
 
                 
             },
+            beforeSend:function(){
+                $("#loaders3").show()
+             },
             success:function(data,status){
               
                 var data = JSON.parse(data)
@@ -569,9 +534,18 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                         `
                     )
                 }
+                
                 location.reload()
                 
             }
+            ,
+                complete:function(){
+                
+                $("#loaders3").hide()
+                location.reload()
+  
+               }
+                
         })
     }
 
@@ -620,6 +594,42 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
                 alert(data)
             }
         })
+    }
+
+    function emailModal(id){
+       
+        $("#emailBtn").click()
+        $("#emailPayrollId").val(id)
+
+    }
+
+    function emailPayroll(){
+        
+        var id = $("#emailPayrollId").val()
+        alert(id)
+        $.ajax({
+            type:"post",
+            url:"{% url 'payroll-email' %}",
+            data:{
+                payroll_id:id,
+                csrfmiddlewaretoken:'{{ csrf_token }}'
+            },
+             
+            beforeSend:function(){
+                $("#loaders").show()
+             },
+            success:function(data,status){
+
+                alert(data)
+            },
+            complete:function(){
+                
+                $("#loaders").hide()
+                location.reload()
+  
+               }
+
+        })        
     }
     
     function editIframe(id){

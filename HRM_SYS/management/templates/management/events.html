@@ -74,7 +74,7 @@
             
             {% for event in events %}
 
-           
+           {% if request.user.username in event.viewers_list %}
             <div class="col-md-12 stretch-card grid-margin">
                 <div class="card">
                   <div class="card-body">
@@ -83,14 +83,15 @@
                       
                       <li>
                         <div class="d-flex">
-                          <img src="{{event.creator.profile.image.url}}" alt="user">
+                          <img src="{{event.image}}" alt="user">
                           <div>
                             <p class="text-info mb-1">{{event.title}}</p>
                             <p class="mb-0">{{event.details}}</p>
                             <small>{{event.created}}</small>
-                            <a href="{{event.files.url}}" download><i class="fa fa-download"></i></a>
+                            <a href="{{event.file}}" download><i class="fa fa-download"></i></a>
                           </div>
                         </div>
+                        <strong style="color:green">@ {{event.viewers}}</strong>
                         {% if event.creator == request.user %}
                   <a class="btn btn-danger" onclick="delPost('{{event.pk}}')"><i class="fa fa-times"></i></a>
                   {% endif %}
@@ -106,6 +107,7 @@
                 </div>
                 
               </div>
+              {% endif %}
              
               {% endfor %}
           </div>
