@@ -36,7 +36,8 @@ def monthly_payroll(request):
         print(payroll_id)
         
         date2 = datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1)
-        
+        date1 = datetime.strptime(date1, '%Y-%m-%d')
+        print(type(date1))
         
         payrolls = []
         for employee in Employee.objects.all():
@@ -48,10 +49,23 @@ def monthly_payroll(request):
                 for attendance in attendances:
 
                     total_hours += attendance.hours
-                    leave_days += sum([leave.days for leave in Applications.objects.filter(applicant=User.objects.get(username=employee.emp_id)).filter(type__name = "leave") if leave.status=="complete"])
-                    days += attendance.days
                     
-                 
+                    days += attendance.days
+                leave_days += sum([leave.days for leave in Applications.objects.filter(applicant=User.objects.get(username=employee.emp_id)).filter(type__name = "leave") if leave.status=="complete"])
+                overtime_hours = sum([i.overtime_hours for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2 ])
+                overtime_pay = sum([(i.overtime_hours * i.overtime_rate) for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                incentives  = sum([i.incentive for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                loan_deductions = sum([i.loan_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                deductions = Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day)
+                
+                gross_pay = Decimal(employee.salary+employee.allowance+employee.add_ons+incentives)+Decimal(overtime_pay)
+        
+                taxable_income  = Decimal(Decimal(gross_pay)-(employee.payroll_settings.nssf))
+                tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(gross_pay-employee.payroll_settings.nssf),employee.payroll_settings.relief))
+                net_pay = round( Decimal((gross_pay))-(employee.payroll_settings.nssf)\
+                        -round(tax,2)\
+                        -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others-deductions-loan_deductions-welfare_deductions,2)
                 data = {
                     "org_name":employee.payroll_settings.org_name,
                     "payroll_id":payroll_id,
@@ -65,22 +79,25 @@ def monthly_payroll(request):
                     "account_no":employee.account_no,
                     "basic_salary":employee.salary,
                     "allowance":employee.allowance,
+                    "overtime_pay":overtime_pay,
+                    "overtime_hours":overtime_hours,
+                    "incentives":incentives,
                     "add_ons":employee.add_ons,
-                    "total_hours":days,
+                    "total_days":days,
                     "leave_days":leave_days,
-                    "deductions":Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day),
-                    "gross_pay":Decimal((employee.salary+employee.allowance+employee.add_ons)-deductions),
-                    "taxable_income":Decimal(Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf)),
-                    "tax": Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf),employee.payroll_settings.relief)),
+                    "deductions":deductions,
+                    "loan_deductions":loan_deductions,
+                    "welfare_deductions":welfare_deductions,
+                    "gross_pay":gross_pay,
+                    "taxable_income":taxable_income,
+                    "tax": tax,
                     "nhif":employee.payroll_settings.nhif,
                     "nssf":employee.payroll_settings.nssf,
                     "insurance":employee.payroll_settings.health_insurance,
                     "housing": employee.payroll_settings.housing,
                     "others": employee.payroll_settings.others,
-                    "net_pay":round( Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf)\
-                        -round(tax_amount(employee.payroll_settings.tax_rate,  Decimal(((employee.salary+employee.allowance+employee.add_ons)-deductions))-(employee.payroll_settings.nssf),employee.payroll_settings.relief),2)\
-                        -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others,2),
-
+                    "net_pay":net_pay,
+                    
                     "created_date": datetime.now(),
                     "created_time":datetime.now(),
                     "pay_run": str(date1)+" - "+str(date2)

@@ -239,6 +239,7 @@ class Events(models.Model):
     details = models.TextField()
     category = models.CharField(max_length=100,choices=(("announcement","announcement"),("events","events"),("updates","updates")),default="")
     viewers = models.CharField(max_length=100,choices=(("all","all"),("members","members"),("admins","admins")),default="")
+    viewers_list = models.TextField(default="")
     created = models.DateTimeField(default=timezone.now)
     creator = models.ForeignKey(User,on_delete=models.CASCADE)
     files = models.FileField(default='posts.png',upload_to='posts_files')

@@ -47,33 +47,175 @@
 .border-top {
     border-top: 1px solid #dee2e6!important;
 }
+.face{
+            width: 200px;
+            height:200px;
+            display: inline-block;
+            position: relative;
+            background-color: rgb(111, 159, 178);
+            border-radius: 50%;
+            box-shadow:inset 2px 2px 10px #0a5f01, inset 20px 20px 50px #01ed40;
+        }
+        .face::after{
+            content: "";
+            position: absolute;
+            width:90px;
+            height: 100px;
+            transform: rotate(-20deg);
+            background-color: #000;
+            left:0;
+            animation: animation1 0.3s infinite;
+            border-radius: 50px 50px 0px 0px;
+            top: -20px;
+            z-index: -100;
+        }
+        .face::before{
+            content: "";
+            position: absolute;
+            width:90px;
+            height: 100px;
+            transform: rotate(20deg);
+            background-color: #000;
+            animation: animation 0.3s infinite;
+            right:0;
+            border-radius: 50px 50px 0px 0px;
+            top: -20px;
+            z-index: -100;
+        }
+        .eye1{
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-color: aliceblue;
+            border: 3px solid #000;
+            border-radius: 50%;
+            text-align: center;
+            top:40px;
+            left:30px;
+            border-top: 30px solid #000000;
+        }
 
+        .eye1::before{
+            content:"";
+            position: absolute;
+            width:10px;
+            height: 10px;
+            top: 30%;
+            left: 30%;
+            animation: animation 0.3s infinite;
+            border-radius: 50%;
+            transition: 0.5s;
+            border:5px solid #000;
+            background-color: #9b9999;
+        }
+        .eye2{
+            position: absolute;
+            width: 50px;
+            height: 30px;
+            background-color: aliceblue;
+            border: 3px solid #000;
+            border-radius: 50%;
+            text-align: center;
+            border-top: 30px solid #000000;
+            top:40px;
+            right:30px;
+        }
+        .eye2::before{
+            content:"";
+            position: absolute;
+            width:10px;
+            height: 10px;
+            animation: animation 0.3s infinite;
+            top: 30%;
+            right: 30%;
+            border-radius: 50%;
+            border:5px solid #000;
+            background-color: #9b9999;
+        }
+        .nose{
+            position: absolute;
+            width:60px;
+            height: 50px;
+            background-color: #000;
+            border-radius: 50%;
+            top: 50%;
+            left:35%;
+            border-top: 3px solid #fff;
+        }
+        .mouth{
+            position: absolute;
+            width:150px;
+            height: 100px;
+            background-color: transparent;
+            top:35%;
+            left:15%;
+            border-bottom: 10px solid #000;
+            animation: animation2 3s infinite;
+            border-radius: 50%;
+        }
+        @keyframes animation{
+            0%{
+                transform:rotate(20deg) scale(1);
+            }
+          
+            100%{
+               
+                transform: rotate(20deg) scale(1.2);
+            }
+        }
+        @keyframes animation1{
+            0%{
+                transform:rotate(-20deg) scale(1);
+            }
+          
+            100%{
+               
+                transform: rotate(-20deg) scale(1.2);
+            }
+        }
+        @keyframes animation2{
+            0%{
+                border-radius: 30px;
+            }
+          
+            100%{
+               
+                border-radius: 100%;
+            }
+        }
 
 
 </style>
 
 
-    <div class="container p-0">
+    <div class="container p-0" style="margin-top:50px;">
 
 		<h1 class="h3 mb-3">Messages</h1>
 
 		<div class="card">
 			<div class="row g-0">
-				<div class="col-12 col-lg-5 col-xl-3 border-right" style="height:300px; overflow: hidden;">
+				<div class="col-12 col-lg-5 col-xl-3 border-right" style="height:300px; zoom:85%; overflow: scroll;">
 
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
-								<input type="text" class="form-control my-3" placeholder="Search...">
+
+								<input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname">
+								<datalist id="searchUser">
+									{% for profile in profiles %}
+                                    <option value="{{profile.user.username}}">{{profile.user.username}}</option>
+									{% endfor %}
+								</datalist>
 							</div>
 						</div>
 					</div>
+					<div>
                     {% for profile in profiles %}
 					<a onclick="insertChatBox('{{profile.user.id}}')" class="list-group-item list-group-item-action border-0" style="background-color: greenyellow;">
 						<div class="badge bg-success float-right" id="chats-no" style="color:black"></div>
-						<div class="d-flex align-items-start">
+						<div class="d-flex align-items-start" >
 							<img src="{{profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
-							<div class="flex-grow-1 ml-3">
+							<div class="flex-grow-1 ml-3" id="profileDiv">
 								{% if profile.user.username == request.user.username %}
 								me
 								{% else %}
@@ -89,13 +231,14 @@
 						</div>
 					</a>
                     {% endfor %}
+					</div>
                    
 
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
-				<iframe height="800px" width="100%" id="chatBox" style="zoom:80%">
-
+				<iframe height="800px" width="100%" id="chatBox" style="zoom:80%; border:5px solid greenyellow;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rNfcR4hxsEdCopu_oIKBGPwmbUIl6FsoNjC7tnDoVA&s">
+					<p>yes</p>
 				</iframe>
 
 
@@ -111,7 +254,7 @@
 
 	function getLatest(){
 
-		var url = ""
+		var url = "{% url 'management_chat_notify' %}"
 
 		$.get(url,
 
@@ -148,6 +291,17 @@
 
        document.getElementById("chatBox").src = 'live_chat/live_chat_user/'+id
 	}
+
+	$(document).ready(function(){
+          $("#pname").on("keyup",function(){
+              var value=$(this).val();
+             $('#profileDiv').hide()
+      
+            $('#profileDiv:contains("'+value+'")').show()
+      
+          });
+      });
+
 </script>
 
 {% endblock content %}

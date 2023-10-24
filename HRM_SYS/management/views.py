@@ -694,11 +694,15 @@ def profile(request):
     displays both announcements and events
 '''
 def Event(request):
-
+    
     events = Events.objects.all().order_by('-created')
-
+    all_users = [user.username for user in User.objects.all()]
+    admin_users = [user.username for user in User.objects.all() if user.is_staff]
+    #member_users = [user.username for user in User.objects.all() if Employee.objects.get(emp_id = user.username).departments == Employee.objects.get(emp_id = request.user.username).departments]
+    print(admin_users)
     context = {
-                "events":events,"form":PostsForm()
+                "events":events,"form":PostsForm(),"admins":admin_users,
+                "uzers":all_users
     }
 
     return render(request,'management/events.html',context)
@@ -716,9 +720,13 @@ def add_event(request):
            
            instance = post_form.save(commit=False)
            instance.creator = request.user
+           if instance.viewers == "all":
+               instance.viewers_list = ",".join([user.username for user in User.objects.all()])
+           elif instance.viewers == "admins":
+               instance.viewers_list = ",".join([user.username for user in User.objects.all() if user.is_staff])
            instance.save()
 
-           print("yes")
+           #print("yes")
 
            return JsonResponse("created successfully",safe=False)
 
@@ -852,6 +860,33 @@ def sent_msg(request,pk):
         new_chat.save()
       
         return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
+
+def chat_notify(request):
+    
+    
+    usrs = Profile.objects.all()
+
+    
+    
+    usrs_arr,chats_arr,send_arr,dates_arr = [],[],[],[]
+
+    for usr in usrs:
+        chats = ChatMessage.objects.filter(sender__id = usr.id , recep = request.user.profile,seen=False)
+        usrs_arr.append(chats.count())
+        for chat in chats:
+            chats_arr.append(chat.body)
+            send_arr.append(chat.sender.user.username)
+            dates_arr.append(chat.sent)
+
+    res_dict = {
+
+                    "no":usrs_arr,"msg":chats_arr,"sender":send_arr,"dates":dates_arr,
+
+                    
+
+
+                }
+    return JsonResponse(res_dict,safe=False)
 
 
 def recv_msg(request,pk):

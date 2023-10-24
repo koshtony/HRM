@@ -143,10 +143,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i></a></li>
-                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary"><i class="ti-list"></i></a></li>
-                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="ti-filter"></i></a></li>
-                    <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-primary" style="background-color: blue;"><i class="fa fa-wrench"></i></a></li>
+
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary"><i class="ti-list"></i>general</a></li>
+                    <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="ti-filter"></i>generate</a></li>
+                    <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-primary" style="background-color: blue;"><i class="fa fa-wrench"></i>groups</a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
@@ -265,8 +265,12 @@
                                             <th>account_no</th>
                                             <th>salary</th>
                                             <th>leave days</th>
-                                            <th>hours</th>
+                                            <th>days</th>
+                                            <th>overtime pay</th>
+                                            <th>incentives</th>
                                             <th>deductions</th>
+                                            <th>loan deductions</th>
+                                            <th>welfare deductions</th>
                                             <th>gross_pay</th>
                                             <th>taxable income</th>
                                             <th>PAYE</th>
@@ -329,10 +333,22 @@
                                                 {{val.leave_days}}
                                             </td>
                                             <td>
-                                                {{val.total_hours}}
+                                                {{val.total_days}}
+                                            </td>
+                                            <td>
+                                                {{val.overtime_pay}}
+                                            </td>
+                                            <td>
+                                                {{val.incentives}}
                                             </td>
                                             <td>
                                                 {{val.deductions}}
+                                            </td>
+                                            <td>
+                                                {{val.loan_deductions}}
+                                            </td>
+                                            <td>
+                                                {{val.welfare_deductions}}
                                             </td>
                                             <td>
                                                 {{val.gross_pay}}

@@ -18,7 +18,10 @@ class PayRoll(models.Model):
     basic_salary = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     allowance =  models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     add_ons = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    total_hours = models.FloatField(default=0.0)
+    total_days = models.FloatField(default=0.0)
+    overtime_hours = models.FloatField(default=0.0)
+    overtime_pay = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    incentives = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     leave_days = models.FloatField(default=0.0)
     deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2) 
     gross_pay  = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
@@ -28,6 +31,8 @@ class PayRoll(models.Model):
     nssf = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     insurance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     housing = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    loan_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    welfare_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     others = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     net_pay = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     created_date = models.DateField(default=timezone.now)
@@ -61,10 +66,13 @@ class ExtraPayments(models.Model):
     employee_id = models.CharField(max_length=100)
     overtime_hours = models.FloatField(default=0.0)
     overtime_rate = models.FloatField(default=0.0)
-    incentive = models.FloatField(default=0.0)
-    performance = models.FloatField(default=0.0)
-    awards = models.FloatField(default=0.0)
+    incentive = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    performance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    awards = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    loan_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    welfare_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    created = models.DateTimeField(default=datetime.datetime.now())
 
     def __str__(self):
 
-        return self.employee
+        return self.employee_id
