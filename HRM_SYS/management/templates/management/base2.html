@@ -101,14 +101,12 @@
   <!-- End custom js for this page-->
   <script>
     $('body').append('<div style = "" id = "indicator"> <div class="loader"> </div> </div>');
-    $(window).on('load', function () {
-       setTimeout(removeLoader, 2000);
+    const preloader = document.querySelector('#indicator');
+  if (preloader) {
+    window.addEventListener('load', () => {
+      preloader.remove();
     });
-    function removeLoader() {
-       $("#indicator").fadeOut(1000, function () {
-          $("#indicator").remove();
-       });
-    }
+  }
   </script>
 </body>
 
