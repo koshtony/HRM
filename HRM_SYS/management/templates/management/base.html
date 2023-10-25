@@ -32,7 +32,7 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand brand-logo mr-5" href=""><img src="{% static 'logo/logo.png' %}"  class="mr-2" alt="logo"/></a>
-        <a class="navbar-brand brand-logo-mini" href=""><img src="{{request.user.profile.image.url}}" alt="logo"/></a>
+        <a class="navbar-brand brand-logo-mini" href=""><img src="{% static 'logo/logo.png' %}"  alt="logo"/></a>
       </div>
       <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
         <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -46,9 +46,14 @@
                   <i class="icon-search"></i>
                 </span>
               </div>
-              <input type="text" list="searches" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
+              <input type="text" list="searches" class="form-control" id="navbar-search-input" onkeydown = "if (event.keyCode == 13)
+              window.location='/' + this.value"
+     placeholder="search" />
               <datalist  id="searches">
-                <option value="data">
+                <option value="list_employee" style="color:greenyellow">employees</option>
+                <option value="clock" style="color:yellow">attendance</option>
+                <option value="list_approvals" style="color:aqua">all approvals</option>
+                <option value="approvals" style="color:blue">approvals</option>
 
               </datalist>
             </div>
@@ -133,16 +138,13 @@
             <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
           </li>
         </ul>
+        <!---->
         <div class="tab-content" id="setting-content">
           <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel" aria-labelledby="todo-section">
             <div class="add-items d-flex px-3 mb-0">
-              <form class="form w-100">
-                <div class="form-group d-flex">
-                  <input type="text" class="form-control todo-list-input" placeholder="Add To-do">
-                  <button type="submit" class="add btn btn-primary todo-list-add-btn" id="add-task">Add</button>
-                </div>
-              </form>
+              
             </div>
+            <!--
             <div class="list-wrapper px-3">
               <ul class="d-flex flex-column-reverse todo-list">
                 <li>
@@ -168,6 +170,7 @@
                 
               </ul>
             </div>
+          -->
             <h4 class="px-3 text-muted mt-5 font-weight-light mb-0">Events</h4>
             <div class="events pt-4 px-3">
               <div class="wrapper d-flex mb-2">
@@ -180,6 +183,7 @@
            
           </div>
           <!-- To do section tab ends -->
+          <!--
           <div class="tab-pane fade" id="chats-section" role="tabpanel" aria-labelledby="chats-section">
             <div class="d-flex align-items-center justify-content-between border-bottom">
               <p class="settings-heading border-top-0 mb-3 pl-3 pt-0 border-bottom-0 pb-0">Friends</p>
@@ -209,7 +213,7 @@
               
             </ul>
           </div>
-          <!-- chat tab ends -->
+          -->
         </div>
       </div>
       <!-- partial -->
@@ -231,8 +235,10 @@
             <div class="collapse" id="ui-basic">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'management_events' %}">feeds</a></li>
+                <!--
                 <li class="nav-item"> <a class="nav-link" href="">bulky sms</a></li>
                 <li class="nav-item"> <a class="nav-link" href="">bulky emails</a></li>
+                -->
               </ul>
             </div>
           </li>
@@ -282,7 +288,7 @@
             </a>
             <div class="collapse" id="icons">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="{% url 'management_live_chat' %}">sema</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'management_live_chat' %}"><i class="fa fa-comment"></i>sema</a></li>
               </ul>
             </div>
           </li>
@@ -317,15 +323,7 @@
             </div>
           </li>
           {% endif %}
-          {% if user.is_staff %}
-          <li class="nav-item">
-            <a class="nav-link" href="">
-              <i class="icon-paper menu-icon"></i>
-              <span class="menu-title">systems logs</span>
-            </a>
-            
-          </li>
-          {% endif %}
+          
         </ul>
       </nav>
       

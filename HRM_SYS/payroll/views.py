@@ -236,17 +236,25 @@ def re_calculate(request):
         sign_id = request.POST.get("sign_id")
         org_name = request.POST.get("org_name")
         pin_no = request.POST.get("pin_no")
-        basic_salary = float(request.POST.get("basic_salary"))
-        add_ons = float(request.POST.get("add_ons"))
-        total_hours = float(request.POST.get("total_hours"))
-        leave_days = float(request.POST.get("leave_days"))
-        deductions = float(request.POST.get("deductions"))
-        nhif = float(request.POST.get("nhif"))
-        nssf = float(request.POST.get("nssf"))
-        insurance = float(request.POST.get("insurance"))
-        housing = float(request.POST.get("housing"))
-        others = float(request.POST.get("others"))
-        allowance = float(request.POST.get("allowance"))
+        basic_salary = Decimal(request.POST.get("basic_salary"))
+        add_ons = Decimal(request.POST.get("add_ons"))
+        total_days = Decimal(request.POST.get("total_hours"))
+        leave_days = Decimal(request.POST.get("leave_days"))
+        deductions = Decimal(request.POST.get("deductions"))
+        nhif = Decimal(request.POST.get("nhif"))
+        nssf = Decimal(request.POST.get("nssf"))
+        insurance = Decimal(request.POST.get("insurance"))
+        housing = Decimal(request.POST.get("housing"))
+        others = Decimal(request.POST.get("others"))
+        allowance = Decimal(request.POST.get("allowance"))
+        overtime_pay = Decimal(request.POST.get("overtime_pay"))
+        overtime_hours = Decimal(request.POST.get("overtime_hours"))
+        incentives = Decimal(request.POST.get("incentives"))
+        welfare = Decimal(request.POST.get("welfare"))
+        loan  = Decimal(request.POST.get("loan"))
+        
+        gross_pay = basic_salary+allowance+overtime_pay+overtime_pay+add_ons
+        taxable_income = gross_pay - nssf
         
         employee = Employee.objects.get(emp_id = PayRoll.objects.get(sign_id=sign_id).employee_id)
         
@@ -254,7 +262,7 @@ def re_calculate(request):
         filt_payroll.org_name = org_name
         filt_payroll.pin_no = pin_no 
         filt_payroll.basic_salary = basic_salary
-        filt_payroll.total_hours = total_hours 
+        filt_payroll.total_days = total_days 
         filt_payroll.leave_days = leave_days 
         filt_payroll.deductions = deductions 
         filt_payroll.add_ons = add_ons 
@@ -264,12 +272,12 @@ def re_calculate(request):
         filt_payroll.housing = housing
         filt_payroll.others = others
         filt_payroll.allowance = allowance
-        filt_payroll.gross_pay = round((basic_salary+allowance+add_ons)-deductions,2)
-        filt_payroll.taxable_income = round(((basic_salary+allowance+add_ons)-deductions)-(nssf),2)
-        filt_payroll.tax = round(tax_amount(employee.payroll_settings.tax_rate,((basic_salary+allowance+add_ons)-deductions)-(nssf),employee.payroll_settings.relief),2)
-        filt_payroll.net_pay = round(((basic_salary+allowance+add_ons)-deductions)-(nssf)\
-                        -round(tax_amount(employee.payroll_settings.tax_rate,((basic_salary+allowance+add_ons)-deductions)-(nssf),employee.payroll_settings.relief),2)\
-                        -nhif-insurance-housing-others,2)
+        filt_payroll.gross_pay = gross_pay
+        filt_payroll.taxable_income = taxable_income
+        filt_payroll.tax = tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief)
+        filt_payroll.net_pay = round(gross_pay-nssf\
+                        -round(tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief),2)\
+                        -nhif-insurance-housing-others-welfare-loan,2)
         
 
         filt_payroll.status = "audited"

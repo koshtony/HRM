@@ -50,6 +50,7 @@ class Employee(models.Model):
     next_kin_phone = models.CharField(max_length=50,default="None")
     address = models.CharField(max_length=50,default="None")
     location = models.CharField(max_length=50,default="None")
+    office = models.CharField(max_length=50,default="None")
 
  # HR admin section
 

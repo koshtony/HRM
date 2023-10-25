@@ -850,29 +850,79 @@ def sent_msg(request,pk):
         chat = data["msg"]
         anony = data["anony"]
       
-        if anony == "yes":
-
-            new_chat = ChatMessage(
-               body = chat , 
-               sender = Profile.objects.get(user__username="hummingbird"),
-               recep = ind_profile,
-               sent = datetime.now(),
-               seen = False
-               
-            )
-            
-        else:
+        
+        #Profile.objects.get(user__username="hummingbird")
+        if anony!="yes":
             new_chat = ChatMessage(
                 body = chat , 
                 sender = request.user.profile,
+                anonymous_sender = request.user.profile,
                 recep = ind_profile,
                 sent = datetime.now(),
                 seen = False
                 
-            )
-        new_chat.save()
+                )
+            new_chat.save()
+        else:
+
+            new_chat = ChatMessage(
+                body = chat , 
+                sender = Profile.objects.get(user__username="hummingbird") ,
+                anonymous_sender = request.user.profile,
+                recep = ind_profile,
+                sent = datetime.now(),
+                seen = False
+                
+                )
+            new_chat.save()
+
+            
+    
       
         return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
+@csrf_exempt
+def chat_reply(request):
+
+ 
+
+        data = json.loads(request.body)
+
+        id = data["id"]
+        msg = data["msg"]
+        anony = data["anony"]
+
+        chats = ChatMessage.objects.get(pk=id)
+
+        if anony!="yes":
+            new_chat = ChatMessage(
+                body = msg , 
+                sender = request.user.profile,
+                anonymous_sender = request.user.profile,
+                recep = chats.sender,
+                sent = datetime.now(),
+                seen = False
+                
+                )
+            new_chat.save()
+            return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
+        else:
+
+            new_chat = ChatMessage(
+                body = msg, 
+                sender = Profile.objects.get(user__username="hummingbird") ,
+                anonymous_sender = request.user.profile,
+                recep = chats.anonymous_sender,
+                sent = datetime.now(),
+                seen = False
+                
+                )
+            new_chat.save()
+
+            return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
+
+
+
+
 
 def chat_notify(request):
     

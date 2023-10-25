@@ -163,16 +163,21 @@ input:checked + .slider:before {
 						<div class="chat-messages p-4" id="chat-bdy">
                         {% for chat in chats %}
                         
-						   {% if chat.sender.user.username == user.username and chat.recep.user.username == ind.user.username %}
+						   {% if chat.sender.user.username == user.username and chat.recep.user.username == ind.user.username or chat.anonymous_sender.user.username == user.username and chat.recep.user.username == ind.user.username %}
 							<div class="chat-message-right pb-4" id="chat{{chat.pk}}">
 								<div>
 									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
 									<div class="text-muted small text-nowrap mt-2">{{chat.sent}}</div>
+									{% if chat.anonymous_sender.user.username == user.username %}
+									<p style="color:red">anonymous</p>
+								{% endif %}
 								</div>
 								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3" style="background-color:grey">
 									<div class="font-weight-bold mb-1">You</div>
 									{{chat.body | safe}} <a onclick="delMssg('{{chat.pk}}');" style="color:red"> <i class="fa fa-trash"></i></a>
+									
 								</div>
+								
 
 							</div>
 
@@ -186,6 +191,10 @@ input:checked + .slider:before {
 								<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3" style="background-color: greenyellow;">
 									<div class="font-weight-bold mb-1" style="color:orange">{{ind.user.username}}@{{ind.user.first}}</div> 
 									{{chat.body | safe}}
+									{% if chat.sender.user.username == "hummingbird" %}
+									
+									<a onclick="Reply('{{chat.pk}}');" style="color:green"> <i class="fa fa-reply"></i></a>
+									{% endif %}
 								</div>
 							</div>
 							<br>
@@ -251,7 +260,7 @@ function sendMsg(event){
     tinyMCE.triggerSave();
 	var chat = $('#id_body').val()
     var anony = $("#anony").val()
-	alert(anony)
+	
 
 	
     var data  = {"msg":chat,"anony":anony}
@@ -363,8 +372,62 @@ function delMssg(id){
 	})
 }
 
+function Reply(id){
+	alert(id)
+
+	event.preventDefault()
+ 
+
+   
+    tinyMCE.triggerSave();
+	var chat = $('#id_body').val()
+	var anony = $("#anony").val()
+    
+	alert(anony)
+
+	
+    var data  = {"msg":chat,"id":id,"anony":anony}
+	var url = "{% url 'management_chat_reply'%}"
+
+	fetch(url,{
+		method:'POST',
+		headers:{
+			'Content-Type':'application/json',
+			'X-CSRFToken': csrftoken
+		},
+		body:JSON.stringify(data),
+		
+	}
+
+
+	).then(response => response.json()).then(
+		data => {
+			console.log('Success:',data)
+            var chatBody = document.getElementById("chat-bdy")
+			var chatBox = document.createElement('div')
+			chatBox.classList.add("chat-message-right")
+			chatBox.innerHTML = `
+			<div>
+									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									<div class="text-muted small text-nowrap mt-2">${data["date"]}</div>
+								</div>
+								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
+									<div class="font-weight-bold mb-1">You</div>
+									${data["mssg"]}
+								</div>
+
+			`
+			document.getElementById("id_body").value = ""
+           chatBody.append(chatBox)
+
+		}
+	).catch((error) => {
+		console.error('Error:',error)
+	})
+}
+
 $(document).ready(function () {
-    $(".django-ckeditor-widget").css("width", "10%")
+    $(".django-ckeditor-widget").css("width", "100%")
  });
 </script>
 
