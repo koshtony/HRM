@@ -163,6 +163,17 @@
                   <p class="card-description">
                     annual,sick, compassionate
                     <h4 id="success">
+                      <div id="loaders6" style="display: none;">
+                        <div class="spinner-grow text-primary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-secondary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-success" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        </div>
                        
                     </h4>
                   </p>
@@ -343,9 +354,19 @@ getClock()
         data:formData,
         processData: false,
    contentType: false,
+   beforeSend:function(){
+                $("#loaders").show()
+             },
+
         success:function(data,status){
           $("#success").html(data)
-        }
+        },
+        complete:function(){
+                
+                $("#loaders6").hide()
+                location.reload()
+  
+               }
       })
      })
 

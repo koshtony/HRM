@@ -291,6 +291,17 @@
           </button>
         </div>
         <div class="modal-body">
+            <div id="loaders4" style="display: none;">
+                <div class="spinner-grow text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-secondary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-success" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                </div>
             <form class="form-sample" id="fileForm" ectype="multipart/form-data" method="POST">
                 <p class="card-description">
                   Personal info
@@ -487,9 +498,19 @@
      data:formData,
      processData: false,
 contentType: false,
+beforeSend:function(){
+                $("#loaders4").show()
+             },
      success:function(data,status){
        alert(data)
-     }
+     },
+     complete:function(){
+                
+                $("#loaders4").hide()
+                location.reload()
+  
+               }
+
    })
   })
 
