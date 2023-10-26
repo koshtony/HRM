@@ -850,21 +850,9 @@ def sent_msg(request,pk):
         chat = data["msg"]
         anony = data["anony"]
       
-        
+        print(anony)
         #Profile.objects.get(user__username="hummingbird")
-        if anony!="yes":
-            new_chat = ChatMessage(
-                body = chat , 
-                sender = request.user.profile,
-                anonymous_sender = request.user.profile,
-                recep = ind_profile,
-                sent = datetime.now(),
-                seen = False
-                
-                )
-            new_chat.save()
-        else:
-
+        if anony == "yes":
             new_chat = ChatMessage(
                 body = chat , 
                 sender = Profile.objects.get(user__username="hummingbird") ,
@@ -875,6 +863,22 @@ def sent_msg(request,pk):
                 
                 )
             new_chat.save()
+       
+        else:
+
+            new_chat = ChatMessage(
+                body = chat , 
+                sender = request.user.profile,
+                anonymous_sender = request.user.profile,
+                recep = ind_profile,
+                sent = datetime.now(),
+                seen = False
+                
+                )
+            new_chat.save()
+
+            
+       
 
             
     

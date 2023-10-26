@@ -168,7 +168,7 @@ input:checked + .slider:before {
 								<div>
 									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
 									<div class="text-muted small text-nowrap mt-2">{{chat.sent}}</div>
-									{% if chat.anonymous_sender.user.username == user.username %}
+									{% if chat.sender.user.username == "hummingbird" %}
 									<p style="color:red">anonymous</p>
 								{% endif %}
 								</div>
@@ -426,9 +426,7 @@ function Reply(id){
 	})
 }
 
-$(document).ready(function () {
-    $(".django-ckeditor-widget").css("width", "100%")
- });
+
 </script>
 
 

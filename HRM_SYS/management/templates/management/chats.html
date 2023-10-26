@@ -200,7 +200,7 @@
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
 
-								<input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname">
+								<input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname" onkeyup="search()">
 								<datalist id="searchUser">
 									{% for profile in profiles %}
                                     <option value="{{profile.user.username}}">{{profile.user.username}}</option>
@@ -212,14 +212,17 @@
 					<div>
                     {% for profile in profiles %}
 					<a onclick="insertChatBox('{{profile.user.id}}')" class="list-group-item list-group-item-action border-0" style="background-color: greenyellow;">
-						<div class="badge bg-success float-right" id="chats-no" style="color:black"></div>
-						<div class="d-flex align-items-start" >
+						<div class="flexi">
+                        <div class="badge bg-success float-right" id="chats-no" style="color:black"></div>
+                        
+						<div class="d-flex align-items-start" id="profileDiv">
+                         
 							<img src="{{profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
-							<div class="flex-grow-1 ml-3" id="profileDiv">
+							<div class="flex-grow-1 ml-3">
 								{% if profile.user.username == request.user.username %}
 								me
 								{% else %}
-								{{profile.user.username}}
+								<p>{{profile.user.username}}</p>
 								{% endif %}
                                 {% if profile.user.is_authenticated == True %}
 								<div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
@@ -228,7 +231,9 @@
 								<div class="small"><span class="fas fa-circle chat-online"></span> Offline</div>
 							     {% endif %}
                             </div>
+                           
 						</div>
+                        </div>
 					</a>
                     {% endfor %}
 					</div>
@@ -237,7 +242,7 @@
 					<hr class="d-block d-lg-none mt-1 mb-0">
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
-				<iframe height="800px" width="100%" id="chatBox" style="zoom:80%; border:5px solid greenyellow;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rNfcR4hxsEdCopu_oIKBGPwmbUIl6FsoNjC7tnDoVA&s">
+				<iframe height="1300px;" width="100%" id="chatBox" style="zoom:75%; border:5px solid greenyellow;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rNfcR4hxsEdCopu_oIKBGPwmbUIl6FsoNjC7tnDoVA&s">
 					<p>yes</p>
 				</iframe>
 
@@ -292,15 +297,16 @@
        document.getElementById("chatBox").src = 'live_chat/live_chat_user/'+id
 	}
 
-	$(document).ready(function(){
-          $("#pname").on("keyup",function(){
-              var value=$(this).val();
-             $('#profileDiv').hide()
+   function search(){
+          var value = $("#pname").val()
+              var value=value.toLowerCase();
+              //alert(value)
+             $('.flexi').hide()
       
-            $('#profileDiv:contains("'+value+'")').show()
+            $('.flexi:contains("'+value+'")').show()
       
-          });
-      });
+          
+        }
 
 </script>
 

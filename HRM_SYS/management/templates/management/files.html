@@ -350,7 +350,7 @@
                     <input type="text" list="empids" id="empid" class="form-control"placeholder="search by employee id">
                     <datalist id="empids">
                         {% for file in files %}
-                        <option value="{{file.employee}}">{{file.employee}}</option>
+                        <option value="{{file.file_name}}-{{file.employee}}">{{file.file_name}}-{{file.employee}}</option>
                         {% endfor %}
                     </datalist>
                 </ol>
@@ -365,17 +365,19 @@
                             <button type="button" class="btn btn-default md-btn-flat dropdown-toggle px-2" data-toggle="dropdown"><i class="ion ion-ios-settings"></i></button>
                             <div class="dropdown-menu">
                                 
-                                <a class="dropdown-item" href="javascript:void(0)">Remove</a>
+                                <a class="dropdown-item" onclick="getCheckedFiles()">Remove</a>
+                                <input type="checkbox" id="selectall" onclick="checker()">
                                 
                             </div>
                             <button type="button" class="btn btn-default md-btn-flat dropdown-toggle px-2" onclick="location.reload()"><i class="ion ion-ios-refresh"></i></button>
+
+                           
+
                         </div>
+                        
                     </div>
                     <div>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-default icon-btn md-btn-flat active"> <input type="radio" name="file-manager-view" value="file-manager-col-view" checked="" /> <span class="ion ion-md-apps"></span> </label>
-                            <label class="btn btn-default icon-btn md-btn-flat"> <input type="radio" name="file-manager-view" value="file-manager-row-view" /> <span class="ion ion-md-menu"></span> </label>
-                        </div>
+                       
                     </div>
                 </div>
         
@@ -388,14 +390,17 @@
                     <div class="file-item-changed pb-2">Changed</div>
                 </div>
         
-                
+               
             {% for file in files %}
+          
             {% if user.is_staff %}
+            
                 <div class="file-item" id="fileDiv">
+                 
                     <div class="file-item-select-bg bg-primary"></div>
                     <label class="file-item-checkbox custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" />
-                        <input type="text" class="custom-control-input" value="{{file.emp_id}}">
+                        <input type="checkbox" class="custom-control-input" name="filesCheck" value="{{file.employee}}"/>
+                        <input type="text" class="custom-control-input" value="{{file.employee}}">
                         <span class="custom-control-label"></span>
                     </label>
                     <div>
@@ -404,20 +409,14 @@
                                 </svg>
                     </div>
                     <a href="{{file.document.url}}" class="file-item-name" download>
-                        {{file.file_name}}-{{file.category}}-<span style="color:green;">{{file.employee.emp_id}}</span>
+                        {{file.file_name}}-{{file.category}}-{{file.employee}}
                     </a>
                     <div class="file-item-changed">{{file.created}}</div>
-                    <div class="file-item-actions btn-group">
-                        <button type="button" class="btn btn-default btn-sm rounded-pill icon-btn borderless md-btn-flat hide-arrow dropdown-toggle" data-toggle="dropdown"><i class="ion ion-ios-more"></i></button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="javascript:void(0)">Rename</a>
-                           
-                            <a class="dropdown-item" href="javascript:void(0)">Remove</a>
-                        </div>
-                    </div>
+                    
                 </div>
-                {% elif user.username == file.employee.emp_id %}
-                <div class="file-item">
+                {% elif user.username == file.employee %}
+                <div class="file-item" id="fileDiv">
+                    
                     <div class="file-item-select-bg bg-primary"></div>
                     
                     <div>
@@ -426,7 +425,7 @@
                                 </svg>
                     </div>
                     <a href="{{file.document.url}}" class="file-item-name" download>
-                        {{file.file_name}}-{{file.category}}-{{file.employee.emp_id}}
+                        {{file.file_name}}-{{file.category}}-{{file.employee}}
                     </a>
                     <div class="file-item-changed">{{file.created}}</div>
                     
@@ -473,7 +472,8 @@
      new DataTable('#attendance');
      $(document).ready(function(){
           $("#empid").on("keyup",function(){
-              var value=$(this).val().toLowerCase();
+              var value=$(this).val();
+              alert(value)
              $('#fileDiv').hide()
       
             $('#fileDiv:contains("'+value+'")').show()
@@ -515,7 +515,28 @@ beforeSend:function(){
   })
 
 }
- 
+
+// get id for all selected files
+
+function getCheckedFiles(){
+
+    var checks = []
+    $("input:checkbox[name=filesCheck]:checked").each(function(){
+    checks.push($(this).val());
+});
+console.log(checks)
+
+}
+
+function checker(){
+
+alert("yes")
+       
+            $("input:checkbox[name=filesCheck]:checked").each(function(){
+                $("input:checkbox[name=filesCheck]").prop('checked', true);
+            })
+        
+    }
 </script>
 
 
