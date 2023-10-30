@@ -192,6 +192,53 @@ def get_employee_template(request):
     response = FileResponse(path,as_attachment=True)
 
     return response
+@csrf_exempt
+def import_employee_data(request):
+
+        try:
+            file = request.FILES.get("file")
+            emp_df = pandas.read_excel(file ,sheet_name='employee')
+            settings_df = pandas.read_excel(file,sheet_name='attendance')
+            for items in emp_df.to_dict('records'):
+                # create the user
+
+                passwd = hash(datetime.now())
+                user = User(
+                    username = items["emp_id"],password=passwd,email = items["email"]
+                )
+                user.save()
+
+                # create the profile
+                profile = Profile(user=User.objects.get(username = items["emp_id"]))
+                profile.save()
+
+                emp = Employee(
+                    **items
+                )
+                emp.save()
+
+                send_mail(
+                    subject='Beezy new login details',
+                    message='username: '+str(items["emp_id"])+'\n'+ "password: "+str(passwd)+'\n'+"if you didn't register kindly ignore",
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[items['email']])
+
+
+            for items in settings_df.to_dict('records'):
+                sett = AttSettings(
+                    **items
+                )
+                sett.save()
+
+            return JsonResponse("done",safe=False)
+        
+        except Exception as err:
+
+            return JsonResponse(str(err),safe=False)
+
+
+
+
 
 
 

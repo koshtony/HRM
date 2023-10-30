@@ -199,11 +199,15 @@
                 </li>
                 <li>
                   <div class="form-check">
-                    <label class="form-check-label">
-                      <input  type="file">
+     
+                      <input  type="file" id="fileData">
                       <i class="fa fa-file"></i>
                       upload employee data
-                    </label>
+                    
+                    
+                    <br>
+                    <button class="btn btn-success" onclick="uploadFile()">push</button>
+                    
                   </div>
                 
                 </li>
@@ -485,6 +489,29 @@ function goTo(id){
           location.href = "{% url 'management_list_approvals' %}"
         }
   })
+}
+
+// upload 
+
+function uploadFile(){
+  alert("yes")
+
+  var fData = new FormData()
+  fData.append("file",$("input[id^='fileData']")[0].files[0])
+  //fData.append("csrfmiddlewaretoken":"{{ csrf_token }}");
+$.ajax({
+
+  type:"POST",
+  url:"{% url 'management_import_employee_data' %}",
+  processData:false,
+  contentType:false,
+  mimeType:"multipart/form-data",
+  data:fData,
+  success:function(data,status){
+
+      alert(data)
+  }
+})
 }
 </script>
 

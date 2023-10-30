@@ -6,7 +6,7 @@ from .views import home,clock,add_department,view_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
-            files_del,get_employee_template
+            files_del,get_employee_template,import_employee_data
 
             
 
@@ -26,6 +26,7 @@ urlpatterns = [
        path('list_departments',views.departments,name="management_list_departments"),
        path('department_details/<str:name>',views.dep_details,name="management_departments_details"),
        path('get_employee',views.get_employee,name="management_get_employee"),
+       path('import_employee_data',views.import_employee_data,name="management_import_employee_data"),
       path('get_files',views.get_employee,name="management_get_files"),
       path('files_details/<str:id>',views.files_details,name="management_files_details"),
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
