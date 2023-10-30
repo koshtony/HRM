@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required,permission_required
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse,HttpResponse,FileResponse
 from django.core import serializers
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -12,13 +12,18 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm
 from .models import *
+from .temps import gen_temp
 from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
+import mimetypes
+import pandas
 import folium
 import time
 import json
+import os
 # Create your views here.
 @login_required
 def home(request):
@@ -175,6 +180,19 @@ def get_employee(request):
         
         print(employee)
         return JsonResponse(employee, safe=False)
+def get_employee_template(request):
+
+    filename = 'employee_template.xlsx'
+
+    filepath =  os.path.join(settings.MEDIA_ROOT, 'emp_temp',filename)
+    gen_temp(filepath)
+
+    path = open(filepath,'rb')
+
+    response = FileResponse(path,as_attachment=True)
+
+    return response
+
 
 
 
@@ -185,8 +203,10 @@ def list_files(request):
         file_form = filesForm(request.POST,request.FILES)
 
         if file_form.is_valid():
-            file_form.save()
-            print("done")
+            instance = file_form.save(commit = False)
+            instance.properties = file_form.cleaned_data.get("document")
+            instance.save()
+            
             return JsonResponse("file uploaded successfully",safe=False)
     return render(request,'management/files.html',context)
 
@@ -219,6 +239,20 @@ def files_details(request,id):
         }
 
         return render(request,'management/files_details.html',context)
+# delete all selected files
+@csrf_exempt
+def files_del(request):
+
+    if request.POST:
+
+        pks = request.POST.get("pks")
+        count = 0
+        for pk in pks.split(","):
+            # get file primary key and delete
+            EmpFiles.objects.get(pk=pk).delete()
+            count+=1
+        
+        return JsonResponse(str(count)+" file(s) deleted successfully",safe=False)
 
 @login_required
 def clock(request):

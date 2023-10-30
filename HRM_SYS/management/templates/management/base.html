@@ -179,7 +179,7 @@
         <i class="settings-close ti-close"></i>
         <ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">TO DO LIST</a>
+            <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">process center</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
@@ -191,33 +191,28 @@
             <div class="add-items d-flex px-3 mb-0">
               
             </div>
-            <!--
             <div class="list-wrapper px-3">
               <ul class="d-flex flex-column-reverse todo-list">
                 <li>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="checkbox" type="checkbox">
-                      Team review meeting at 3.00 PM
-                    </label>
-                  </div>
-                  <i class="remove ti-close"></i>
+                  <a href="{% url 'management_emp_temp' %}"><i class="fa fa-download"></i>employee template</a>
+                  
                 </li>
                 <li>
                   <div class="form-check">
                     <label class="form-check-label">
-                      <input class="checkbox" type="checkbox">
-                      Prepare for presentation
+                      <input  type="file">
+                      <i class="fa fa-file"></i>
+                      upload employee data
                     </label>
                   </div>
-                  <i class="remove ti-close"></i>
+                
                 </li>
                 
                 
                 
               </ul>
             </div>
-          -->
+          
             <h4 class="px-3 text-muted mt-5 font-weight-light mb-0">Events</h4>
             <div class="events pt-4 px-3">
               <div class="wrapper d-flex mb-2">

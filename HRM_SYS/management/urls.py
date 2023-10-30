@@ -5,7 +5,10 @@ from .views import home,clock,add_department,view_attendance,\
       view_approvals,Post,Event,leave,get_emp_files,get_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
-            add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply
+            add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
+            files_del,get_employee_template
+
+            
 
       
 
@@ -40,6 +43,8 @@ urlpatterns = [
       path('posts',views.Post,name="management_post"),
       path('register',views.register,name="management_register"),
       path('list_files',views.list_files,name="management_files"),
+      path('del_files',views.files_del,name="management_del_files"),
+      path('emp_temp',views.get_employee_template,name="management_emp_temp"),
       path('iframe_redirect',views.iframe_redirect,name="management_iframe_redirect"),
       path('profile',views.profile,name="management_profile"),
       path('get_notify',views.get_notify, name='management_get_notify'),
