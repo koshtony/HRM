@@ -57,20 +57,29 @@ def monthly_payroll(request):
                     
                     days += attendance.days
                 leave_days += sum([leave.days for leave in Applications.objects.filter(applicant=User.objects.get(username=employee.emp_id)).filter(type__name = "leave") if leave.status=="complete"])
+
                 overtime_hours = sum([i.overtime_hours for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2 ])
+
                 overtime_pay = sum([(i.overtime_hours * i.overtime_rate) for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+
                 incentives  = sum([i.incentive for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
                 loan_deductions = sum([i.loan_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
                 welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
-                deductions = Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day)
+                try:
+                    deductions = Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day)
+                except:
+                    deductions = 0.00
                 
                 gross_pay = Decimal(Decimal(employee.salary)+Decimal(employee.allowance)+Decimal(employee.add_ons)+Decimal(incentives))+Decimal(overtime_pay)
         
                 taxable_income  = Decimal(Decimal(gross_pay)-(employee.payroll_settings.nssf))
+
                 tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(gross_pay-employee.payroll_settings.nssf),employee.payroll_settings.relief))
-                net_pay = round( Decimal((gross_pay))-(employee.payroll_settings.nssf)\
-                        -round(tax,2)\
-                        -employee.payroll_settings.nhif-employee.payroll_settings.health_insurance-employee.payroll_settings.housing-employee.payroll_settings.others-deductions-loan_deductions-welfare_deductions,2)
+
+                net_pay = gross_pay-Decimal(employee.payroll_settings.nssf)\
+                        -tax\
+                        -Decimal(employee.payroll_settings.nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(employee.payroll_settings.housing)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
+                
                 data = {
                     "org_name":employee.payroll_settings.org_name,
                     "payroll_id":payroll_id,

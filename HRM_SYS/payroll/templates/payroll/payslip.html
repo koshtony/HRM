@@ -1,6 +1,7 @@
 <html>
 	<head>
 <style>
+
     body {
 	background: #f0f0f0;
 	width: 100vw;
@@ -157,12 +158,14 @@
 </style>
 	</head>
 <div id="payslip">
+	
 	<div id="title">{{details.org_name}}</div>
 	<div id="scope">
 		<div class="scope-entry">
 			<div class="title">PAY RUN</div>
 			<div class="value">{{details.created_date}}</div>
 		</div>
+		&nbsp; &nbsp; &nbsp;
 		<div class="scope-entry">
 			<div class="title">PAY PERIOD</div>
 			<div class="value">{{details.pay_run}}</div>
@@ -181,33 +184,40 @@
 			<div class="details">
 				<div class="entry">
 					<div class="label">Employee ID</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.employee_id}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">National ID</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.id_no}}</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">KRA pin</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.pin_no}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Position</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.role}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Department</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> </div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">Payroll Cycle</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> Monthly</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">Prepared by</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"></div>
 				</div>
 			</div>
@@ -215,6 +225,7 @@
 				<div class="title">Gross Income</div>
 				<div class="entry">
 					<div class="label"></div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.gross_pay}}</div>
 				</div>
 			</div>
@@ -222,22 +233,27 @@
 				<div class="title">Employer Contribution</div>
 				<div class="entry">
 					<div class="label">NSSF</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{detail.nssf}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">NHIF</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.nhif}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">housing</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.housing}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">insurance</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.insurance}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">welfare</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.welfare_deductions}}</div>
 				</div>
 			</div>
@@ -245,32 +261,39 @@
 				<div class="title">summary Figures</div>
                 <div class="entry">
 					<div class="label">Basic Income</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.basic_salary}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Allowance</div>
-					<div class="value">{ {details.allowance}}</div>
+					&nbsp; &nbsp; &nbsp;
+					<div class="value">{{details.allowance}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Incentives</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.incentives}}</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">overtime</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value">{{details.overtime_pay}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Gross Income</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.gross_pay}}</div>
 				</div>
 				<div class="entry">
 					<div class="label">Taxable Income</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.taxable}}</div>
 				</div>
 				
 				<div class="entry">
 					<div class="label">Net Pay</div>
+					&nbsp; &nbsp; &nbsp;
 					<div class="value"> {{details.net_pay}}</div>
 				</div>
 				
@@ -421,5 +444,6 @@
 			</div>
 		</div>
 	</div>
+	<strong>system generated payslip</strong>
 </div>
 </html>

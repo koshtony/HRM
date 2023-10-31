@@ -18,7 +18,7 @@ from .models import *
 from .temps import gen_temp
 from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
-import mimetypes
+import string
 import pandas
 import folium
 import time
@@ -202,7 +202,7 @@ def import_employee_data(request):
             for items in emp_df.to_dict('records'):
                 # create the user
 
-                passwd = hash(datetime.now())
+                passwd = str(hash(date.today()))+str(items["emp_id"])
                 user = User(
                     username = items["emp_id"],password=passwd,email = items["email"]
                 )
@@ -307,72 +307,98 @@ def clock(request):
     context = {'leave_form':LeaveForm(),"approvals":Approvals.objects.all()}
    
     if request.POST:
-        if len(AttSettings.objects.filter(employee_id = request.user.username))< 1:
 
-            return JsonResponse("no settings found, contact admin",safe=False)
+        try:
 
-        att_settings =  AttSettings.objects.filter(employee_id = request.user.username)[0]
-        lat = request.POST.get('latitude')
-        long = request.POST.get('longitude')
-        image_info = request.POST.get('image_str')
-        #print(image_info)
-        empty = ""
-        att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
-        
-        early_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
-        '''
-             condition to determine if employee  left on time or early; early denoted by -ve
-        '''
-        if early_diff < 0:
+            if len(AttSettings.objects.filter(employee_id = request.user.username))< 1:
 
-            early_diff = early_diff*-1
-        else:
-            early_diff = 0
-        
-        late_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') - datetime.strptime(att_settings.start.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
-        
-        if late_diff > 0:
+                return JsonResponse("no settings found, contact admin",safe=False)
 
-            late_diff =  late_diff 
-
-        else:
-
-            late_diff = 0
-                                     
-        
-        if len(att_filt) == 0: #record initial data
-            attendance = Attendance(
-                    employee =  Employee.objects.get(emp_id = request.user.username),
-                    day = date.today(),
-                    clock_in = datetime.now(),
-                    clock_out = empty,
-                    lat =lat ,long=long,image1=image_info,
-                    lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
-                    deductions  = 0,
-                    days = 1
-
-                    
-
-                )
-            attendance.save()
-            return JsonResponse("clock in successful",safe=False)
-        
-        elif len(att_filt)>0 and att_filt[0].clock_out == '':
+            att_settings =  AttSettings.objects.filter(employee_id = request.user.username)[0]
+            lat = request.POST.get('latitude')
+            long = request.POST.get('longitude')
+            image_info = request.POST.get('image_str')
+            #print(image_info)
+            empty = ""
+            att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
             
-            att_filt[0].clock_out = datetime.now()
-            att_filt[0].lat1 = lat
-            att_filt[0].long1 = long 
-            att_filt[0].image2 = image_info
-            att_filt[0].status = "present"
-            att_filt[0].remarks = att_filt[0].remarks+" clock out"
-            att_filt[0].deductions =  0
-            att_filt[0].save()
+            early_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+            '''
+                condition to determine if employee  left on time or early; early denoted by -ve
+            '''
+            if early_diff < 0:
 
-            return JsonResponse("clock out successful",safe=False)
-        
-        elif att_filt[0].clock_in != '' and att_filt[0].clock_out != '':
+                early_diff = early_diff*-1
+            else:
+                early_diff = 0
+            
+            late_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') - datetime.strptime(att_settings.start.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+            
+            if late_diff > 0:
 
-            return JsonResponse("clock in and clockout already completed",safe=False)
+                late_diff =  late_diff 
+
+            else:
+
+                late_diff = 0
+                                        
+            
+            if len(att_filt) == 0: #record initial data
+                attendance = Attendance(
+                        employee =  Employee.objects.get(emp_id = request.user.username),
+                        day = date.today(),
+                        clock_in = datetime.now(),
+                        clock_out = empty,
+                        lat =lat ,long=long,image1=image_info,
+                        lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
+                        deductions  = 0,
+                        days = 1
+
+                        
+
+                    )
+                attendance.save()
+                return JsonResponse("clock in successful",safe=False)
+            
+            elif len(att_filt)>0 and att_filt[0].clock_out == '':
+                
+                att_filt[0].clock_out = datetime.now()
+                att_filt[0].lat1 = lat
+                att_filt[0].long1 = long 
+                att_filt[0].image2 = image_info
+                att_filt[0].status = "present"
+                att_filt[0].remarks = att_filt[0].remarks+" clock out"
+                att_filt[0].deductions =  0
+                att_filt[0].save()
+
+                return JsonResponse("clock out successful",safe=False)
+            
+            elif att_filt[0].clock_in != '' and att_filt[0].clock_out != '':
+
+                return JsonResponse("clock in and clockout already completed",safe=False)
+            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and len(att_filt):
+
+                attendance = Attendance(
+                        employee =  Employee.objects.get(emp_id = request.user.username),
+                        day = date.today(),
+                        clock_in = empty,
+                        clock_out = datetime.now(),
+                        lat = empty ,long=empty,image1=empty,
+                        lat1 = lat, long1 = long, image2 = image_info,remarks="clock out",
+                        deductions  = 0,
+                        days = 1
+
+                        
+
+                    )
+                attendance.save()
+                return JsonResponse("clock in successful",safe=False)
+
+
+        except Exception as e:
+
+
+            return JsonResponse(str(e),safe=False)
 
 
             
