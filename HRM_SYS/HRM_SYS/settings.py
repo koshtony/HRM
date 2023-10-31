@@ -94,7 +94,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+'''
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'railway',
+       'USER': 'postgres',
+       'PASSWORD': 'eceG*AEg*Df4C4CbD4F3d31Ac34F4CeB',
+       'HOST': 'viaduct.proxy.rlwy.net',
+       'PORT': '25925',
+   }
+}
+'''
 
 
 

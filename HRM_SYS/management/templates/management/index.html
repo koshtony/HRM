@@ -1,5 +1,6 @@
 {% extends 'management/base.html' %}
 {% block content %}
+
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
@@ -28,20 +29,18 @@
           <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card tale-bg">
-                <div class="card-people mt-auto">
-                  <img src="https://images.unsplash.com/photo-1549002942-c6af9c116f79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c3VubGlnaHR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" height="300px;" alt="people">
-                  <div class="weather-info">
-                    <div class="d-flex">
-                      <div>
-                        <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
-                      </div>
-                      <div class="ml-2">
-                        <h4 class="location font-weight-normal">Nairobi</h4>
-                        <h6 class="font-weight-normal">Kenya</h6>
-                      </div>
-                    </div>
+                <div class='box' style="margin-left:40px;">
+                  <div class='wave -one'></div>
+                  <div class='wave -two'></div>
+                  <div class='wave -three'></div>
+                  <div class="weathercon"><i class='fas fa-sun' style='color: #d36326;'></i></div>
+                  <div class="info">
+                    <h2 class="location">Nairobi</h2>
+                    <p class="date">Tuesday | OCT | 12:34</p>
+                    <h1 class="temp">25 &deg;C | 77 &deg;F</h1>
                   </div>
                 </div>
+                <span style="margin-left:30px">Enable location to see actual! :)</span>
               </div>
             </div>
             <div class="col-md-6 grid-margin transparent">
@@ -281,6 +280,17 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">approve</h5>
+                <div id="loaders2" style="display: none;">
+                  <div class="spinner-grow text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-secondary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -435,9 +445,19 @@ function doneApprove(){
 
 
     },
+    beforeSend:function(){
+                $("#loaders2").show()
+             },
+            
     success:function(data,status){
       alert(data)
-    }
+    },
+    complete:function(){
+                
+                $("#loaders2").hide()
+                location.reload()
+  
+               }
      
   })
 
@@ -480,5 +500,99 @@ function reject(id){
 
 }
 
+$(document).ready(function() {
+  navigator.geolocation.getCurrentPosition(success, error);
+
+  function success(pos) {
+    var lat = pos.coords.latitude;
+    var long = pos.coords.longitude;
+    weather(lat, long);
+  }
+
+  function error() {
+    console.log("There was an error");
+  }
+
+  function weather(lat, long) {
+    var URL = `https://fcc-weather-api.glitch.me/api/current?lat=${lat}&lon=${long}`;
+    $.getJSON(URL, function(data) {
+      display(data);
+    });
+  }
+
+  function display(data) {
+    var city = data.name.toUpperCase();
+    var temp =
+      Math.round(data.main.temp_max) +
+      "&deg; C | " +
+      Math.round(Math.round(data.main.temp_max) * 1.8 + 32) +
+      "&deg; F";
+    var desc = data.weather[0].description;
+    var date = new Date();
+
+    var months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+
+    var weekday = new Array(7);
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+
+    var font_color;
+    var bg_color;
+    if (Math.round(data.main.temp_max) > 25) {
+      font_color = "#d36326";
+      bg_color = "#f3f5d2";
+    } else {
+      font_color = "#44c3de";
+      bg_color = "#eff3f9";
+    }
+
+    if (data.weather[0].main == "Sunny" || data.weather[0].main == "sunny") {
+      $(".weathercon").html(
+        "<i class='fas fa-sun' style='color: #d36326;'></i>"
+      );
+    } else {
+      $(".weathercon").html(
+        "<i class='fas fa-cloud' style='color: #44c3de;'></i>"
+      );
+    }
+
+    var minutes =
+      date.getMinutes() < 11 ? "0" + date.getMinutes() : date.getMinutes();
+    var date =
+      weekday[date.getDay()].toUpperCase() +
+      " | " +
+      months[date.getMonth()].toUpperCase().substring(0, 3) +
+      " " +
+      date.getDate() +
+      " | " +
+      date.getHours() +
+      ":" +
+      minutes;
+    $(".location").html(city);
+    $(".temp").html(temp);
+    $(".date").html(date);
+    $(".box").css("background", bg_color);
+    $(".location").css("color", font_color);
+    $(".temp").css("color", font_color);
+  }
+});
       </script>
 {% endblock content %}

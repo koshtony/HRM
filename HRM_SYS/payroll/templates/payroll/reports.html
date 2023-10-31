@@ -616,7 +616,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             },
              
             beforeSend:function(){
-                $("#loaders").show()
+                $("#loaders2").show()
              },
             success:function(data,status){
 
@@ -624,7 +624,7 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
             },
             complete:function(){
                 
-                $("#loaders").hide()
+                $("#loaders2").hide()
                 location.reload()
   
                }
