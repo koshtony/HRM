@@ -1,7 +1,7 @@
 from django.urls import path 
 from . import views 
 from .views import gen_payroll,monthly_payroll,gen_payslip,payroll_details,\
-      payroll_check,grouped_payroll,EditPayrollView,re_calculate,email_payroll
+      payroll_check,grouped_payroll,EditPayrollView,re_calculate,email_payroll,payroll_sum
 
 
 urlpatterns = [
@@ -14,6 +14,7 @@ urlpatterns = [
       path('payroll_re_calculate',views.re_calculate,name="payroll-re-calculate"),
       path('grouped_payroll',views.grouped_payroll,name="payroll-grouped"),
       path('email_payroll',views.email_payroll,name="payroll-email"),
+      path('summary/<str:payroll_id>',views.payroll_sum,name="payroll-summary"),
       path('edit_payroll/<int:pk>',EditPayrollView.as_view(),name="payroll-edit-payroll"),
 
 ]

@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'management.apps.ManagementConfig',
     'payroll.apps.PayrollConfig',
     'hrm_users.apps.HrmUsersConfig',
-    'storages'
+    'storages',
+    'mathfilters'
 
 ]
 

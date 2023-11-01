@@ -291,7 +291,30 @@ def re_calculate(request):
 
 
         return JsonResponse("done calculating",safe=False)
-# class views
+
+def payroll_sum(request,payroll_id):
+    
+    filtered = PayRoll.objects.filter(payroll_id = payroll_id)
+    summary = filtered.values('payroll_id')\
+              .annotate(
+                  size = Count('employee_id'),salary = Sum('basic_salary'),allowance = Sum('allowance'),add_ons = Sum('add_ons'),
+                  overtime = Sum('overtime_pay'),incentives = Sum('incentives'),
+                  deductions = Sum('deductions'),gross = Sum('gross_pay'),tax=Sum('tax'),
+                  nhif = Sum('nhif'),nssf = Sum('nssf'),insurance = Sum('insurance'),housing = Sum('housing'),loan = Sum('loan_deductions'),
+                  welfare = Sum('welfare_deductions'),others = Sum('others')
+                        
+                        
+                        )
+    print(summary)
+    context = {"summary":summary[0],"payrun":filtered[0].pay_run,"org":filtered[0].org_name}
+    
+    return render(request,'payroll/summary.html',context)
+
+
+
+
+
+
 
 
 class EditPayrollView(LoginRequiredMixin,UpdateView):
