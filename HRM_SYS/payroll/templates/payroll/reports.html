@@ -399,7 +399,7 @@
                                             <th>payroll id</th>
                                             <th>total payable</th>
                                             <th>size</th>
-                                            <th>created</th>
+                                            <th>summary</th>
                                             <th>view all</th>
                                             <th>Action</th>
                                           
@@ -414,7 +414,7 @@
                                             <td>{{payroll.payroll_id}}</td>
                                             <td>{{payroll.total_amount}}</td>
                                             <td>{{payroll.size}}</td>
-                                            <td>{{payroll.created_date}} {{payroll.created_time}}</td>
+                                            <td><a href="{% url 'payroll-summary' payroll.payroll_id %}">summary</a></td>
                                             <td><a class="btn btn-primary" onclick="showDetails('{{payroll.payroll_id}}')"><i class="ti-check"></i></a></td>
                                             <td><a onclick="emailModal('{{payroll.payroll_id}}')"><i class="fa fa-envelope"></i>email</a></td>
                                            

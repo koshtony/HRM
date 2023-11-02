@@ -1,0 +1,332 @@
+{% load mathfilters %}
+<html>
+	<head>
+<style>
+    body {
+	background: #f0f0f0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+    padding: 20px;
+    height: 100%;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Roboto:200,300,400,600,700');
+
+* {
+	font-family: 'Roboto', sans-serif;
+	font-size: 12px;
+	color: #444;
+}
+
+#payslip {
+	width: calc( 8.5in - 80px );
+	height: calc( 11in - 60px );
+	background: #fff;
+	padding: 30px 40px;
+}
+
+#title {
+	margin-bottom: 20px;
+	font-size: 38px;
+	font-weight: 600;
+}
+
+#scope {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 7px 0 4px 0;
+	display: flex;
+	justify-content: space-around;
+}
+
+#scope > .scope-entry {
+	text-align: center;
+}
+
+#scope > .scope-entry > .value {
+	font-size: 14px;
+	font-weight: 700;
+}
+
+.content {
+	display: flex;
+	border-bottom: 1px solid #ccc;
+	height: 880px;
+}
+
+.content .left-panel {
+	border-right: 1px solid #ccc;
+	min-width: 200px;
+	padding: 20px 16px 0 0;
+}
+
+.content .right-panel {
+	width: 100%;
+	padding: 10px 0  0 16px;
+}
+
+#employee {
+	text-align: center;
+	margin-bottom: 20px;
+}
+#employee #name {
+	font-size: 15px;
+	font-weight: 700;
+}
+
+#employee #email {
+	font-size: 11px;
+	font-weight: 300;
+}
+
+.details, .contributions, .ytd, .gross {
+	margin-bottom: 20px;
+}
+
+.details .entry, .contributions .entry, .ytd .entry {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 6px;
+}
+
+.details .entry .value, .contributions .entry .value, .ytd .entry .value {
+	font-weight: 700;
+	max-width: 130px;
+	text-align: right;
+}
+
+.gross .entry .value {
+	font-weight: 700;
+	text-align: right;
+	font-size: 16px;
+}
+
+.contributions .title, .ytd .title, .gross .title {
+	font-size: 15px;
+	font-weight: 700;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 4px;
+	margin-bottom: 6px;
+}
+
+.content .right-panel .details {
+	width: 100%;
+}
+
+.content .right-panel .details .entry {
+	display: flex;
+	padding: 0 10px;
+	margin: 6px 0;
+}
+
+.content .right-panel .details .label {
+	font-weight: 700;
+	width: 120px;
+}
+
+.content .right-panel .details .detail {
+	font-weight: 600;
+	width: 130px;
+}
+
+.content .right-panel .details .rate {
+	font-weight: 400;
+	width: 80px;
+	font-style: italic;
+	letter-spacing: 1px;
+}
+
+.content .right-panel .details .amount {
+	text-align: right;
+	font-weight: 700;
+	width: 90px;
+}
+
+.content .right-panel .details .net_pay div, .content .right-panel .details .nti div {
+	font-weight: 600;
+	font-size: 12px;
+}
+
+.content .right-panel .details .net_pay, .content .right-panel .details .nti {
+	padding: 3px 0 2px 0;
+	margin-bottom: 10px;
+	background: rgba(0, 0, 0, 0.04);
+}
+
+</style>
+	</head>
+<div id="payslip">
+	<div id="title">{{org}}</div>
+	<div id="scope">
+		<div class="scope-entry">
+			<div class="title">PAY RUN</div>
+			<div class="value">{{payrun}}</div>
+		</div>
+		<div class="scope-entry">
+			<div class="title">PAY PERIOD</div>
+			<div class="value">{{details.pay_run}}</div>
+		</div>
+	</div>
+	<div class="content" >
+		<div class="right-panel">
+			<div class="details">
+                <div class="nti" >
+					<div class="entry">
+						<div class="label">PAYABLES</div>
+						
+					</div>
+				</div>
+				<div class="basic-pay">
+					<div class="entry">
+						<div class="label">Total Basic Pay</div>
+						<div class="detail"></div>
+						
+						<div class="amount">{{summary.salary}}</div>
+					</div>
+				</div>
+			
+				<div class="leaves">
+					<div class="entry">
+						<div class="label">Total Earnings</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount"></div>
+					</div>
+					<div class="entry paid">
+						<div class="label"></div>
+						<div class="detail">Allowance</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.allowance}}</div>
+					</div>
+					<div class="entry unpaid">
+						<div class="label"></div>
+						<div class="detail">Overtime</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.overtime}}</div>
+					</div>
+				</div>
+				<div class="taxable_allowance">
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Incentives</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.incentives}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Add ons</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.add_ons}}</div>
+					</div>
+				</div>
+                <div class="nti">
+					<div class="entry">
+						<div class="label">Total Gross Pay</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.gross}}</div>
+					</div>
+				</div>
+				
+				<div class="taxable_commission"></div>
+				<div class="contributions">
+					<div class="entry">
+						<div class="label">Total Contributions</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount"></div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">NSSF</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.nssf}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">NHIF</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.nhif}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">housing</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.housing}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Insurance</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.insurance}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">welfare</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.welfare}}</div>
+					</div>
+				</div>
+				<div class="nti">
+					<div class="entry">
+						<div class="label">PAYE</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.tax}}</div>
+					</div>
+				</div>
+				<div class="withholding_tax">
+					<div class="entry">
+						<div class="label">PAYE</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount">({{details.tax}})</div>
+					</div>
+				</div>
+               
+				
+				<div class="non_taxable_bonus">
+					<div class="entry">
+						<div class="label">Deductions</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount"></div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Absent deductions</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.deductions}}</div>
+					</div>
+				</div>
+				<div class="non_taxable_commission">
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Loan deductions</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.loan}}</div>
+					</div>
+					<div class="entry">
+						<div class="label"></div>
+						<div class="detail">Others</div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.others}}</div>
+					</div>
+					
+				</div>
+				
+				<div class="net_pay">
+					<div class="entry">
+						<div class="label">Total</div>
+						<div class="detail"></div>
+						<div class="rate"></div>
+						<div class="amount">{{summary.gross|sub:summary.deductions|sub:summary.loan|sub:summary.others}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
