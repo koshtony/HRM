@@ -13,7 +13,7 @@ from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm
 from .models import *
 from .temps import gen_temp
 from payroll.models import PayRoll
@@ -528,6 +528,19 @@ def view_attendance(request):
     context = {"attendances":attendances,"lates":late, "leaves":today_leaves,"absents":absents}
 
     return render(request,'management/list_attendance.html',context)
+
+def edit_att_settings(request,emp_id):
+
+    settings = AttSettings.objects.filter(employee_id = emp_id)[0]
+
+    context = {"settings":settings,"form":SettingsForm()}
+
+    if request.POST:
+        form = SettingsForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+    return render(request,'management/edit_attendance.html',context)
 
 
 @login_required
@@ -1102,6 +1115,7 @@ class EditEmpView(LoginRequiredMixin,UpdateView):
 
     def form_valid(self,form):
         return super().form_valid(form)
+    
     
 
     

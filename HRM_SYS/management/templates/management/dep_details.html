@@ -5,6 +5,31 @@
 
 
 <!--details modal-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editSettingsModal" id="editSettingsIframeBtn" style="display:none">
+    edit employee
+   </button>
+   
+   <!-- Modal -->
+   <div class="modal fade" id="editSettingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog modal-lg" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Edit attendance Settings</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+             <iframe id="editSettingsFrame" width="100%" height="1000" style="overflow-x: scroll;"></iframe>
+              
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+           
+         </div>
+       </div>
+     </div>
+   </div>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="editIframeBtn" style="display:none">
    edit employee
@@ -89,6 +114,7 @@
             <div class="col-sm-6 p-md-0">
                 <div class="welcome-text">
                     <h4>Reports</h4>
+                    <h6 style="color:rgb(47, 255, 54)">{{details | length}} members</h6>
                 </div>
             </div>
             
@@ -125,6 +151,7 @@
                                                 <th>status</th>
                                                 <th>doj</th>
                                                 <th>more</th>
+                                                <th>attendance settings</th>
                                                
                                             </tr>
                                         </thead>
@@ -169,6 +196,11 @@
                                                 {% if request.user.is_staff %}
                                                 <td>
                                                     <a class="ti-pencil" onclick="editDepEmp('{{detail.pk}}')">audit</a>
+                                                </td>
+                                                {% endif %}
+                                                {% if request.user.is_staff %}
+                                                <td>
+                                                    <a class="ti-pencil" onclick="editSettings('{{detail.emp_id}}')">settings</a>
                                                 </td>
                                                 {% endif %}
                                             </tr>
@@ -461,6 +493,14 @@ function showMap(lat,long){
     var new_url = lat+"_"+long
     window.history.pushState({}, document.title, "/");
     document.getElementById("mapFrame").src = 'show_map/'+new_url
+}
+
+function editSettings(emp_id){
+
+    $("#editSettingsIframeBtn").click()
+    window.history.pushState({}, document.title, "/");
+    document.getElementById("editSettingsFrame").src = 'edit_settings/'+emp_id
+     
 }
 
     

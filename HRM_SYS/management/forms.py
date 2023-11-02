@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage,Events
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage,Events,AttSettings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from tinymce.widgets import TinyMCE
@@ -116,4 +116,11 @@ class PostsForm(forms.ModelForm):
 
         model = Events 
         fields = ['title','details','files','category','viewers']
+
+class SettingsForm(forms.ModelForm):
+
+    class Meta:
+
+        model = AttSettings
+        fields = '__all__'
        

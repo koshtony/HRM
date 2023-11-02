@@ -80,12 +80,12 @@ class Employee(models.Model):
         return self.emp_id
 class AttSettings(models.Model):
     employee_id = models.CharField(max_length=100,null=True)
-    start = models.TimeField()
-    end = models.TimeField()
-    deduction_per_day = models.FloatField()
+    start = models.TimeField(default=timezone.now())
+    end = models.TimeField(default=timezone.now())
+    deduction_per_day = models.FloatField(default=0.0)
     expected_days =  models.FloatField(default=24.0)
     leave_days =  models.FloatField(default=21.0)
-    remarks = models.TextField()
+    remarks = models.TextField(default="")
     clock_in_latitude = models.CharField(max_length=1000,default="")
     clock_in_longitude = models.CharField(max_length=1000,default="")
 
