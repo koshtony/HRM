@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required,permission_required
+from django.core.exceptions import *
 from django.http import JsonResponse,HttpResponse,FileResponse
 from django.core import serializers
 from django.contrib import messages
@@ -31,7 +32,7 @@ def home(request):
     for todo in Applications.objects.all():
         if request.user.username in todo.approvers.split(','):
             apps = [
-                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url
+                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,todo.applicant.username
             ]
             todos.append(apps)
     event = Events.objects.last()
@@ -82,7 +83,7 @@ def approvals(request):
 def view_approvals(request):
 
     context = {
-        "applications":Applications.objects.all().order_by('-created_date'),
+        "applications":Applications.objects.all().order_by('-pk'),
         "tracks":approvalTrack.objects.all()
         
         }
@@ -787,24 +788,29 @@ def recall_by_comment(request):
 
 @login_required
 def profile(request):
+    try:
+        profile_form = profileUpdateForm(instance=request.user.profile)
 
-    profile_form = profileUpdateForm(instance=request.user.profile)
 
+        context = {"profile_form":profile_form, "profiles":Profile.objects.all()}
 
-    context = {"profile_form":profile_form}
+        if request.method == 'POST':
 
-    if request.method == 'POST':
-
-    
-        profile_form = profileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
         
-        
-        if profile_form.is_valid():
-    
-           profile_form.save()
+            profile_form = profileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
             
+            
+            if profile_form.is_valid():
+        
+                profile_form.save()
+                
 
-           return JsonResponse("profile updated",safe=False)
+            return JsonResponse("profile updated",safe=False)
+    except Exception as error:
+
+        raise ObjectDoesNotExist(error)
+
+        
 
 
     return render(request,'management/profile.html',context)

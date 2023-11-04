@@ -26,13 +26,30 @@ class Department(models.Model):
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
 
+    def __str__(self):
+
+        return self.name
+
 class Roles(models.Model):
     name = models.CharField(max_length=50,default="None")
     requirements = models.CharField(max_length=50,default="None")
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
 
-dep_choices = tuple([(dep.name,dep.name) for dep in Department.objects.all()])
+    def __str__(self):
+
+        return self.name
+
+class Station(models.Model):
+
+    name = models.CharField(max_length=100,null=True)
+    created = models.DateField(default=timezone.now)
+
+    def __str__(self):
+
+        return self.name
+
+
 class Employee(models.Model):
    
     emp_id = models.CharField(max_length=50,default="None")
@@ -50,12 +67,12 @@ class Employee(models.Model):
     next_kin_phone = models.CharField(max_length=50,default="None")
     address = models.CharField(max_length=50,default="None")
     location = models.CharField(max_length=50,default="None")
-    office = models.CharField(max_length=50,default="None")
+    station = models.ForeignKey(Station,on_delete = models.PROTECT,null=True)
 
  # HR admin section
 
-    role = models.CharField(max_length=50,default="None")
-    departments = models.CharField(choices=dep_choices,max_length=50,default="None")
+    role = models.ForeignKey(Roles,on_delete = models.PROTECT,null=True)
+    departments = models.ForeignKey(Department,on_delete = models.PROTECT,null=True)
     education_level = models.CharField(max_length=50,default="None")
     doj = models.DateField(default=timezone.now)
     dol = models.DateField(default=timezone.now)
@@ -160,7 +177,7 @@ class Applications(models.Model):
     type = models.ForeignKey(Approvals,on_delete=models.PROTECT)
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
     approvers = models.TextField(default="")
-    details = models.TextField()
+    details = HTMLField()
     created_date = models.DateField(default=timezone.now)
     created_time = models.TimeField(default=timezone.now)
     attachment = models.FileField(default='attachment',upload_to='approval_files')
@@ -194,7 +211,7 @@ class Process(models.Model):
 
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
     approvals = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="processes")
-    details = models.TextField()
+    details = HTMLField()
     created = models.DateField()
     attachments = models.FileField(default="process.pdf",upload_to='application_files')
     status = models.CharField(max_length=10,choices=(('pending',"pending"),('cancelled',"cancelled"),('complete',"complete")),default="pending")

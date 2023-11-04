@@ -477,7 +477,7 @@
             {% if user.is_staff %}
             
                 <div class="col-lg-3 col-xl-2" id="fileDiv">
-                    <div class="file-man-box"><input type="checkbox" class="checkboxall" name="filesCheck" value="{{file.pk}}" style="width:20px;">
+                    <div class="file-man-box"><input type="checkbox" class="checkboxall" name="filesCheck" value="{{file.pk}}" >
                         <div class="file-img-box">
                             {% if "pdf" in file.properties %}
                             <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="icon">

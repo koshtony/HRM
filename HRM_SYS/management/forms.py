@@ -37,7 +37,9 @@ class EmpUpdateForm(forms.ModelForm):
 
 
 class ApprovalForm(forms.ModelForm):
-
+    details = forms.CharField(widget=TinyMCE(
+            attrs={'required': False, 'cols': 5, 'rows': 5})
+    )
     class Meta:
 
         model = Process

@@ -37,14 +37,22 @@
                   </p>
                   <form class="forms-sample" ectype="multipart/form-data" method="POST" id="ApprovalForm">
                     {% csrf_token %}
-                    {% for field in appForm %}
+                    
                  
                     <div class="form-group">
-                       {{field | as_crispy_field}}
+                       {{appForm.approvals | as_crispy_field}}
                     </div>
-                   
-                  {% endfor %}
+                    <div class="form-group">
+                      {{appForm.media}}
+                      {{appForm.details}}
+                   </div>
+                   <div class="form-group">
                     
+                    {{appForm.attachments}}
+                 </div>
+        
+                   
+             
                    
                     <button type="submit" class="btn btn-primary mr-2" onclick="loadApproval()">Submit</button>
                     <button class="btn btn-light">Cancel</button>
@@ -80,7 +88,7 @@ function loadApproval(){
      processData: false,
 contentType: false,
 beforeSend:function(){
-                $("#loaders").show()
+                $("#loaders5").show()
              },
      success:function(data,status){
        alert(data)

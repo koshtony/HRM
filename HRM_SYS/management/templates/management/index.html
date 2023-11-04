@@ -172,13 +172,15 @@
                               <div class="form-check">
                                 <label class="form-check-label">
                                   <input class="checkbox" type="checkbox" onclick="getPk('{{todo.0}}')">
-                                  {{todo.3}} {{todo.2}}
+                                  {{todo.5}} {{todo.6}}
                                 </label>
                               </div>
                               &nbsp;&nbsp;&nbsp;&nbsp;
                               <a href="{{todo.4}}" download><i class="remove ti-download"></i>attachment</a>
                               &nbsp;&nbsp;&nbsp;
-                              <a onclick="approveModal('{{todo.0}}','{{todo.3}}','{{todo.4}}')"><i class="ti-eye"></i></a>
+                              <a onclick="approveModal('{{todo.0}}','{{todo.4}}')"><i class="fa fa-check"></i></a>
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                              <a><i class="fa fa-eye"></i></a>
                               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               <a class="btn btn-danger" onclick="reject('{{todo.0}}');"><i class="remove ti-close"></i></a>
                             </li>
@@ -417,12 +419,13 @@
       });
      
 // approval modal
-function approveModal(id,remarks,link){
+function approveModal(id,link){
+
     
   $("#approveModalBtn").click()
 
   $("#approvePk").val(id)
-  $("#det").html(remarks)
+  
   $("#attach").href(link)
 }
 
