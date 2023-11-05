@@ -75,8 +75,9 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active">My profile</a></li>
-                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary">others</a></li>
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-primary mr-1 show active" style="background-color:green">My profile</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-primary" style="background-color:yellowgreen">others</a></li>
+                    <li class="nav-item"><a href="#change-password" data-toggle="tab" class="nav-link btn-primary" style="background-color:orange">change password</a></li>
                 </ul>
             </div>
             <div class="col-lg-12">
@@ -111,6 +112,17 @@
                                                 <!-- Account details card-->
                                                 <div class="card mb-4">
                                                     <div class="card-header">Account Details</div>
+                                                    <div id="loaders20" style="display: none;">
+                                                        <div class="spinner-grow text-primary" role="status">
+                                                          <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                        <div class="spinner-grow text-secondary" role="status">
+                                                          <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                        <div class="spinner-grow text-success" role="status">
+                                                          <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                        </div>
                                                     <div class="card-body">
                                                         <form method="POST" enctype="multipart/form-data" id="profileForm">
                                                             {% csrf_token %}
@@ -145,9 +157,51 @@
                             
                         </div>
                     </div>
-                    <div id="Map">
+                    <div id="change-password" class="tab-pane fade col-lg-12">
+                        <div class="row">
+                            <div class="col-xl-8">
+                                <!-- Account details card-->
+                                <div class="card mb-4">
+                                    <div class="card-header">change password</div>
+                                    <div id="loaders10" style="display: none;">
+                                        <div class="spinner-grow text-primary" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-secondary" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                        <div class="spinner-grow text-success" role="status">
+                                          <span class="sr-only">Loading...</span>
+                                        </div>
+                                        </div>
+                                    <div class="card-body">
+                            <form method="POST" enctype="multipart/form-data" id="passwordForm" class="form-sample">
+                                {% csrf_token %}
+                                <!-- Form Row-->
+                                &nbsp; &nbsp;
+                                
+                                <div class="form-group">
+                                    <!-- Form Group (first name)-->
+                                    
+                                        {{password_form | crispy}}
+                                   
+                                    <!-- Form Group (last name)-->
+                                   
+                                </div>
+                            
+                              
+                                <button class="btn btn-primary" type="submit" onclick="passwordUpdate();">Save changes</button>
+                                <button class="btn btn-outline" type="button" onclick="seePassword();"><i class="fa fa-eye"></i>see passwords</button>
 
-                    </div>
+                            </form>
+                            </div>
+                            </div>
+                            </div>
+                            
+                            
+                            </div>
+                        </div>
+                    
                 </div>
             </div>
         </div>
@@ -174,12 +228,58 @@
      data:formData,
      processData: false,
      contentType: false,
+     beforeSend:function(){
+            $("#loaders20").show()
+          },
+
      success:function(data,status){
        alert(data)
-     }
+     },
+     complete:function(){
+            $("#loaders20").hide()
+          },
+
    })
   })
      }
+
+
+     function passwordUpdate(){
+    
+          
+    $("#passwordForm").submit(function(e){
+e.preventDefault()
+
+$form = $(this)
+var formData = new FormData(this);
+
+$.ajax({
+ type:"post",
+ url:"{% url 'change-password' %}",
+ data:formData,
+ processData: false,
+ contentType: false,
+ beforeSend:function(){
+            $("#loaders10").show()
+          },
+
+ success:function(data,status){
+   alert(data)
+ },
+ complete:function(){
+            $("#loaders10").hide()
+          },
+
+})
+})
+ }
+
+ function seePassword(){
+
+     document.getElementById("id_old_password").type = "text"
+     document.getElementById("id_new_password1").type = "text"
+     document.getElementById("id_new_password2").type = "text"
+ }
 </script>
 
 

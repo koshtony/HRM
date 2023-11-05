@@ -12,6 +12,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixi
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm
@@ -204,6 +206,10 @@ def import_employee_data(request):
                 # create the user
 
                 passwd = str(hash(date.today()))+str(items["emp_id"])
+                emp = Employee(
+                    **items
+                )
+                emp.save()
                 user = User(
                     username = items["emp_id"],password=passwd,email = items["email"]
                 )
@@ -213,10 +219,7 @@ def import_employee_data(request):
                 profile = Profile(user=User.objects.get(username = items["emp_id"]))
                 profile.save()
 
-                emp = Employee(
-                    **items
-                )
-                emp.save()
+                
 
                 send_mail(
                     subject='Beezy new login details',
@@ -790,9 +793,10 @@ def recall_by_comment(request):
 def profile(request):
     try:
         profile_form = profileUpdateForm(instance=request.user.profile)
+        password_form = PasswordChangeForm(request.user)
 
 
-        context = {"profile_form":profile_form, "profiles":Profile.objects.all()}
+        context = {"profile_form":profile_form,"password_form":password_form, "profiles":Profile.objects.all()}
 
         if request.method == 'POST':
 
@@ -815,6 +819,20 @@ def profile(request):
 
     return render(request,'management/profile.html',context)
 
+# changing current user passwords
+@login_required
+def change_password(request):
+
+    if request.POST:
+        form = PasswordChangeForm(request.user,request.POST)
+        if form.is_valid():
+
+            new_user = form.save()
+            update_session_auth_hash(request, new_user) 
+            
+            return JsonResponse("password updated successfully",safe=False)
+        else:
+            return JsonResponse("check the errors and correct",safe=False)
 
 ''''
     displays both announcements and events
@@ -979,9 +997,10 @@ def sent_msg(request,pk):
         print(anony)
         #Profile.objects.get(user__username="hummingbird")
         if anony == "yes":
+            
             new_chat = ChatMessage(
                 body = chat , 
-                sender = Profile.objects.get(user__username="hummingbird") ,
+                sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = ind_profile,
                 sent = datetime.now(),
@@ -989,9 +1008,10 @@ def sent_msg(request,pk):
                 
                 )
             new_chat.save()
+            return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
        
         else:
-
+           
             new_chat = ChatMessage(
                 body = chat , 
                 sender = request.user.profile,
@@ -1002,14 +1022,9 @@ def sent_msg(request,pk):
                 
                 )
             new_chat.save()
+            return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
 
             
-       
-
-            
-    
-      
-        return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
 @csrf_exempt
 def chat_reply(request):
 
@@ -1039,7 +1054,7 @@ def chat_reply(request):
 
             new_chat = ChatMessage(
                 body = msg, 
-                sender = Profile.objects.get(user__username="hummingbird") ,
+                sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = chats.anonymous_sender,
                 sent = datetime.now(),

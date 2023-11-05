@@ -133,7 +133,7 @@ input:checked + .slider:before {
 				<div class="text-muted small"><em></em></div>
 			</div>
 			<label class="switch" >
-				<input type="checkbox" id="anony" value="yes" checked>
+				<input type="checkbox" id="anony" value="yes">
 				<span class="slider round" style="background-color:black"></span>
 			  </label>
 			<div>
@@ -165,10 +165,21 @@ input:checked + .slider:before {
                         
 						   {% if chat.sender.user.username == user.username and chat.recep.user.username == ind.user.username or chat.anonymous_sender.user.username == user.username and chat.recep.user.username == ind.user.username %}
 							<div class="chat-message-right pb-4" id="chat{{chat.pk}}">
+								<div id="loaders5" style="display: none;">
+									<div class="spinner-grow text-primary" role="status">
+									  <span class="sr-only">Loading...</span>
+									</div>
+									<div class="spinner-grow text-secondary" role="status">
+									  <span class="sr-only">Loading...</span>
+									</div>
+									<div class="spinner-grow text-success" role="status">
+									  <span class="sr-only">Loading...</span>
+									</div>
+									</div>
 								<div>
 									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
 									<div class="text-muted small text-nowrap mt-2">{{chat.sent}}</div>
-									{% if chat.sender.user.username == "hummingbird" %}
+									{% if chat.sender.user.username == "anonymous" %}
 									<p style="color:red">anonymous</p>
 								{% endif %}
 								</div>
@@ -191,7 +202,7 @@ input:checked + .slider:before {
 								<div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3" style="background-color: greenyellow;">
 									<div class="font-weight-bold mb-1" style="color:orange">{{ind.user.username}}@{{ind.user.first}}</div> 
 									{{chat.body | safe}}
-									{% if chat.sender.user.username == "hummingbird" %}
+									{% if chat.sender.user.username == "anonymous" %}
 									
 									<a onclick="Reply('{{chat.pk}}');" style="color:green"> <i class="fa fa-reply"></i></a>
 									{% endif %}
@@ -259,9 +270,14 @@ function sendMsg(event){
    
     tinyMCE.triggerSave();
 	var chat = $('#id_body').val()
-    var anony = $("#anony").val()
+	var anony = ""
+    if (document.getElementById("anony").checked){
+		anony+="yes"
+	}else{
+		anony+="no"
+	}
 	
-
+    //alert(anony)
 	
     var data  = {"msg":chat,"anony":anony}
 	var url = "{% url 'management_sent_msg' ind.user.id %}"
@@ -273,6 +289,8 @@ function sendMsg(event){
 			'X-CSRFToken': csrftoken
 		},
 		body:JSON.stringify(data),
+		
+
 		
 	}
 
@@ -304,7 +322,7 @@ function sendMsg(event){
 
 }
 
-setInterval(recvMsg,3000)
+setInterval(recvMsg,3000) $("#loaders5").show()
 
  var counter = {{counts}}
 

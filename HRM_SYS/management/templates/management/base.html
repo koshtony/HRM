@@ -181,17 +181,31 @@
           <li class="nav-item">
             <a class="nav-link active" id="todo-tab" data-toggle="tab" href="#todo-section" role="tab" aria-controls="todo-section" aria-expanded="true">process center</a>
           </li>
+          <!--
           <li class="nav-item">
             <a class="nav-link" id="chats-tab" data-toggle="tab" href="#chats-section" role="tab" aria-controls="chats-section">CHATS</a>
           </li>
+        -->
         </ul>
-        <!---->
+  
         <div class="tab-content" id="setting-content">
           <div class="tab-pane fade show active scroll-wrapper" id="todo-section" role="tabpanel" aria-labelledby="todo-section">
             <div class="add-items d-flex px-3 mb-0">
               
             </div>
             <div class="list-wrapper px-3">
+              <div id="loaders30" style="display:none">
+                <div class="spinner-grow text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-secondary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-success" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                </div>
+                {% if user.is_staff %}
               <ul class="d-flex flex-column-reverse todo-list">
                 <li>
                   <a href="{% url 'management_emp_temp' %}"><i class="fa fa-download"></i>employee template</a>
@@ -217,6 +231,7 @@
                 
                 
               </ul>
+              {% endif %}
             </div>
           
             <h4 class="px-3 text-muted mt-5 font-weight-light mb-0">Events</h4>
@@ -509,10 +524,16 @@ $.ajax({
   contentType:false,
   mimeType:"multipart/form-data",
   data:fData,
+  beforeSend:function(){
+            $("#loaders30").show()
+          },
   success:function(data,status){
 
       alert(data)
-  }
+  },
+  complete:function(){
+            $("#loaders30").hide()
+          },
 })
 }
 </script>

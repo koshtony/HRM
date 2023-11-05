@@ -34,6 +34,9 @@
               </div>
               <h4>Hello!</h4>
               <h6 class="font-weight-light">Sign in here.</h6>
+              {% for error in form.non_field_errors %}
+   {{error}}
+{% endfor %}
               <form class="pt-3" method="POST">
                 {% csrf_token %}
                 {% for field in form %}
