@@ -47,6 +47,7 @@ def monthly_payroll(request):
         payrolls = []
         for employee in Employee.objects.all():
             
+            
             attendances = Attendance.objects.filter(employee=employee).filter(created__range = [date1,date2])
             if len(attendances) > 0:
                
@@ -120,6 +121,7 @@ def monthly_payroll(request):
 
                 }
                 payrolls.append(data)
+                print(payrolls)
                 
             else:
 
