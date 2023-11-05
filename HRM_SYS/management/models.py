@@ -26,9 +26,6 @@ class Department(models.Model):
     created = models.DateField(default=timezone.now)
     remarks = models.TextField(default="")
 
-    def __str__(self):
-
-        return self.name
 
 class Roles(models.Model):
     name = models.CharField(max_length=50,default="None")

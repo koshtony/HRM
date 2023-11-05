@@ -142,7 +142,7 @@ def departments(request):
 
 def dep_details(request,name):
 
-    details = Employee.objects.filter(departments = name)
+    details = Employee.objects.filter(departments=Department.objects.get(name=name))
     dep_attendance = Attendance.objects.filter(employee__departments = name)
     context = {"details":details,"attendances":dep_attendance}
 
