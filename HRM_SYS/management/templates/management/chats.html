@@ -188,13 +188,14 @@
 </style>
 
 
-    <div class="container p-0" style="margin-top:50px;">
+    <div class="container p-0" style="margin-top:50px; zoom:75%">
 
 		<h1 class="h3 mb-3">Messages</h1>
+        <button class="btn btn-outline" onclick="showProfiles()" id="chatBtn"  style="display:none"><i class="fa fa-arrow-left"></i></button>
 
 		<div class="card">
 			<div class="row g-0">
-				<div class="col-12 col-lg-5 col-xl-3 border-right" style="height:300px; zoom:85%; overflow: scroll;">
+				<div class="col-12 col-lg-5 col-xl-3 border-right" style=" zoom:85%;" id="profilez">
                     
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
@@ -211,7 +212,7 @@
 					</div>
 					<div>
                     {% for profile in profiles %}
-					<a onclick="insertChatBox('{{profile.user.id}}')" class="list-group-item list-group-item-action border-0" style="background-color: greenyellow;">
+					<a onclick="insertChatBox('{{profile.user.id}}')" class="list-group-item list-group-item-action border-0" style="">
 						<div class="flexi">
                         <div class="badge bg-success float-right" id="chats-no" style="color:black"></div>
                         
@@ -224,12 +225,9 @@
 								{% else %}
 								<p>{{profile.user.username}}</p>
 								{% endif %}
-                                {% if profile.user.is_authenticated == True %}
-								<div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
+                            
+								<div class="small"><span class="fas fa-circle chat-online"></span> @{{profile.first}}</div>
 
-								{% else %} 
-								<div class="small"><span class="fas fa-circle chat-online"></span> Offline</div>
-							     {% endif %}
                             </div>
                            
 						</div>
@@ -293,7 +291,8 @@
 	}
 
 	function insertChatBox(id){
-
+       $("#profilez").hide()
+       $("#chatBtn").show()
        document.getElementById("chatBox").src = 'live_chat/live_chat_user/'+id
 	}
 
@@ -308,6 +307,10 @@
           
         }
 
+function showProfiles(){
+    $("#profilez").show()
+    $("#chatBtn").hide()
+}
 </script>
 
 {% endblock content %}

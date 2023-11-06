@@ -1006,7 +1006,7 @@ def sent_msg(request,pk):
         print(anony)
         #Profile.objects.get(user__username="hummingbird")
         if anony == "yes":
-            
+            print("yes")
             new_chat = ChatMessage(
                 body = chat , 
                 sender = Profile.objects.get(user__username="anonymous") ,
