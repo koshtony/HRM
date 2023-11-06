@@ -206,10 +206,19 @@ def import_employee_data(request):
                 # create the user
 
                 passwd = str(hash(date.today()))+str(items["emp_id"])
+                # load employe data
                 emp = Employee(
-                    **items
+                    emp_id = items["emp_id"], first_name = items["first_name"],second_name = items["second_name"],national_no = items["national_no"],
+                    kra_pin = items["kra_pin"],email = items["email"],dob=items["dob"],phone=items["phone"],next_kin_name = items["next_kin_name"],next_kin_id=items["next_kin_id"],
+                    next_kin_phone = items["next_kin_phone"],address = items["address"],location = items["location"],station = Station.objects.filter(name = items["station_id"])[0],
+                    role = Roles.objects.filter(name = items["role_id"])[0],departments = Department.objects.filter(name = items["departments_id"])[0], education_level = items["education_level"],doj=items["doj"],
+                    dol = items["dol"],payroll_settings = PayRollSetting.objects.filter(category = items["payroll_settings_id"])[0],
+                    account_no = items["account_no"], bank_name = items["bank_name"],salary = items["salary"],
+                    allowance = items["allowance"], add_ons = items["add_ons"],status = "incomplete"
+
                 )
                 emp.save()
+                # create user
                 user = User(
                     username = items["emp_id"],password=passwd,email = items["email"]
                 )
