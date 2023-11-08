@@ -1,5 +1,5 @@
 {% extends 'management/base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %} 
 
 
@@ -35,7 +35,7 @@
                     </div>
                     <br>
                     <div>
-                        <h4 id="payrun" style="font-weight: bold;"></h4>
+                        <h4 id="payId" style="font-weight: bold;"></h4>
                     </div>
                     
                 </div>
@@ -432,47 +432,101 @@
                        </div>
             </div>
             <div id="groups" class="tab-pane fade show col-lg-12">
-                <div class="card">
-                    <div class="row">
-                        <div class="table-responsive">
-                            <table  class="table table-striped"  id="payroll" style="zoom: 85%; font-weight: bolder;">
-                            <thead>
-                                <tr>
-                                    <th>org name</th>
-                                    <th>group</th>
-                                    <th>formula</th>
-                                    <th>relief</th>
-                                    <th>Nssf</th>
-                                    <th>Nhif</th>
-                                    <th>Housing</th>
-                                    <th>Others</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for setting in settings %}
-                                <tr>
-                                    <td>{{setting.org_name}}</td>
-                                    <td>{{setting.category}}</td>
-                                    <td>{{setting.tax_rate}}</td>
-                                    <td>{{setting.relief}}</td>
-                                    <td>{{setting.nssf}}</td>
-                                    <td>{{setting.nhif}}</td>
-                                    <td>{{setting.health_insurance}}</td>
-                                    <td>{{setting.housing}}</td>
-                                    <td>{{setting.others}}</td>
-                                </tr>
+                <div class="row">
+                   
+                    <div class="col-md-6 grid-margin stretch-card" id="list-view">
+                      <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-striped"  id="payroll" style="zoom: 85%; font-weight: bolder;">
+                                <thead>
+                                    <tr>
+                                        <th>org name</th>
+                                        <th>group</th>
+                                        <th>formula</th>
+                                        <th>relief</th>
+                                        <th>Nssf</th>
+                                        <th>Nhif</th>
+                                        <th>Housing</th>
+                                        <th>Others</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for setting in settings %}
+                                    <tr>
+                                        <td>{{setting.org_name}}</td>
+                                        <td>{{setting.category}}</td>
+                                        <td>{{setting.tax_rate}}</td>
+                                        <td>{{setting.relief}}</td>
+                                        <td>{{setting.nssf}}</td>
+                                        <td>{{setting.nhif}}</td>
+                                        <td>{{setting.health_insurance}}</td>
+                                        <td>{{setting.housing}}</td>
+                                        <td>{{setting.others}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                            
+                            
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6 grid-margin stretch-card">
+                     
+                      <div class="card">
+                        <div class="card-body">
+                          <div>
+                          
+                          </div>
+                            <h4 id="success" style="color:greenyellow"></h4>
+                            <div id="loaders6" style="display: none;">
+                                <div class="spinner-grow text-primary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-secondary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                </div>
+                            <form id="extraPaymentForm" enctype="multipart/form-data" method="POST">
+                                {% csrf_token %}
+              
+                                {% for field in extra_payment_form %}
+                                  <div class="form-group">
+                                     {{field | as_crispy_field}}
+                                  </div>
                                 {% endfor %}
-                            </tbody>
-                            </table>
-
-
-            </div>
-            </div>
-        </div>
+                                  
+                                 
+                                  
+                                  
+                                 
+                                
+                                  <button type="submit" class="btn btn-primary mr-2" onclick="loadPayment();">Submit</button>
+                                  <button class="btn btn-light">Cancel</button>
+                                </form>
+                          
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 grid-margin stretch-card" id="groups">
+                      <div class="card">
+                        <div class="card-body">
+                          
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
        
     </div>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
@@ -675,7 +729,41 @@ function showMap(lat,long){
 }
 
 //$("#payId").val(Math.trunc(Date.now() + Math.random()))
+
+// uploading extra payments
+
+function loadPayment(){
+  
+  $("#extraPaymentForm").submit(function(e){
+   e.preventDefault()
     
+   $form = $(this)
+   var formData = new FormData(this);
+   alert("p")
+   $.ajax({
+     method:"post",
+     url:"{% url 'payroll-extra-payments' %}",
+     data:formData,
+     processData: false,
+contentType: false,
+beforeSend:function(){
+             $("#loaders6").show()
+          },
+
+     success:function(data,status){
+       $("#success").html(data)
+     },
+     complete:function(){
+             
+             $("#loaders6").hide()
+             //location.reload()
+
+            }
+   })
+  })
+
+}
+
 </script>
 
 

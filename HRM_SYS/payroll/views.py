@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse,FileResponse
 from django.contrib import messages
 from django.views.generic import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
@@ -7,8 +7,12 @@ from django.template.loader import render_to_string,get_template
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail import EmailMessage
 from django.db.models import Sum,Count
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from .forms import ExtraPaymentsForm
 from management.models import * 
 from .formula import tax_amount
+from .temps import gen_temp
 from .models import *
 import datetime
 from datetime import datetime,date, timedelta
@@ -16,6 +20,7 @@ import pandas as pd
 import json
 from decimal import Decimal
 import pytz
+import os
 # Create your views here.
 
 
@@ -28,7 +33,7 @@ def gen_payroll(request):
 
     grouped_payroll = PayRoll.objects.values('payroll_id').annotate(size = Count('employee_id'),total_amount=Sum('gross_pay'))
 
-    context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll,"settings":settings}
+    context = {"attendances":attendance,"payrolls":payroll_report,"by_payroll_ids":grouped_payroll,"settings":settings,"extra_payment_form":ExtraPaymentsForm}
 
     return render(request,"payroll/reports.html",context)
 
@@ -320,6 +325,52 @@ def payroll_sum(request,payroll_id):
     context = {"summary":summary[0],"payrun":filtered[0].pay_run,"org":filtered[0].org_name}
     
     return render(request,'payroll/summary.html',context)
+
+def add_extra_payments(request):
+
+    if request.POST:
+
+        form = ExtraPaymentsForm(request.POST)
+
+        if form.is_valid():
+
+            form.save()
+
+            return JsonResponse("details submitted successfully",safe=False)
+
+def gen_extra_payement_temp(request):
+
+    filename = 'extra_payments_template.xlsx'
+
+    filepath =  os.path.join(settings.MEDIA_ROOT, 'extra_payments_temp',filename)
+    gen_temp(filepath)
+
+    path = open(filepath,'rb')
+
+    response = FileResponse(path,as_attachment=True)
+
+    return response
+@csrf_exempt
+def import_extra_payments(request):
+
+    try:
+
+        file = request.FILES.get("file")
+        extra_df = pd.read_excel(file)
+        for items in extra_df.to_dict("records"):
+
+            extra = ExtraPayments(
+                **items
+            )
+            extra.save()
+        return JsonResponse("file processed successfully",safe=False)
+    except Exception as err:
+
+        return JsonResponse(str(err),safe=False)
+
+
+
+
 
 
 

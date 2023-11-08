@@ -207,17 +207,24 @@
                 </div>
                 {% if user.is_staff %}
               <ul class="d-flex flex-column-reverse todo-list">
-                <li>
+                <li style="background-color:aqua">
                   <a href="{% url 'management_emp_temp' %}"><i class="fa fa-download"></i>employee template</a>
+
+                
                   
                 </li>
-                <li>
+               
+                <li style="background-color:orange">
+                  <a href="{% url 'payroll-extra-payments-temp' %}"><i class="fa fa-download"></i>extra payments template</a>
+                </li>
+                <li style="background-color:aqua">
+                  upload employee data
                   <div class="form-check">
-     
+                    
                       <input  type="file" id="fileData">
 
                      
-                      upload employee data
+                     
                     
                     
                     <br>
@@ -225,7 +232,24 @@
                     <button class="btn btn-success" onclick="uploadFile()"><i class="fa fa-upload"></i></button>
                     
                   </div>
+
+                  
                 
+                </li>
+                <li style="background-color:orange">
+                  upload extra payments data
+                          <div class="form-check">
+                           
+                            <input  type="file" id="fileExtraData">
+      
+                           
+                          
+                          
+                          <br>
+                          <br>
+                          <button class="btn btn-primary" onclick="uploadExtraFile()"><i class="fa fa-upload"></i></button>
+                          
+                        </div>
                 </li>
                 
                 
@@ -508,10 +532,11 @@ function goTo(id){
   })
 }
 
-// upload 
+// upload employee data 
 
+//=========================================================
 function uploadFile(){
-  alert("yes")
+
 
   var fData = new FormData()
   fData.append("file",$("input[id^='fileData']")[0].files[0])
@@ -520,6 +545,35 @@ $.ajax({
 
   type:"POST",
   url:"{% url 'management_import_employee_data' %}",
+  processData:false,
+  contentType:false,
+  mimeType:"multipart/form-data",
+  data:fData,
+  beforeSend:function(){
+            $("#loaders30").show()
+          },
+  success:function(data,status){
+
+      alert(data)
+  },
+  complete:function(){
+            $("#loaders30").hide()
+          },
+})
+}
+
+//upload extra payment data
+//===================================
+function uploadExtraFile(){
+  
+
+  var fData = new FormData()
+  fData.append("file",$("input[id^='fileExtraData']")[0].files[0])
+  //fData.append("csrfmiddlewaretoken":"{{ csrf_token }}");
+$.ajax({
+
+  type:"POST",
+  url:"{% url 'payroll-extra-payments-import' %}",
   processData:false,
   contentType:false,
   mimeType:"multipart/form-data",

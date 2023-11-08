@@ -71,7 +71,7 @@ class ExtraPayments(models.Model):
     awards = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     loan_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     welfare_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    created = models.DateTimeField(default=datetime.datetime.now())
+    created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
 
