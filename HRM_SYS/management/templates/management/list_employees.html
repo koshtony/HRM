@@ -351,6 +351,40 @@
     </div>
   </div>
 
+  <!-- more details modal-->
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#moreDetailsModal" id="moreDetailsBtn" style="display:none"></button>
+
+<div class="modal fade" id="moreDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">more details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <th>Title</th>
+                <th>value</th>
+              </thead>
+              <tbody id="detailsTab">
+
+              </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <link rel="shortcut icon" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
   <link rel="shortcut icon" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css">
@@ -397,6 +431,9 @@
                             department
                           </th>
                           <th>
+                            station
+                          </th>
+                          <th>
                             education level
                            </th>
                           <th>
@@ -431,6 +468,9 @@
                           <th>
                             edit
                           </th>
+                          <th>
+                            more details
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -458,6 +498,9 @@
                           </td>
                           <td>
                              {{emp.department}}
+                          </td>
+                          <td>
+                            {{emp.station}}
                           </td>
                           <td>
                             {{emp.education_level}}
@@ -493,6 +536,12 @@
                           <td>
                             <a  onclick="EditEmp('{{emp.pk}}')"><i class="ti-pencil"></i></a>
                           </td>
+                          <th>
+                            <button onclick="moreDetails('{{emp.emp_id}}')"><i class="fa fa-info"></i>
+                              <p style="display:none">{{emp.other_fields}}</p>
+                            </button>
+                            
+                          </th>
                         </tr>
                         {% elif employee.emp_id == request.user.username %}
                         <tr>
@@ -518,6 +567,9 @@
                           <td>
                              {{emp.department}}
                           </td>
+                          <th>
+                            {{emp.station}}
+                          </th>
                           <td>
                             {{emp.education_level}}
                          </td>
@@ -552,6 +604,10 @@
                           <td>
                               -----
                           </td>
+                          <th>
+                            <button onclick="moreDetails('{{emp.emp_id}}');"></button>
+                            <p>{{emp.other_fields}}</p>
+                          </th>
                         </tr>
                         {% endif %}
                         {% endfor %}
@@ -967,6 +1023,38 @@ function EditEmp(pk){
     
   $("#listIframeBtn").click()
     document.getElementById("listFrame").src = 'edit_employee/'+pk
+}
+
+function moreDetails(id){
+
+  $("#moreDetailsBtn").click()
+  
+
+  $.ajax({
+       
+        type:"POST",
+        url:"{% url 'management_get_emp_other_details' %}",
+        data:{
+          id:id
+        },
+        success:function(data,status){
+         
+          //var data = JSON.parse(data)
+          console.log(data)
+           for(key in data){
+            $("#detailsTab").html(
+              `
+                  <tr>
+                    <td>${data[key]["name"]}</td>
+                    <td>${data[key]["value"]}</td>
+                  </tr>
+
+              `
+            )
+        }
+      }
+
+  })
 }
 </script>
 {% endblock content %}

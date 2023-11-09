@@ -175,7 +175,7 @@ def get_employee(request):
 
         id = request.POST.get("id")
 
-        print(id)
+      
 
         employee = Employee.objects.get(emp_id = str(id))
 
@@ -183,6 +183,22 @@ def get_employee(request):
         
         print(employee)
         return JsonResponse(employee, safe=False)
+@csrf_exempt   
+def get_emp_other_details(request):
+
+    if request.POST:
+
+        emp_id = request.POST.get("id")
+
+        other_fields = Employee.objects.get(emp_id = emp_id ).other_fields.split("\n")
+        
+        other_fields_all = []
+        for other_field in other_fields:
+            
+            other_fields_all.append({"name":str(other_field.split(":")[0]),"value":str(other_field.split(":")[1])})
+        
+        return JsonResponse(other_fields_all,safe=False)
+
 def get_employee_template(request):
 
     filename = 'employee_template.xlsx'
