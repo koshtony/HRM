@@ -327,6 +327,15 @@
     margin-left: 1rem;
     margin-right: 1rem;
 }
+.parent {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.parent::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
 </style>
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#listEmpModal" id="listIframeBtn" style="display:none">edit modal</button>
 
@@ -391,12 +400,18 @@
       <div class="main-panel">
         <div class="content-wrapper">
           
-          
-          <!-- Modal -->
-          
           <div class="row">
-            
-            
+            <div class="col-lg-12">
+                <ul class="nav nav-pills mb-3">
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="fa fa-users"></i> employees</a></li>
+                    <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-outline"><i class="fa fa-bar-chart"></i> Analysis</a></li>
+                    
+                </ul>
+            </div>
+            <div class="col-lg-12">
+                <div class="row tab-content">
+                    <div id="list-view" class="tab-pane fade active show col-lg-12">
+                         
             <div class="col-lg-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -618,10 +633,81 @@
                 </div>
               </div>
             </div>
+                    </div>
+                    <div id="grid-view" class="tab-pane fade col-lg-12">
+                       
+                      <div class="row">
+                   
+                        <div class="col-md-6 grid-margin stretch-card">
+                         
+                          <div class="card">
+                            
+                            <div class="card-body">
+                              <h4>department size</h4>
+                             
+                               <div id="dep" style="width:100%" class="parent">
+
+                               </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6 grid-margin stretch-card">
+                         
+                          <div class="card">
+                            <div class="card-body">
+                              <strong style="color:orange">turnover rate: <p style="color:blue">{{rate}} %</p></strong>
+                            <div id="status" style="width:100%" class="parent">
+
+                            </div>
+                              
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12 grid-margin stretch-card" id="groups">
+                          <div class="card">
+                            <div class="card-body">
+                              <div id="trends">
+                             
+
+                              </div>
+                              
+                            </div>
+                          </div>
+                        </div>
+                        
+                      </div>
+                        <div>
+                      
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive">
+                                
+                                    
+                              
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div id="settings" class="tab-pane fade col-lg-12">
+                      
+                       <div class="row">
+                       
+
+
+                       </div>
+            </div>
+            <div id="groups" class="tab-pane fade show col-lg-12">
+                <div class="card">
+                    <div class="row">
+                       
+
+
+            </div>
+            </div>
+        </div>
+          <!-- Modal -->
           
-            
-           
-          </div>
+          
         </div>
        
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal" id="modalBtn" style="display:none">
@@ -793,7 +879,85 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
+
 <script>
+  // employee charts
+  var dep_div = document.getElementById("dep")
+var data = [
+  {
+    x: {{dep_names | safe}},
+    y: {{dep_total | safe}},
+    type: 'bar',
+    
+  }
+];
+var layout = {
+  height: 500,
+  width: 500
+}
+Plotly.newPlot(dep_div, data,layout);
+
+// turnover charts
+var status_div = document.getElementById("status")
+var data = [{
+  values: {{total_status | safe}},
+  labels:{{status | safe}},
+  domain: {column: 0},
+  name: 'Turnover rate',
+  hoverinfo: 'label+percent+name',
+  hole: .4,
+  type: 'pie',
+}]
+
+var layout = {
+  title: 'Employee status share',
+  annotations: [
+    {
+      font: {
+        size: 20
+      },
+      showarrow: false,
+      text: 'rate',
+      x: 0.17,
+      y: 0.5
+    },
+  ],
+  height: 400,
+  width: 1000,
+  showlegend: false,
+  grid: {rows: 1, columns: 2}
+};
+
+Plotly.newPlot(status_div, data, layout);
+
+//  trends charts
+var trends_div = document.getElementById("trends")
+console.log({{month | safe}})
+var join_trend_data = [
+  {
+    x: {{month | safe}},
+    y: {{size | safe}},
+    type: 'scatter'
+  }
+];
+var resign_trend_data =  [
+  {
+    x: {{r_month | safe}},
+    y: {{r_size | safe}},
+    type: 'scatter'
+  }
+];
+
+var trend_data =[join_trend_data,resign_trend_data]
+var layout = {
+  title: 'Employee Joining/Resign Trend',
+};
+
+Plotly.newPlot(trends_div, trend_data,layout);
+
+
+
+
     new DataTable('#EmpTab');
 
     function viewFiles(id){
@@ -1056,5 +1220,9 @@ function moreDetails(id){
 
   })
 }
+
+// chart bars
+
+
 </script>
 {% endblock content %}

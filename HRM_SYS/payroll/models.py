@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from simple_history.models import HistoricalRecords
 import datetime
 
 # Create your models here.
@@ -39,6 +40,7 @@ class PayRoll(models.Model):
     created_time = models.TimeField(default=timezone.now)
     status = models.CharField(max_length=100,default="audit")
     pay_run = models.CharField(max_length=200,default='')
+    history = HistoricalRecords()
 
     def __str__(self):
 
@@ -56,6 +58,7 @@ class PayRollSetting(models.Model):
     health_insurance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     housing = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     others = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    history = HistoricalRecords()
 
     def __str__(self):
 
@@ -72,6 +75,7 @@ class ExtraPayments(models.Model):
     loan_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     welfare_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     created = models.DateTimeField(default=timezone.now)
+    history = HistoricalRecords()
 
     def __str__(self):
 

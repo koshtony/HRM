@@ -43,7 +43,7 @@ def monthly_payroll(request):
         date1 = request.POST.get("date1")
         date2 = request.POST.get("date2")
         payroll_id = request.POST.get("payId")
-        print(payroll_id)
+      
         
         date2 = utc.localize(datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1))
         date1 = utc.localize(datetime.strptime(date1, '%Y-%m-%d'))
@@ -126,13 +126,13 @@ def monthly_payroll(request):
 
                 }
                 payrolls.append(data)
-                print(payrolls)
+           
                 
             else:
 
                 JsonResponse("no data to process",safe=False)
                 
-        print(payrolls)
+   
         for payroll in payrolls:
 
             pay = PayRoll(**payroll)
@@ -182,7 +182,7 @@ def payroll_details(request):
 
             payrolls.append(info)
         summary = {"cost":cost,"size":size,"org":org,"created":created[0]}
-        print(summary)
+       
         return JsonResponse(json.dumps(summary,default=str),safe=False)
     
 def payroll_check(request):
@@ -190,7 +190,7 @@ def payroll_check(request):
     if request.POST:
 
         id = request.POST.get("id")
-        print(id)
+     
 
         payrolls = PayRoll.objects.filter(payroll_id = id)
         for payroll in payrolls:
@@ -321,7 +321,7 @@ def payroll_sum(request,payroll_id):
                         
                         
                         )
-    print(summary)
+ 
     context = {"summary":summary[0],"payrun":filtered[0].pay_run,"org":filtered[0].org_name}
     
     return render(request,'payroll/summary.html',context)

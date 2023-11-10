@@ -16,6 +16,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.db.models import Count,Sum
+from django.db.models.functions import ExtractMonth
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm
 from .models import *
 from .temps import gen_temp
@@ -164,8 +166,39 @@ def add_employee(request):
     return render(request,'management/add_employees.html',context)
 
 def list_employee(request):
+    
+    dep_count =  Employee.objects.values('departments__name').annotate(all_deps = Count('departments__name'))
 
-    context = {"employee":Employee.objects.all()}
+    turnovers = Employee.objects.values('status').annotate(all_status = Count('status'))
+
+    joining_trends = Employee.objects.annotate(month=ExtractMonth('doj')).values('month').annotate(size=Count('month'))
+
+    resign_trends = Employee.objects.annotate(month=ExtractMonth('dol')).values('month').annotate(size=Count('month'))
+    
+    print(resign_trends)
+    context = {
+        
+        "employee":Employee.objects.all(),
+
+        "dep_names":[dep["departments__name"] for dep in dep_count],
+
+        "dep_total":[dep["all_deps"] for dep in dep_count],
+
+        "status": [turnover["status"] for turnover in turnovers],
+
+        "total_status":[turnover["all_status"] for turnover in turnovers],
+
+        "rate": (len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])/((len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])+len([turnover["status"] for turnover in turnovers if turnover["status"] == "active" ]))/2))*100,
+
+        "month":[trend["month"] for trend in joining_trends],
+
+        "size":[trend["size"] for trend in joining_trends],
+
+        "r_month":[trend["month"] for trend in resign_trends],
+
+        "r_size":[trend["size"] for trend in resign_trends]
+
+        }
     
     return render(request,'management/list_employees.html',context)
 
@@ -506,9 +539,10 @@ def view_attendance(request):
     late = []
     for attendance in attendances:
          if attendance.clock_in != '':
-            if datetime.strptime(attendance.clock_in, '%Y-%m-%d %H:%M:%S.%f').time() > AttSettings.objects.get(employee_id = attendance.employee.emp_id).start:
+            try:
+                if datetime.strptime(attendance.clock_in, '%Y-%m-%d %H:%M:%S.%f').time() > AttSettings.objects.get(employee_id = attendance.employee.emp_id).start:
              
-                late_dict = {
+                    late_dict = {
                     "employee":attendance.employee.emp_id,
                     "employee_name":attendance.employee.first_name + " "+attendance.employee.second_name,
                     "day":attendance.day,
@@ -521,7 +555,9 @@ def view_attendance(request):
                     
 
                 }
-                late.append(late_dict)
+                    late.append(late_dict)
+            except:
+                late_dict = {}
     absents = []
 
     for employee in Employee.objects.all():
@@ -1174,3 +1210,9 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('management-home')    
+
+
+'''
+    ===============data Analytics views===================
+
+'''

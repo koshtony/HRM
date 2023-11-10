@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'hrm_users.apps.HrmUsersConfig',
     'storages',
     'mathfilters',
-    'user_visit'
+    'user_visit',
+    'simple_history'
+
 
 
 ]
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'HRM_SYS.urls'
@@ -167,13 +170,13 @@ MEDIA_URL = 'media/'
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
     "mediafiles": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
     },
 }
 

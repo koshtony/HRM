@@ -36,3 +36,4 @@ django-tinymce
 openpyxl
 django-mathfilters
 django-user-visit
+django-simple-history

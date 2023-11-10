@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from payroll.models import PayRollSetting
 from tinymce.models import HTMLField
 from datetime import date
+from simple_history.models import HistoricalRecords
 import time
 # Create your models here.
 class Profile(models.Model):
@@ -62,6 +63,7 @@ class Employee(models.Model):
     kra_pin = models.CharField(max_length=50,default="None")
     email = models.EmailField(default="None")
     dob = models.DateField(default=timezone.now)
+    gender = models.CharField(max_length=100,default="undisclosed",choices=(("male","male"),("female","female"),("undisclosed","undisclosed")))
     phone = models.CharField(max_length=50,default="None")
     next_kin_name = models.CharField(max_length=50,default="None")
     next_kin_id = models.CharField(max_length=50,default="None")
@@ -76,7 +78,7 @@ class Employee(models.Model):
     departments = models.ForeignKey(Department,on_delete = models.PROTECT,null=True)
     education_level = models.CharField(max_length=50,default="None")
     doj = models.DateField(default=timezone.now)
-    dol = models.DateField(default=timezone.now)
+    dol = models.DateField(null=True)
     payroll_settings = models.ForeignKey(PayRollSetting,on_delete=models.PROTECT,null=True)
     
  # finance section 
@@ -91,6 +93,8 @@ class Employee(models.Model):
     other_fields = models.TextField(default="name:value")
     status = models.CharField(max_length=50,choices=(('incomplete',"incomplete"),('active',"active"),('resigned',"resigned"),('terminated',"terminated"),('suspended',"suspended")),default="None")
     image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
+    history = HistoricalRecords()
+
 
 
     def __str__(self):
@@ -155,6 +159,7 @@ class Attendance(models.Model):
     deductions = models.FloatField(default=0.0)
     created = models.DateTimeField(default=timezone.now)
     remarks = models.TextField()
+    history = HistoricalRecords()
 
     def __str__(self):
 
