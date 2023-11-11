@@ -33,7 +33,7 @@
                   <div class="weather-info">
                     <div class="d-flex">
                       <div>
-                        <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2>
+                        <h2 class="mb-0 font-weight-normal"><i class="fa-solid fa-cloud-rain"></i><strong id="temps"></strong><sup>C</sup></h2>
                       </div>
                       <div class="ml-2">
                         <h4 class="location font-weight-normal">Nairobi</h4>
@@ -345,78 +345,6 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
       <script>
    
-      var SalesChartCanvas = $("#sales-charts").get(0).getContext("2d");
-      new Chart(SalesChartCanvas, {
-        type: 'bar',
-        data: {
-          labels: ["SEPT", "OCT", "NOV", "DEC", "JAN"],
-          datasets: [{
-              label: 'Expected',
-              data: [480, 230, 470, 210, 330],
-              backgroundColor: '#98BDFF'
-            },
-            {
-              label: 'Actual',
-              data: [400, 340, 550, 480, 170],
-              backgroundColor: '#4B49AC'
-            }
-          ]
-        },
-        options: {
-          cornerRadius: 5,
-          responsive: true,
-          maintainAspectRatio: true,
-          layout: {
-            padding: {
-              left: 0,
-              right: 0,
-              top: 20,
-              bottom: 0
-            }
-          },
-          scales: {
-            yAxes: [{
-              display: true,
-              gridLines: {
-                display: true,
-                drawBorder: false,
-                color: "#F2F2F2"
-              },
-              ticks: {
-                display: true,
-                min: 0,
-                max: 560,
-                callback: function(value, index, values) {
-                  return  value + '$' ;
-                },
-                autoSkip: true,
-                maxTicksLimit: 10,
-                fontColor:"#6C7383"
-              }
-            }],
-            xAxes: [{
-              stacked: false,
-              ticks: {
-                beginAtZero: true,
-                fontColor: "#6C7383"
-              },
-              gridLines: {
-                color: "rgba(0, 0, 0, 0)",
-                display: false
-              },
-              barPercentage: 1
-            }]
-          },
-          legend: {
-            display: false
-          },
-          elements: {
-            point: {
-              radius: 0
-            }
-          }
-        },
-      });
      
 // approval modal
 function approveModal(id,link){
@@ -503,6 +431,24 @@ function reject(id){
           })
 
 }
+
+//============================== fetch weather data==========================================
+
+function getWeatherData(lat,lon){
+
+var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=4fa5737c18f70c57a4aa1c17b818a7b3`
+  fetch(url).then(
+    function(resp){
+      return resp.json()
+    }
+  ).then(
+    function(data){
+      console.log(data.weather[0].main)
+      document.getElementById("temps").innerHTML =  Math.round(parseFloat(data.main.temp)-273.15)
+    }
+  )
+}
+getWeatherData('-1.292066','36.821945')
 
       </script>
 {% endblock content %}
