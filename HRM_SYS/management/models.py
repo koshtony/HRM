@@ -170,7 +170,7 @@ class Attendance(models.Model):
 
 class Approvals(models.Model):
 
-    name = models.CharField(max_length=10,default="")
+    name = models.CharField(max_length=100,default="")
     approvers = models.TextField(default="")
     created = models.DateField(default=timezone.now)
     remarks = models.TextField() 

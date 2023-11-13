@@ -850,7 +850,17 @@ def recall_by_comment(request):
         )
         track.save()
         return JsonResponse("remark added successfully",safe=False)
+@csrf_exempt
+def view_approval_details(request):
 
+    if request.POST:
+
+        id = request.POST.get("id")
+
+        details = Applications.objects.get(pk=id).details
+        
+
+        return JsonResponse(details,safe=False)
 @login_required
 def profile(request):
     try:

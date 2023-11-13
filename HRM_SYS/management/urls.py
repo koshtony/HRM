@@ -6,7 +6,7 @@ from .views import home,clock,add_department,view_attendance,\
       upload_leave,approve,upload_process,register,list_files,profile,EditEmpView,ResetPasswordView,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
-            files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details
+            files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details,view_approval_details
 
             
 
@@ -31,6 +31,7 @@ urlpatterns = [
       path('get_emp_other_details',views.get_emp_other_details,name="management_get_emp_other_details"),
       path('files_details/<str:id>',views.files_details,name="management_files_details"),
       path('list_approvals',views.view_approvals,name="management_list_approvals"),
+      path('view_approval_details',views.view_approval_details,name="management_view_approval_details"),
       path('leave',views.leave,name="management_leave"),
       path('upload_leave',views.upload_leave,name="management_upload_leave"),
       path('approve',views.approve,name="management_approve"),

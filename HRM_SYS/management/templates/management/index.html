@@ -1,5 +1,16 @@
 {% extends 'management/base.html' %}
 {% block content %}
+<style>
+  .parent {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.parent::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+</style>
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
@@ -179,10 +190,10 @@
                               &nbsp;&nbsp;&nbsp;&nbsp;
                               <a href="{{todo.4}}" download><i class="remove ti-download"></i>attachment</a>
                               &nbsp;&nbsp;&nbsp;
-                              <a onclick="approveModal('{{todo.0}}','{{todo.4}}')"><i class="fa fa-check"></i></a>
-                              &nbsp;&nbsp;&nbsp;&nbsp;
-                              <a><i class="fa fa-eye"></i></a>
-                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <a onclick="approveModal('{{todo.0}}','{{todo.4}}')" class="btn btn-outline"><i class="fa fa-check"></i></a>
+                             
+                              <a onclick="viewMore('{{todo.}}')"><i class="fa fa-eye"></i></a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               <a class="btn btn-danger" onclick="reject('{{todo.0}}');"><i class="remove ti-close"></i></a>
                             </li>
                             {% endfor %}
@@ -300,8 +311,9 @@
                 </button>
               </div>
               <div class="modal-body">
+                <a onclick="hideDetails()"><i class="ti-arrow-circle-up"></i></a>
                 <a onclick="showDetails()"><i class="ti-arrow-circle-down"></i></a>
-                <div style="color:yellowgreen; display:none" id="detDiv">
+                <div style="color:yellowgreen; overflow-y:scroll" id="detDiv" style="height:400px">
                   <strong id="det"></strong>
                   <a href="" download><i class="ti-download" id="attach"></i></a>
                 </div>
@@ -336,6 +348,7 @@
             </div>
           </div>
         </div>
+
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
@@ -355,14 +368,31 @@ function approveModal(id,link){
 
   $("#approvePk").val(id)
   
-  $("#attach").href(link)
+  //$("#attach").href(link)
+
+  $.ajax({
+
+      type:"POST",
+      url:"{% url 'management_view_approval_details' %}",
+      data:{
+
+         id:id
+      },
+      success:function(data,status){
+         alert(data)
+        document.getElementById("detDiv").innerHTML = data
+      }
+  })
 }
 
+function hideDetails(){
+    
+    $("#detDiv").hide()
+}
 function showDetails(){
     
-  document.getElementById("detDiv").style.display = 'block'
+    $("#detDiv").show()
 }
-
 function doneApprove(){
 
   $.ajax({
@@ -431,6 +461,13 @@ function reject(id){
           }
           })
 
+}
+
+// view application details
+
+function viewMore(){
+
+    $("#viewMoreBtn").click()
 }
 
 //============================== fetch weather data==========================================
