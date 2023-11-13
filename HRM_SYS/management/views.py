@@ -561,7 +561,8 @@ def view_attendance(request):
     absents = []
 
     for employee in Employee.objects.all():
-        if employee.emp_id not in [att.id for att in Attendance.objects.filter(day = date.today())]:
+        if employee.emp_id not in [att.employee.emp_id for att in Attendance.objects.filter(day = date.today())]:
+            
             try:
                 absent_dict = {
                     "employee_id":employee.emp_id,

@@ -317,10 +317,14 @@ getClock()
           var long = document.getElementById("longitudes").value
           var lat = document.getElementById("latitudes").value
 
-          var diff = distance(lat,long,lat1,long1)
-          console.log(diff)
+          var diff = distance(lat,long,lat1,long1)*1000
+          
        
+          if(diff > 200){
+            alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
+          }else{
 
+          
           
              
             $.ajax({
@@ -340,6 +344,7 @@ getClock()
               }
             })
         }
+      }
   
       // upload leave data 
  function loadLeave(){

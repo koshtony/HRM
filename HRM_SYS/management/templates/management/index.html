@@ -12,12 +12,12 @@
                  
                                         </div>
                 <div class="col-12 col-xl-4">
+                  
                  <div class="justify-content-end d-flex">
                   <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
-                    <button class="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                      <span id="tday"></span>
-                       
-                    </button>
+                    
+                      <span id="statusText" style="color:orange"></span>
+                  
                     
                   </div>
                  </div>
@@ -26,10 +26,11 @@
             </div>
           </div>
           <div class="row">
+            
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card tale-bg">
                 <div class="card-people mt-auto">
-                  <img src="https://images.unsplash.com/photo-1549002942-c6af9c116f79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c3VubGlnaHR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" height="300px;" alt="people">
+                  <img src="https://images.unsplash.com/photo-1549002942-c6af9c116f79?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8c3VubGlnaHR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60" height="300px;" alt="people" id="statusPic">
                   <div class="weather-info">
                     <div class="d-flex">
                       <div>
@@ -448,7 +449,45 @@ var url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}
     }
   )
 }
+
 getWeatherData('-1.292066','36.821945')
+
+function workStatus(){
+
+  var work_time = 'https://images.unsplash.com/photo-1506452819137-0422416856b8?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d29yayUyMHRpbWV8ZW58MHx8MHx8fDA%3D'
+  var tea_time = 'https://images.unsplash.com/photo-1588710962678-845d46818fd0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YnJlYWslMjB0aW1lfGVufDB8fDB8fHww'
+  var lunch_break = 'https://images.unsplash.com/photo-1567934124115-2eca8953796b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHBsYXRlfGVufDB8fDB8fHww'
+  var rest_time = 'https://images.unsplash.com/photo-1586084531072-e03cbf17afa6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVzdHxlbnwwfHwwfHx8MA%3D%3D'
+
+  const today = new Date();
+          
+  let h = today.getHours();
+  
+  if(h >= 8 && h <10){
+   
+      document.getElementById("statusPic").src = work_time
+      document.getElementById("statusText").innerHTML = "Work time"
+
+  }else if (h==10){
+     
+    document.getElementById("statusPic").src = tea_time
+    document.getElementById("statusText").innerHTML = "Tea Break"
+  } else if (h>=11 && h<13){
+    document.getElementById("statusPic").src = work_time
+    document.getElementById("statusText").innerHTML = "Work time"
+  }else if (h==13){
+    document.getElementById("statusPic").src = lunch_break
+    document.getElementById("statusText").innerHTML = "Lunch Break"
+  }else if(h>=14 && h<=17){
+    document.getElementById("statusPic").src = work_time
+    document.getElementById("statusText").innerHTML = "Work time"
+  }
+  else{
+    document.getElementById("statusPic").src = rest_time
+    document.getElementById("statusText").innerHTML = "Rest"
+  }
+}
+workStatus()
 
       </script>
 {% endblock content %}
