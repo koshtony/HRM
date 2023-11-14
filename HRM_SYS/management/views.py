@@ -164,6 +164,27 @@ def add_employee(request):
     context = {"emp_form":EmpForm()}
 
     return render(request,'management/add_employees.html',context)
+@csrf_exempt
+def resign_employee(request):
+
+    if request.POST:
+
+        emp_id = request.POST.get("emp_id")
+        remarks = request.POST.get("remarks")
+
+        emp = Employee.objects.get(emp_id=emp_id)
+        emp.status = "resigned"
+        emp.remarks = remarks
+        emp.dol = datetime.now()
+        emp.save()
+
+        user_del = User.objects.get(username = emp_id)
+        user_del.delete()
+
+        return JsonResponse("resignation successfully set",safe=False)
+
+
+
 
 def list_employee(request):
     

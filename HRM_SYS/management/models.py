@@ -93,7 +93,9 @@ class Employee(models.Model):
     other_fields = models.TextField(default="name:value")
     status = models.CharField(max_length=50,choices=(('incomplete',"incomplete"),('active',"active"),('resigned',"resigned"),('terminated',"terminated"),('suspended',"suspended")),default="None")
     image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
+    remarks = models.TextField(default="",null=True)
     history = HistoricalRecords()
+
 
 
 

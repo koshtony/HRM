@@ -416,9 +416,9 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Employee list</h4>
-                  <p class="card-description">
-                   
-                  </p>
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#resignModal" title="employee resignation">
+                   <i class="fa fa-minus"></i>Employee
+                  </button>
                   <div class="table-responsive">
                     <table class="table table-striped" id="EmpTab">
                       <thead>
@@ -866,6 +866,54 @@
   </div>
 
 
+  <!-- resignation modal-->
+ 
+  
+  <!-- Modal -->
+  <div class="modal fade" id="resignModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Employee resignation</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <form class="form-sample">
+
+            <div class="form-group">
+              <label>employee id</label>
+              <input list="emp_ids" class="form-control" id="emps">
+              <datalist id="emp_ids">
+                {% for emp in employee %}
+                <option value="{{emp.emp_id}}">
+                  {{emp.emp_id}}
+                </option>
+                {% endfor %}
+              </datalist>
+              
+            </div>
+            <div class="form-group">
+              <label>remarks</label>
+
+              <textarea class="form-control" rows="5">
+
+              </textarea>
+
+            </div>
+
+           </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="remEmployee()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
@@ -1221,7 +1269,30 @@ function moreDetails(id){
   })
 }
 
-// chart bars
+// remove Employees 
+function remEmployee(){
+
+     $.ajax({
+
+         type:"POST",
+         url:"{% url 'management_resign_employee' %}",
+         data:{
+             
+          emp_id:$("#emps").val(),
+          remarks:$("#remarks").val()
+
+         },
+         beforeSend:function(){
+
+         },
+         success:function(data,status){
+              alert(data)
+         },
+         complete:function(){
+             
+         }
+     })
+}
 
 
 </script>
