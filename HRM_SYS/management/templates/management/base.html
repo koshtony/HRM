@@ -52,6 +52,13 @@
   cursor: move;
 }
 
+/* From https://css.glass */
+#windowModalBody{
+  filter: drop-shadow(2px 4px 6px black);
+background-color: rgb(152 151 151 / 25%); /* Just adjust the color or opacity to make the text pop! */
+box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
+}
+
   </style>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
 </head>
@@ -429,8 +436,8 @@
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="windowModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="windowModal" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document" id="windowModalBody">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">window</h5>
@@ -632,10 +639,17 @@ $.ajax({
 function multiWindows(){
   
     $("#windowBtn").click()
-
     document.getElementById("windowFrame").src = window.location.href
+  
+
+    
+    
    
 }
+
+$(".modal").draggable({
+  handle: ".modal-header"
+});
 
 </script>
 

@@ -93,7 +93,7 @@ WSGI_APPLICATION = 'HRM_SYS.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -101,17 +101,19 @@ DATABASES = {
     }
 }
 '''
+
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'railway',
        'USER': 'postgres',
-       'PASSWORD': 'eceG*AEg*Df4C4CbD4F3d31Ac34F4CeB',
-       'HOST': 'viaduct.proxy.rlwy.net',
-       'PORT': '25925',
+       'PASSWORD': 'gAB2d4eeGEabd15-c333FbF3fGEd6CGf',
+       'HOST': 'roundhouse.proxy.rlwy.net',
+       'PORT': '32398',
    }
 }
-'''
+
 
 
 

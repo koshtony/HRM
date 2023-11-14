@@ -499,7 +499,7 @@ function workStatus(){
   const today = new Date();
           
   let h = today.getHours();
-  
+ 
   if(h >= 8 && h <10){
    
       document.getElementById("statusPic").src = work_time
@@ -525,6 +525,6 @@ function workStatus(){
   }
 }
 workStatus()
-
+setInterval(workStatus,1000)
       </script>
 {% endblock content %}
