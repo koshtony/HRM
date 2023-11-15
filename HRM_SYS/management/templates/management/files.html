@@ -492,8 +492,8 @@
                             {% elif "xls" in file.properties or "xlsx" in file.properties %}
                             <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/xls.svg" alt="icon">
                             {% endif %}
-
-                        </div><a href="{{file.document.url}}" class="file-download" download><i class="fa fa-download"></i></a>
+                           <a href="{{file.document.url}}" class="file-download" download><i class="fa fa-download"></i></a>
+                        </div>
                         <div class="file-man-title">
                             <small class="mb-0 text-overflow"> {{file.file_name}}-{{file.category}}-{{file.employee}}</small>
                             <p class="mb-0"><small>{{file.employee}}</small></p>
@@ -517,7 +517,8 @@
                             {% elif "xls" in file.properties %}
                             <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/xls.svg" alt="icon">
                             {% endif %}
-                        </div><a href="{{file.document.url}}" class="file-download"><i class="fa fa-download"></i></a>
+                            <a href="{{file.document.url}}" class="file-download"><i class="fa fa-download"></i></a>
+                        </div>
                         <div class="file-man-title">
                             <h5 class="mb-0 text-overflow"> {{file.file_name}}-{{file.category}}-{{file.employee}}</h5>
                             <p class="mb-0"><small>{{file.employee}}</small></p>
