@@ -205,8 +205,8 @@ CSRF_TRUSTED_ORIGINS = ['https://hrm-production-02c6.up.railway.app','https://*.
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'koshtech.site@gmail.com'
-EMAIL_HOST_PASSWORD = 'llmb kxvj iblk vvii'
+EMAIL_HOST_USER = 'admin@koshtech.site'
+EMAIL_HOST_PASSWORD = 'orwj wcqs deni efr'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
