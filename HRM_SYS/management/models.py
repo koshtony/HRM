@@ -110,6 +110,7 @@ class AttSettings(models.Model):
     expected_days =  models.FloatField(default=24.0)
     leave_days =  models.FloatField(default=21.0)
     remarks = models.TextField(default="")
+    address = models.CharField(max_length=300,default="")
     clock_in_latitude = models.CharField(max_length=1000,default="")
     clock_in_longitude = models.CharField(max_length=1000,default="")
 

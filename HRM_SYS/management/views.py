@@ -42,7 +42,7 @@ def home(request):
     event = Events.objects.last()
     department = Department.objects.all()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
-    attendance = Attendance.objects.filter(employee_id = request.user.username).order_by('-day')[:5]
+    attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
     context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
     return render(request,'management/index.html',context)
 @login_required
@@ -195,6 +195,12 @@ def list_employee(request):
     joining_trends = Employee.objects.annotate(month=ExtractMonth('doj')).values('month').annotate(size=Count('month'))
 
     resign_trends = Employee.objects.annotate(month=ExtractMonth('dol')).values('month').annotate(size=Count('month'))
+
+    try:
+
+        rate = (len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])/((len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])+len([turnover["status"] for turnover in turnovers if turnover["status"] == "active" ]))/2))*100
+    except:
+        rate = 0;
     
     print(resign_trends)
     context = {
@@ -209,7 +215,7 @@ def list_employee(request):
 
         "total_status":[turnover["all_status"] for turnover in turnovers],
 
-        "rate": (len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])/((len([turnover["status"] for turnover in turnovers if turnover["status"] == "resigned" ])+len([turnover["status"] for turnover in turnovers if turnover["status"] == "active" ]))/2))*100,
+        "rate": rate,
 
         "month":[trend["month"] for trend in joining_trends],
 
@@ -905,8 +911,9 @@ def profile(request):
             return JsonResponse("profile updated",safe=False)
     except Exception as error:
 
-        raise ObjectDoesNotExist(error)
+        context = {}
 
+        
         
 
 
