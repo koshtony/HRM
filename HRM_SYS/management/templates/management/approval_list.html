@@ -77,7 +77,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -105,16 +105,47 @@
     </div>
   </div>
 </div>
+
+<!--create approvers-->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#apprvModal" style="display:none"  id="apprvModalBtn">
+ 
+</button>
+
+<div class="modal" id="apprvModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">create approvals category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      
+       <iframe height="500px" width="100%" id="apprvFrame"></iframe>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+     
      
 
 
       <!-- partial -->
-      <div class="main-panel">        
+      <div class="main-panel"> 
+              
         <div class="content-wrapper">
           <div class="row">
             <div class="col-12 grid-margin stretch-card" style="height:500px; overflow-y: scroll;">
               <div class="card">
+                <button class="btn btn-outline" style="margin:10px; width:20px; border-color: black;;" onclick="createApprv()"><i class="fa fa-cogs"></i></button> 
                 <div class="card-body">
+                  
                   <h4 class="card-title">approvals process</h4>
             <div class="tree">
               <ul>
@@ -245,7 +276,10 @@
         </footer>
         <!-- partial -->
       </div>
-
+      
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <script>
       $(function () {
     $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
@@ -307,6 +341,18 @@ success:function(data,status){
 
 }
 new DataTable('#ApprovalTab')
+
+// create approvals category
+
+function createApprv(){
+
+  $("#apprvModalBtn").click()
+
+  document.getElementById("apprvFrame").src = "create_approval"
+}
+
+
+$('select').selectpicker();
     
     </script>
   {% endblock content %}

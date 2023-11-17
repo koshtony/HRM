@@ -477,7 +477,8 @@
             {% if user.is_staff %}
             
                 <div class="col-lg-3 col-xl-2" id="fileDiv">
-                    <div class="file-man-box"><input type="checkbox" class="checkboxall" name="filesCheck" value="{{file.pk}}" >
+                    <div class="file-man-box" style="width:200px;">
+                        <input type="checkbox" class="checkboxall" name="filesCheck" value="{{file.pk}}" >
                         <div class="file-img-box">
                             {% if "pdf" in file.properties %}
                             <img src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg" alt="icon">
@@ -569,7 +570,7 @@
      $(document).ready(function(){
           $("#empid").on("keyup",function(){
               var value=$(this).val();
-              alert(value)
+              
              $('#fileDiv').hide()
       
             $('#fileDiv:contains("'+value+'")').show()
@@ -630,7 +631,7 @@ $.ajax({
     },
     success:function(data,status){
 
-        alert(data)
+        
     },
     complete:function(){
                 

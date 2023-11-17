@@ -243,6 +243,15 @@ def get_employee(request):
         
         print(employee)
         return JsonResponse(employee, safe=False)
+    
+def employee_profile(request,id):
+
+    employee = Employee.objects.get(emp_id = id)
+
+    context = {"employee":employee}
+
+    return render(request,'management/employee_profile.html',context)
+
 @csrf_exempt   
 def get_emp_other_details(request):
 
@@ -635,6 +644,10 @@ def edit_att_settings(request,emp_id):
 
     return render(request,'management/edit_attendance.html',context)
 
+def create_approval(request):
+    #
+    context = {"employees":Employee.objects.all()}
+    return render(request,'management/create_approval.html',context)
 
 @login_required
 def upload_leave(request):

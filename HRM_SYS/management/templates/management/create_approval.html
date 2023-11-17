@@ -1,0 +1,71 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<html>
+
+<head>
+    <link rel="stylesheet" href="{% static 'management/vendors/feather/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'vendors/datatables.net-bs4/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'management/vendors/ti-icons/css/themify-icons.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'management/js/select.dataTables.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="{% static 'management/css/vertical-layout-light/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'logo/logo.jpg' %}" />
+    <!-- endinject -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- partial:partials/_navbar.html -->
+       
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <div class="main-panel">        
+                <div class="content-wrapper">
+          <div class="row">
+            <form class="forms-sample">
+                <div class="form-group">
+                  <label for="exampleInputName1">id</label>
+                  <input type="text" class="form-control" id="approvalName" placeholder="Name">
+                </div>
+                
+                <div class="form-group">
+                    <label>select approvers</label>
+                <select class="selectpicker" multiple data-live-search="true">
+
+                    {% for employee in employees %}
+                    <option value="{{employee.emp_id}}">{{employee.first_name}} {{employee.second_name}}</option>
+                    {% endfor %}
+                  </select>
+                  </div>
+                  <br>
+                  <br>
+                <button type="button" class="btn btn-primary mr-2" onclick="addComment()">Remark</button>
+              
+              </form>
+            
+         
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+      </div>
+      </div>
+      </div>
+</body>
+     <script>
+        $('select').selectpicker();
+     </script>
+</html>
+
+  

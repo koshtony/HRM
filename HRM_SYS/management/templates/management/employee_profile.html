@@ -1,0 +1,208 @@
+
+{% extends 'management/base2.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+     <!-- create camera modal here-->
+
+     
+
+
+
+
+
+
+      <!-- partial -->
+      <div class="main-panel">        
+        <div class="content-wrapper">
+          <div class="row">
+            
+            <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <section style="background-color: #eee;">
+                        <div class="container py-5">
+                          <div class="row">
+                            <div class="col">
+                              <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                                {{employee.first_name}} profile
+                              </nav>
+                            </div>
+                          </div>
+                      
+                          <div class="row">
+                            <div class="col-lg-4">
+                              <div class="card mb-4">
+                                <div class="card-body text-center">
+                                  <img src="{{employee.image.url}}" alt="avatar"
+                                    class="rounded-circle img-fluid" style="width: 150px;">
+                                  <h5 class="my-3">{{employee.first_name}} {{employee.first_name}}</h5>
+                                  <p class="text-muted mb-1">{{employee.role}}</p>
+                                  <p class="text-muted mb-4">{{employee.address}}</p>
+                                  <div class="d-flex justify-content-center mb-2">
+                                    <a type="button" class="btn btn-primary" href="tel:{{employee.phone}}"><i class="fas fa-phone"></i></a>
+                                    
+                                    
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                              <div class="card mb-4 mb-lg-0">
+                                <div class="card-body p-0">
+                                  <ul class="list-group list-group-flush rounded-3">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                      <i class="fas fa-envelope fa-lg text-warning"></i>
+                                      <p class="mb-0">{{employee.email}}</p>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                      <i class="fab fa-location-crosshairs fa-lg" style="color: #333333;"></i>
+                                      <p class="mb-0">{{employee.phone}}</p>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                      <i class="fab fa-phone fa-lg" style="color: #55acee;"></i>
+                                      <p class="mb-0">{{employee.address}}</p>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                      <i class="fas fa-location fa-lg" style="color: #ac2bac;"></i>
+                                      <p class="mb-0">{{employee.location}}</p>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                                      <i class="fab fa-whatsapp fa-lg" style="color: #3b5998;"></i>
+                                      <p class="mb-0">{{employee.phone}}</p>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-lg-8">
+                              <div class="card mb-4">
+                                <div class="card-body">
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">National id</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{employee.national_no}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">dob</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{employee.dob}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">next of kin</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{employee.next_kin_name}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">next of kin phone</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{employee.next_kin_phone}}</p>
+                                    </div>
+                                  </div>
+                                  <hr>
+                                  <div class="row">
+                                    <div class="col-sm-3">
+                                      <p class="mb-0">next of kin id</p>
+                                    </div>
+                                    <div class="col-sm-9">
+                                      <p class="text-muted mb-0">{{employee.next_kin_id}}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="card mb-4 mb-md-0">
+                                    <div class="card-body">
+                                      <p class="mb-4"><span class="text-primary font-italic me-1"></span> Finance deatils
+                                      </p>
+                                      <p class="mb-1" style="font-size: .77rem;">Account number</p>
+                                      <div  style="height: 10px;">
+                                        {{employee.account_no}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">Bank</p>
+                                      <div style="height: 10px;">
+                                        {{employee.bank_name}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">salary</p>
+                                      <div  style="height: 10px;">
+                                       {{employee.salary}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">allowance</p>
+                                      <div style="height: 10px;">
+                                       {{employee.salary}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">Addons</p>
+                                      <div style="height: 10px;">
+                                       {{employee.add_ons}}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="card mb-4 mb-md-0">
+                                    <div class="card-body">
+                                      <p class="mb-4"><span class="text-primary font-italic me-1"></span> work status
+                                      </p>
+                                      <p class="mb-1" style="font-size: .77rem;">Role</p>
+                                      <div  style="height: 5px;">
+                                        {{employee.role}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">department</p>
+                                      <div  style="height: 10px;">
+                                        {{employee.department}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">education</p>
+                                      <div  style="height: 10px;">
+                                        {{employee.education}}
+                                        </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">Date of joining</p>
+                                      
+                                      <div  style="height: 10px;">
+                                       {{employee.doj}}
+                                      </div>
+                                      <p class="mt-4 mb-1" style="font-size: .77rem;">Date of leaving</p>
+                                      <div style="height: 10px;">
+                                        {{employee.dol}}
+                                        
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+       
+        <!-- partial -->
+      </div>
+
+    <script>
+     
+
+    </script>
+  {% endblock content %}
+
+  
