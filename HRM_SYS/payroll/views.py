@@ -19,6 +19,7 @@ from datetime import datetime,date, timedelta
 import pandas as pd
 import json
 from decimal import Decimal
+import math
 import pytz
 import os
 # Create your views here.
@@ -368,13 +369,116 @@ def import_extra_payments(request):
 
         return JsonResponse(str(err),safe=False)
 
+def flat_payroll(request):
+    utc=pytz.UTC
+    if request.POST:
+        date1 = request.POST.get("date1")
+        date2 = request.POST.get("date2")
+        payroll_id = request.POST.get("payId")
+        
+            
+        date2 = utc.localize(datetime.strptime(date2, '%Y-%m-%d')+timedelta(days=1))
+        date1 = utc.localize(datetime.strptime(date1, '%Y-%m-%d'))
+        all_payrolls = []
+        for employee in Employee.objects.all():
+
+            
+            overtime_hours = sum([i.overtime_hours for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2 ])
+            overtime_pay = sum([(i.overtime_hours * i.overtime_rate) for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+            if str(overtime_pay).isdecimal()==False:
+                overtime_pay = 0.00
+            incentives  = sum([i.incentive for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+            if str(incentives).isdecimal() ==False:
+                incentives = 0.00
+            loan_deductions = sum([i.loan_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+            if str(loan_deductions).isdecimal() == False:
+                loan_deductions = 0.00
+            welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+            if str(welfare_deductions).isdecimal == False:
+                welfare_deductions == 0.00
+            deductions = 0.00
+            
+            
+           
+            
+            if math.isnan(employee.salary)==True:
+                salary = 0.00
+                gross_pay = Decimal(0.00+incentives+overtime_pay)
+            else:
+                salary = employee.salary
+                gross_pay = Decimal(employee.salary+incentives+overtime_pay)
+            #print(gross_pay)
+            taxable_income  = Decimal(Decimal(gross_pay)-(employee.payroll_settings.nssf))
+            tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,Decimal(gross_pay-employee.payroll_settings.nssf),employee.payroll_settings.relief))
+            net_pay = gross_pay-Decimal(employee.payroll_settings.nssf)\
+                            -tax\
+                            -Decimal(employee.payroll_settings.nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(employee.payroll_settings.housing)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
+            print(gross_pay)
+            data = {
+                        "org_name":employee.payroll_settings.org_name,
+                        "payroll_id":payroll_id,
+                        "employee_id":employee.emp_id,
+                        "sign_id":str(payroll_id)+str(employee.emp_id),
+                        "name":str(employee.first_name)+" "+ str(employee.second_name),
+                        "id_no":employee.national_no,
+                        "pin_no":employee.kra_pin,
+                        "phone":employee.phone,
+                        "role":employee.role,
+                        "account_no":employee.account_no,
+                        "basic_salary":salary,
+                        #"allowance":employee.allowance,
+                        "overtime_pay":overtime_pay,
+                        "overtime_hours":overtime_hours,
+                        "incentives":incentives,
+                        #"add_ons":employee.add_ons,
+                        "total_days":24,
+                        
+                        "deductions":deductions,
+                        "loan_deductions":loan_deductions,
+                        "welfare_deductions":welfare_deductions,
+                        "gross_pay":gross_pay,
+                        "taxable_income":taxable_income,
+                        "tax": tax,
+                        "nhif":employee.payroll_settings.nhif,
+                        "nssf":employee.payroll_settings.nssf,
+                        "insurance":employee.payroll_settings.health_insurance,
+                        "housing": employee.payroll_settings.housing,
+                        "others": employee.payroll_settings.others,
+                        "net_pay":net_pay,
+                        
+                        "created_date": datetime.now(),
+                        "created_time":datetime.now(),
+                        "pay_run": str(date1)+" - "+str(date2)
+                        
 
 
+                    }
+            all_payrolls.append(data)
+        print(all_payrolls)
+        for payroll in all_payrolls:
+
+            pay = PayRoll(**payroll)
+            pay.save()
+
+        return JsonResponse(json.dumps(all_payrolls,default=str),safe=False)
 
 
+def grouping(request):
 
+    if request.POST:
 
+        range1 = request.POST.get("range1")
+        range2 = request.POST.get("range2")
+        group = request.POST.get("group")
 
+        emp_filts = Employee.objects.filter(salary__gte = range1).filter(salary__lte = range2)
+
+        for emp_filt in emp_filts:
+            print(emp_filt)
+            emp_filt.payroll_settings = PayRollSetting.objects.get(category=group)
+            emp_filt.save()
+
+        return JsonResponse(str(range1),safe=False)
 
 
 

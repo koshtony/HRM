@@ -363,6 +363,13 @@
 
                          
                             </div>
+                            <div class="form-group row">
+                              <label>type</label>
+                              <select class="form-control" id="payroll_type">
+                                <option value="flat">flat payroll</option>
+                                <option value="inclusive">inclusive payroll</option>
+                              </select>
+                            </div>
                             <a class="btn btn-primary" onclick="filter()">filter</a>
 
                             <h3>preview</h3>
@@ -517,6 +524,35 @@
                     <div class="col-12 grid-margin stretch-card" id="groups">
                       <div class="card">
                         <div class="card-body">
+                          <h4>group employees</h4>
+                          <form class="forms-sample" onsubmit="grouping();">
+                            {% csrf_token %}
+                          <div class="row">
+                          <div class="col-md-6">
+                          <div class="form-group">
+                            <label>gross range 1</label>
+                            <input type="number" class="form-control" id="range1" required>
+                          </div>
+                          </div>
+                          <div class="col-md-6">
+                          <div class="form-group">
+                            <label>gross range 2</label>
+                            <input type="number" class="form-control" id="range2" required>
+                          </div>
+                          </div>
+                          </div>
+                          <div class="form-group">
+                            <label>select group</label>
+                            <select class="form-control" id="group">
+                              {% for setting in settings %}
+                                <option value="{{setting.category}}">{{setting.category}}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+
+                          <button class="btn btn-secondary" type="submit">set group</button>
+
+                          </form>
                           
                         </div>
                       </div>
@@ -550,58 +586,127 @@ var map = new google.maps.Map(document.getElementById("Map"),mapProp);
 
     
     function filter(){
-        alert($("#date1").val())
-        $.ajax({
+       
+         if($("#payroll_type").val()=="flat"){
+             
+          flat()
 
-            type:"POST",
-            url:"{% url 'payroll-month' %}",
-            data:{
-                 
-                date1: $("#date1").val(),
-                date2: $("#date2").val(),
-                payId: Math.trunc(Date.now() + Math.random()) ,
-                csrfmiddlewaretoken:'{{ csrf_token }}',
+         }else if($("#payroll_type").val()=="inclusive"){
 
-                
-            },
-            beforeSend:function(){
-                $("#loaders3").show()
-             },
-            success:function(data,status){
-              
-                var data = JSON.parse(data)
-                $("#payrollFilt").html('')
-                for(key in data){
-                   console.log(data[key])
-                    $("#payrollFilt").append(
-                        `
-                        <tr>
+          inclusive()
 
-                            <td>${data[key]["payroll_id"]}</td>
-                            <td>${data[key]["org_name"]}</td>
-                            <td>${data[key]["employee_id"]}</td>
-                            <td>${data[key]["sign_id"]}</td>
-                            <td>${data[key]["created"]}</td>
-
-                        </tr>
-                        
-                        `
-                    )
-                }
-                
-                location.reload()
-                
-            }
-            ,
-                complete:function(){
-                
-                $("#loaders3").hide()
-                location.reload()
-  
-               }
-                
-        })
+         }
     }
+
+function inclusive(){
+
+          $.ajax({
+
+        type:"POST",
+        url:"{% url 'payroll-month' %}",
+        data:{
+            
+            date1: $("#date1").val(),
+            date2: $("#date2").val(),
+            payId: Math.trunc(Date.now() + Math.random()) ,
+            csrfmiddlewaretoken:'{{ csrf_token }}',
+
+            
+        },
+        beforeSend:function(){
+            $("#loaders3").show()
+        },
+        success:function(data,status){
+          
+            var data = JSON.parse(data)
+            $("#payrollFilt").html('')
+            for(key in data){
+              console.log(data[key])
+                $("#payrollFilt").append(
+                    `
+                    <tr>
+
+                        <td>${data[key]["payroll_id"]}</td>
+                        <td>${data[key]["org_name"]}</td>
+                        <td>${data[key]["employee_id"]}</td>
+                        <td>${data[key]["sign_id"]}</td>
+                        <td>${data[key]["created"]}</td>
+
+                    </tr>
+                    
+                    `
+                )
+            }
+            
+            location.reload()
+            
+        }
+        ,
+            complete:function(){
+            
+            $("#loaders3").hide()
+            location.reload()
+
+          }
+            
+        })
+
+}
+
+function flat(){
+  alert("yes")
+
+  $.ajax({
+
+type:"POST",
+url:"{% url 'payroll-flat' %}",
+data:{
+    
+    date1: $("#date1").val(),
+    date2: $("#date2").val(),
+    payId: Math.trunc(Date.now() + Math.random()) ,
+    csrfmiddlewaretoken:'{{ csrf_token }}',
+
+    
+},
+beforeSend:function(){
+    $("#loaders3").show()
+},
+success:function(data,status){
+  
+    var data = JSON.parse(data)
+    $("#payrollFilt").html('')
+    for(key in data){
+      console.log(data[key])
+        $("#payrollFilt").append(
+            `
+            <tr>
+
+                <td>${data[key]["payroll_id"]}</td>
+                <td>${data[key]["org_name"]}</td>
+                <td>${data[key]["employee_id"]}</td>
+                <td>${data[key]["sign_id"]}</td>
+                <td>${data[key]["created"]}</td>
+
+            </tr>
+            
+            `
+        )
+    }
+    
+    location.reload()
+    
+}
+,
+    complete:function(){
+    
+    $("#loaders3").hide()
+    location.reload()
+
+  }
+    
+})
+}
 
 
     function showDetails(id){
@@ -760,6 +865,32 @@ beforeSend:function(){
 
             }
    })
+  })
+
+}
+
+
+function grouping(){
+
+  event.preventDefault();
+  
+  $.ajax({
+
+     type:"POST",
+     url:"{% url 'payroll-grouping' %}",
+     data:{
+
+         range1:$("#range1").val(),
+         range2:$("#range2").val(),
+         group: $("#group").val(),
+         csrfmiddlewaretoken:'{{ csrf_token }}'
+
+
+     },
+     success:function(data,status){
+
+         alert(data)
+     }
   })
 
 }

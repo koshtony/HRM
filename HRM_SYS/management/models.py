@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from payroll.models import PayRollSetting
 from tinymce.models import HTMLField
 from datetime import date
-from simple_history.models import HistoricalRecords
+
 import time
 # Create your models here.
 class Profile(models.Model):
@@ -94,7 +94,7 @@ class Employee(models.Model):
     status = models.CharField(max_length=50,choices=(('incomplete',"incomplete"),('active',"active"),('resigned',"resigned"),('terminated',"terminated"),('suspended',"suspended")),default="None")
     image = models.ImageField(default='emoloyee.png',upload_to='emp_images')
     remarks = models.TextField(default="",null=True)
-    history = HistoricalRecords()
+
 
 
 
@@ -162,7 +162,7 @@ class Attendance(models.Model):
     deductions = models.FloatField(default=0.0)
     created = models.DateTimeField(default=timezone.now)
     remarks = models.TextField()
-    history = HistoricalRecords()
+   
 
     def __str__(self):
 
