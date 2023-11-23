@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
+from django.views.decorators.cache import cache_page
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import UpdateView
 from django.contrib.auth.views import PasswordResetView
@@ -31,6 +32,7 @@ import json
 import os
 # Create your views here.
 @login_required
+@cache_page(60 * 60)
 def home(request):
     todos = []
     for todo in Applications.objects.all():
@@ -83,7 +85,7 @@ def add_info(request):
 def approvals(request):
     context = {"appForm":ApprovalForm}
     return render(request,'management/approvals.html',context)
-
+@cache_page(60 * 60)
 def view_approvals(request):
 
     context = {
@@ -134,6 +136,7 @@ def leave(request):
         return JsonResponse("applied successfully",safe=False)
     
 # create departments overview
+@cache_page(60 * 60)
 def departments(request):
 
     departments = Department.objects.all()
@@ -141,7 +144,7 @@ def departments(request):
     context =  {'departments':departments}
 
     return render(request,'management/departments.html',context)
-
+@cache_page(60 * 60)
 def dep_details(request,name):
 
     details = Employee.objects.filter(departments=Department.objects.get(name=name))
@@ -185,7 +188,7 @@ def resign_employee(request):
 
 
 
-
+@cache_page(60 * 60)
 def list_employee(request):
     
     dep_count =  Employee.objects.values('departments__name').annotate(all_deps = Count('departments__name'))
@@ -340,7 +343,7 @@ def import_employee_data(request):
 
 
 
-
+@cache_page(60 * 60)
 def list_files(request):
 
     context ={"files":EmpFiles.objects.all(),"file_form":filesForm()}
@@ -549,6 +552,7 @@ def get_attendance(request):
         
         return JsonResponse(details,safe=False)
 
+@cache_page(60 * 60)
 def view_attendance(request):
 
     attendances =  Attendance.objects.all().order_by('-pk')

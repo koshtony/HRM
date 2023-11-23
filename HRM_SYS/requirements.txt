@@ -38,3 +38,4 @@ django-mathfilters
 django-user-visit
 django-simple-history
 psycopg2
+python-memcached

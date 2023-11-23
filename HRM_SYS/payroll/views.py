@@ -9,6 +9,7 @@ from django.core.mail import EmailMessage
 from django.db.models import Sum,Count
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
 from .forms import ExtraPaymentsForm
 from management.models import * 
 from .formula import tax_amount
@@ -19,12 +20,13 @@ from datetime import datetime,date, timedelta
 import pandas as pd
 import json
 from decimal import Decimal
+
 import math
 import pytz
 import os
 # Create your views here.
 
-
+@cache_page(60 * 60)
 def gen_payroll(request):
     attendance = Attendance.objects.all()
 
