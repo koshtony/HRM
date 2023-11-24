@@ -27,19 +27,31 @@
         <!-- partial:partials/_navbar.html -->
        
         <!-- partial -->
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper" style="zoom:75%">
             <div class="main-panel">        
                 <div class="content-wrapper">
+                  <div id="loaders5" style="display: none;">
+                    <div class="spinner-grow text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-secondary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-success" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    </div>
           <div class="row">
             <form class="forms-sample">
                 <div class="form-group">
-                  <label for="exampleInputName1">id</label>
+                  <label>approval name</label>
                   <input type="text" class="form-control" id="approvalName" placeholder="Name">
                 </div>
-                
+                <br>
+                <br>
                 <div class="form-group">
                     <label>select approvers</label>
-                <select class="selectpicker" multiple data-live-search="true">
+                <select class="selectpicker" multiple data-live-search="true" id="approversName">
 
                     {% for employee in employees %}
                     <option value="{{employee.emp_id}}">{{employee.first_name}} {{employee.second_name}}</option>
@@ -48,7 +60,7 @@
                   </div>
                   <br>
                   <br>
-                <button type="button" class="btn btn-primary mr-2" onclick="addComment()">Remark</button>
+                <button type="button" class="btn btn-primary mr-2" onclick="createApproval()">create</button>
               
               </form>
             
@@ -65,6 +77,35 @@
 </body>
      <script>
         $('select').selectpicker();
+
+        function createApproval(){
+
+          $.ajax({
+
+            type:"POST",
+             url:"{% url 'management_create_approval' %}",
+             data:{
+
+                approval:$("#approvalName").val().toString(),
+                approvers:$("#approversName").val().toString()
+             },
+             beforeSend:function(){
+                $("#loaders5").show()
+             },
+             success:function(data,status){
+               alert(data)
+             },
+             complete:function(){
+                
+                $("#loaders5").hide()
+                location.reload()
+  
+               }
+
+          })
+        }
+
+
      </script>
 </html>
 

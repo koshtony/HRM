@@ -32,7 +32,7 @@ import json
 import os
 # Create your views here.
 @login_required
-@cache_page(60 * 60)
+
 def home(request):
     todos = []
     for todo in Applications.objects.all():
@@ -85,7 +85,7 @@ def add_info(request):
 def approvals(request):
     context = {"appForm":ApprovalForm}
     return render(request,'management/approvals.html',context)
-@cache_page(60 * 60)
+
 def view_approvals(request):
 
     context = {
@@ -136,7 +136,7 @@ def leave(request):
         return JsonResponse("applied successfully",safe=False)
     
 # create departments overview
-@cache_page(60 * 60)
+
 def departments(request):
 
     departments = Department.objects.all()
@@ -144,7 +144,7 @@ def departments(request):
     context =  {'departments':departments}
 
     return render(request,'management/departments.html',context)
-@cache_page(60 * 60)
+
 def dep_details(request,name):
 
     details = Employee.objects.filter(departments=Department.objects.get(name=name))
@@ -188,7 +188,6 @@ def resign_employee(request):
 
 
 
-@cache_page(60 * 60)
 def list_employee(request):
     
     dep_count =  Employee.objects.values('departments__name').annotate(all_deps = Count('departments__name'))
@@ -378,7 +377,7 @@ def lookup_employee(request):
 
     
 
-@cache_page(60 * 60)
+
 def list_files(request):
 
     context ={"files":EmpFiles.objects.all(),"file_form":filesForm()}
@@ -587,7 +586,6 @@ def get_attendance(request):
         
         return JsonResponse(details,safe=False)
 
-@cache_page(60 * 60)
 def view_attendance(request):
 
     attendances =  Attendance.objects.all().order_by('-pk')
@@ -682,9 +680,26 @@ def edit_att_settings(request,emp_id):
             form.save()
 
     return render(request,'management/edit_attendance.html',context)
-
+@csrf_exempt
 def create_approval(request):
-    #
+    
+    if request.POST:
+
+        approval = request.POST.get("approval")
+        approvers = "\n".join(request.POST.get("approvers").split(','))
+
+        apps = Approvals(
+
+            name = approval, 
+            approvers = approvers,
+            created = datetime.now(),
+            remarks = "created by -> "+str(request.user.username)
+        )
+        apps.save()
+
+        return JsonResponse("created successfully",safe=False)
+
+
     context = {"employees":Employee.objects.all()}
     return render(request,'management/create_approval.html',context)
 

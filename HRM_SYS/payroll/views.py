@@ -26,7 +26,7 @@ import pytz
 import os
 # Create your views here.
 
-@cache_page(60 * 60)
+
 def gen_payroll(request):
     attendance = Attendance.objects.all()
 
