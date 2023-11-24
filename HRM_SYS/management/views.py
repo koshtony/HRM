@@ -728,9 +728,9 @@ def upload_process(request):
             '''
             approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
-            print(approvers)
+     
             for approve in approvers:
-                print(approve)
+            
                 notify = Notifications(
                     recipient = User.objects.get(username=approve),
                     info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
