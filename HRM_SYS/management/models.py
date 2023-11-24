@@ -102,6 +102,14 @@ class Employee(models.Model):
     def __str__(self):
 
         return self.emp_id
+    
+    def update(self,*args, **kwargs):
+            for name,values in kwargs.items():
+                try:
+                    setattr(self,name,values)
+                except KeyError:
+                    pass
+            self.save()
 class AttSettings(models.Model):
     employee_id = models.CharField(max_length=100,null=True)
     start = models.TimeField(default=timezone.now())

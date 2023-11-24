@@ -7,7 +7,7 @@ from .views import home,clock,add_department,view_attendance,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
             files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details,view_approval_details,\
-            resign_employee,employee_profile,create_approval
+            resign_employee,employee_profile,create_approval,import_att_settings,lookup_employee
 
             
 
@@ -30,6 +30,8 @@ urlpatterns = [
        path('department_details/<str:name>',views.dep_details,name="management_departments_details"),
        path('get_employee',views.get_employee,name="management_get_employee"),
        path('import_employee_data',views.import_employee_data,name="management_import_employee_data"),
+       path('lookup_employee',views.lookup_employee,name="management_lookup_employee"),
+        path('import_att_settings',views.import_att_settings,name="management_import_att_settings"),
       path('get_files',views.get_employee,name="management_get_files"),
       path('get_emp_other_details',views.get_emp_other_details,name="management_get_emp_other_details"),
       path('files_details/<str:id>',views.files_details,name="management_files_details"),

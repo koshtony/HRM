@@ -338,10 +338,45 @@ def import_employee_data(request):
             return JsonResponse(str(err),safe=False)
 
 
+@csrf_exempt
+def import_att_settings(request):
+
+    try:
+
+        file = request.FILES.get("file")
+        settings_df = pandas.read_excel(file,sheet_name='attendance')
+        for items in settings_df.to_dict('records'):
+            sett = AttSettings(
+                    **items
+                )
+            sett.save()
+            return JsonResponse("done",safe=False)
+    except Exception as err:
+
+        return JsonResponse(str(err),safe=False)
+
+
+
+@csrf_exempt
+def lookup_employee(request):
+
+    try:
+
+        file = request.FILES.get("file")
+        settings_df = pandas.read_excel(file,sheet_name='employee')
+        for items in settings_df.to_dict('records'):
+            employee = Employee.objects.get(emp_id = items["emp_id"])
+            employee.update(**items)
+            
+            return JsonResponse("done",safe=False)
+    except Exception as err:
+
+        return JsonResponse(str(err),safe=False)
 
 
 
 
+    
 
 @cache_page(60 * 60)
 def list_files(request):
