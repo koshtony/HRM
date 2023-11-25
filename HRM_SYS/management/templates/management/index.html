@@ -19,7 +19,7 @@
               <div class="row">
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                   <h3 class="font-weight-bold">Welcome</h3>
-                  <h4 class="font-weight-normal mb-0" style="color:yellowgreen">{{user.profile.first}}@{{user.username}} </h4>
+                  <h4 class="font-weight-normal mb-0" style="color:yellowgreen"> {{user.profile.first}} </h4>
                  
                                         </div>
                 <div class="col-12 col-xl-4">
@@ -171,14 +171,14 @@
                 </div>.
               </div>
             </div>
-            <div class="col-md-6 grid-margin transparent">
+            <div class="col-md-6 stretch-card grid-margin">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title">To do</p>
                                                                                                                                                                                           
                     
-                        <div class="list-wrapper px-3">
-                          <ul class="d-flex flex-column-reverse todo-list">
+                        <div class="li-wrapper px-3">
+                          <ul class="d-flex flex-column-reverse todo-list" style="backgroud-color:grey">
                             {% for todo in todos %}
                             <li>
                               <div class="form-check">

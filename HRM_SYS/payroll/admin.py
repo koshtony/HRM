@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(PayRoll)
 admin.site.register(PayRollSetting)
 admin.site.register(ExtraPayments)
+admin.site.register(Payroll_Rates)

@@ -80,3 +80,19 @@ class ExtraPayments(models.Model):
     def __str__(self):
 
         return self.employee_id
+
+class Payroll_Rates(models.Model):
+
+    nhif_rates_file = models.FileField(upload_to='nhif_files')
+    nhif_relief_rate = models.FloatField(default=15.0)
+    nssf_rate = models.FloatField(default=6.0)
+    house_levy_rate = models.FloatField(default=1.5)
+    paye_rates = models.FileField(upload_to='paye_files')
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+
+        return self.created
+
+
+
