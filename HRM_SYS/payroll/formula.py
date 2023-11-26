@@ -1,15 +1,19 @@
+from .models import Payroll_Rates
 from decimal import Decimal
+import pandas 
+import math
+
 tax_formula = '''24000=10,8333=25,467667=30,300000=32.5
 '''
 
 def tax_amount(rates,amount,relief):
-    if str(amount).isdecimal() == False:
+    if math.isnan(amount) == True:
         amount = 0.00
-    first = float(rates.split(',')[0].split("=")[0])
-    first_rate = float(rates.split(',')[0].split("=")[1])/100
-    second = float(rates.split(',')[1].split("=")[0])
-    second_rate = float(rates.split(',')[1].split("=")[1])/100
-    third_rate = float(rates.split(',')[2].split("=")[1])/100
+    first = Decimal(rates.split(',')[0].split("=")[0])
+    first_rate = Decimal(rates.split(',')[0].split("=")[1])/100
+    second = Decimal(rates.split(',')[1].split("=")[0])
+    second_rate = Decimal(rates.split(',')[1].split("=")[1])/100
+    third_rate = Decimal(rates.split(',')[2].split("=")[1])/100
     tax=0
 
 
@@ -21,7 +25,7 @@ def tax_amount(rates,amount,relief):
         
         tax += Decimal(((amount - first - second )*third_rate)+(first*first_rate)+(second*second_rate))-relief
 
-    elif amount <= first and amount >= 0:
+    elif amount <= first:
 
         tax += 0
 
@@ -29,6 +33,49 @@ def tax_amount(rates,amount,relief):
 
 
 
+def nhif_pay(gross):
+
+    rates = Payroll_Rates.objects.last()
+    nhif_amount = 0
+    if len(str(rates.nhif_rates_file.url))>0:
+
+        rates_df =  pandas.read_excel(rates.nhif_rates_file.url)
+
+        for i,rows in rates_df.iterrows():
+
+            if pandas.isna(rows["to"])==True:
+                if gross >= rows["from"]:
+
+                    nhif_amount = rows["amount"]
+            
+            else:
 
 
+                if gross >= rows["from"] and gross <= rows["to"]:
 
+                    nhif_amount = rows["amount"]
+    if nhif_amount*(rates.nhif_relief_rate/100) > 5000:
+        nhif_amount = nhif_amount - 5000
+    else:
+        nhif_amount = nhif_amount - (nhif_amount*(rates.nhif_relief_rate/100))
+    return nhif_amount
+
+#print(nhif_pay(20000))
+
+def nssf_pay(gross):
+
+    rates = Payroll_Rates.objects.last()
+
+    nssf_amount = gross*(Decimal(rates.nssf_rate/100))
+
+    return nssf_amount 
+
+def house_levy_pay(gross):
+
+    rates = Payroll_Rates.objects.last()
+
+    levy_amount = gross*(Decimal(rates.house_levy_rate/100))
+
+    return levy_amount
+
+print(tax_amount(tax_formula,40000,2400))

@@ -92,7 +92,7 @@ class Payroll_Rates(models.Model):
 
     def __str__(self):
 
-        return self.created
+        return str(self.created)
 
 
 
