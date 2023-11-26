@@ -20,6 +20,17 @@
                 <div class="col-12 col-xl-8 mb-4 mb-xl-0">
                   <h3 class="font-weight-bold">Welcome</h3>
                   <h4 class="font-weight-normal mb-0" style="color:yellowgreen"> {{user.profile.first}} </h4>
+                  <div id="loaders5" style="display: none;">
+                    <div class="spinner-grow text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-secondary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-success" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    </div>
                  
                                         </div>
                 <div class="col-12 col-xl-4">
@@ -378,10 +389,19 @@ function approveModal(id,link){
 
          id:id
       },
+      beforeSend:function(){
+                $("#loaders2").show()
+             },
       success:function(data,status){
-         alert(data)
+       
         document.getElementById("detDiv").innerHTML = data
-      }
+      },
+      complete:function(){
+                
+                $("#loaders2").hide()
+                
+  
+               }
   })
 }
 
@@ -413,12 +433,12 @@ function doneApprove(){
              },
             
     success:function(data,status){
-      alert(data)
+      console.log(data)
     },
     complete:function(){
                 
                 $("#loaders2").hide()
-                location.reload()
+               
   
                }
      
@@ -437,9 +457,19 @@ function getPk(id){
         csrfmiddlewaretoken:'{{ csrf_token }}'
 
       },
+      beforeSend:function(){
+                $("#loaders5").show()
+             },
+
       success:function(data,status){
         alert(data)
-      }
+      },
+      complete:function(){
+                
+                $("#loaders5").hide()
+                location.reload()
+  
+               }
    })
 }
 
@@ -456,9 +486,18 @@ function reject(id){
             csrfmiddlewaretoken:'{{ csrf_token }}'
 
           },
+          beforeSend:function(){
+                $("#loaders5").show()
+             },
           success:function(data,status){
             alert(data)
-          }
+          },
+          complete:function(){
+                
+                $("#loaders5").hide()
+                location.reload()
+  
+               }
           })
 
 }
