@@ -175,13 +175,13 @@ MEDIA_URL = 'media/'
 
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
     "mediafiles": {
-        "BACKEND": "storages.backends.dropbox.DropBoxStorage",
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
 }
 

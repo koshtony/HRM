@@ -184,6 +184,7 @@ class Approvals(models.Model):
     name = models.CharField(max_length=100,default="")
     approvers = models.TextField(default="")
     created = models.DateField(default=timezone.now)
+    template = HTMLField(null=True)
     remarks = models.TextField() 
 
     def __str__(self):

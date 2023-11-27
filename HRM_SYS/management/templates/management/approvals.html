@@ -21,6 +21,7 @@
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Initiate approvals</h4>
+               
                   <p class="card-description">
                     <div id="loaders5" style="display: none;">
                       <div class="spinner-grow text-primary" role="status">
@@ -32,7 +33,7 @@
                       <div class="spinner-grow text-success" role="status">
                         <span class="sr-only">Loading...</span>
                       </div>
-                      </div>
+                    </div>
                     
                   </p>
                   <form class="forms-sample" ectype="multipart/form-data" method="POST" id="ApprovalForm">
@@ -41,6 +42,17 @@
                  
                     <div class="form-group">
                        {{appForm.approvals | as_crispy_field}}
+                    </div>
+                    <div id="loaders10" style="display: none;">
+                      <div class="spinner-grow text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-secondary" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                      <div class="spinner-grow text-success" role="status">
+                        <span class="sr-only">Loading...</span>
+                      </div>
                     </div>
                     <div class="form-group">
                       {{appForm.media}}
@@ -72,7 +84,7 @@
       </div>
 
     <script>
-
+    
 function loadApproval(){
   
   $("#ApprovalForm").submit(function(e){
@@ -103,6 +115,36 @@ beforeSend:function(){
   })
 
 }
+
+var approval = document.getElementById("id_approvals")
+ approval.addEventListener("change",(event) => {
+
+ 
+  
+  $.ajax({
+      
+       method:"post",
+       url:"{% url 'management_get_approval_temp' %}",
+       data:{
+           approval:approval.value
+       },
+       beforeSend:function(){
+                $("#loaders10").show()
+             },
+       success:function(data,status){
+          
+        tinyMCE.get('id_details').setContent(data);
+       },
+       complete:function(){
+                
+                $("#loaders10").hide()
+                location.reload()
+  
+               }
+  })
+
+ })
+
     
     </script>
   {% endblock content %}

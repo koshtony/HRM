@@ -19,7 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.db.models import Count,Sum
 from django.db.models.functions import ExtractMonth
-from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm
+from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm,CreateApprovalForm
 from .models import *
 from .temps import gen_temp
 from payroll.models import PayRoll
@@ -700,8 +700,25 @@ def create_approval(request):
         return JsonResponse("created successfully",safe=False)
 
 
-    context = {"employees":Employee.objects.all()}
+    context = {"employees":Employee.objects.all(),"form":CreateApprovalForm()}
     return render(request,'management/create_approval.html',context)
+@csrf_exempt
+def get_approval_temp(request):
+
+    if request.POST:
+        approval = request.POST.get("approval")
+       
+        if len(Applications.objects.filter(type=Approvals.objects.get(pk=int(approval))).filter(applicant=request.user).filter(status="complete"))>0:
+
+            data = Applications.objects.filter(type=Approvals.objects.get(name=approval)).filter(applicant=request.user).filter(status="complete").details
+
+            return JsonResponse(data,safe=False)
+        else:
+            data = Approvals.objects.filter(pk=int(approval))[0].template
+            print(data)
+            return JsonResponse(data,safe=False)
+
+        
 
 @login_required
 def upload_leave(request):

@@ -1,5 +1,5 @@
 from django import forms 
-from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage,Events,AttSettings
+from .models import Department,Roles,Employee,Applications,Leave,Process,Profile,EmpFiles,ChatMessage,Events,AttSettings,Approvals
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from tinymce.widgets import TinyMCE
@@ -44,6 +44,16 @@ class ApprovalForm(forms.ModelForm):
 
         model = Process
         fields = ['approvals','details','attachments']
+
+class CreateApprovalForm(forms.ModelForm):
+    template = forms.CharField(widget=TinyMCE(
+            attrs={'cols': 15, 'rows': 5})
+    )
+    class Meta:
+
+        model = Approvals
+        fields = ['template']
+
 
 class LeaveForm(forms.ModelForm):
 
