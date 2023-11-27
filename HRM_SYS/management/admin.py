@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Employee,Department,Roles,Approvals,\
-Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events,Station
+Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events,Station,approvalTrack
 
 # Register your models here.
 
@@ -59,4 +59,5 @@ admin.site.register(Leave)
 admin.site.register(Profile)
 admin.site.register(Events)
 admin.site.register(Station)
+admin.site.register(approvalTrack)
 

@@ -199,6 +199,15 @@
     <div class="container p-0" style="margin-top:50px; zoom:75%">
 
 		<h1 class="h3 mb-3">Messages</h1>
+        <div class="flex-grow-1">
+
+            <input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname" onkeyup="search()">
+            <datalist id="searchUser">
+                {% for profile in profiles %}
+                <option value="{{profile.user.username}}">{{profile.user.username}}</option>
+                {% endfor %}
+            </datalist>
+        </div>
         <button class="btn btn-outline" onclick="showProfiles()" id="chatBtn"  style="display:none"><i class="fa fa-arrow-left"></i></button>
 
 		<div class="card">
@@ -207,15 +216,7 @@
                     
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
-							<div class="flex-grow-1">
-
-								<input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname" onkeyup="search()">
-								<datalist id="searchUser">
-									{% for profile in profiles %}
-                                    <option value="{{profile.user.username}}">{{profile.user.username}}</option>
-									{% endfor %}
-								</datalist>
-							</div>
+							
 						</div>
 					</div>
 					<div>

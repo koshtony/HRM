@@ -42,7 +42,7 @@
                     </div>
                     </div>
           <div class="row">
-            <form class="forms-sample">
+            <form class="forms-sample" ectype="multipart/form-data">
                 <div class="form-group">
                   <label>approval name</label>
                   <input type="text" class="form-control" id="approvalName" placeholder="Name">
@@ -59,11 +59,7 @@
                   </select>
                   </div>
                 <label>create template</label>
-                  <div class="form-group">
-                   
-                    {{form.media}}
-                    {{form.template}}
-                  </div>
+                 
                   <br>
                   <br>
                 <button type="button" class="btn btn-primary mr-2" onclick="createApproval()">create</button>

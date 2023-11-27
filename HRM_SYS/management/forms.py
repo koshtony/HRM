@@ -52,7 +52,7 @@ class CreateApprovalForm(forms.ModelForm):
     class Meta:
 
         model = Approvals
-        fields = ['template']
+        fields = '__all__'
 
 
 class LeaveForm(forms.ModelForm):

@@ -708,14 +708,15 @@ def get_approval_temp(request):
     if request.POST:
         approval = request.POST.get("approval")
        
-        if len(Applications.objects.filter(type=Approvals.objects.get(pk=int(approval))).filter(applicant=request.user).filter(status="complete"))>0:
+        try:
 
             data = Applications.objects.filter(type=Approvals.objects.get(name=approval)).filter(applicant=request.user).filter(status="complete").details
 
             return JsonResponse(data,safe=False)
-        else:
+        except:
+
             data = Approvals.objects.filter(pk=int(approval))[0].template
-            print(data)
+         
             return JsonResponse(data,safe=False)
 
         

@@ -119,6 +119,9 @@ beforeSend:function(){
 var approval = document.getElementById("id_approvals")
  approval.addEventListener("change",(event) => {
 
+
+
+ 
  
   
   $.ajax({
@@ -138,12 +141,14 @@ var approval = document.getElementById("id_approvals")
        complete:function(){
                 
                 $("#loaders10").hide()
-                location.reload()
+                
   
                }
   })
 
+
  })
+
 
     
     </script>

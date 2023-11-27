@@ -433,13 +433,13 @@ function doneApprove(){
              },
             
     success:function(data,status){
-      console.log(data)
+      alert(data)
     },
     complete:function(){
                 
                 $("#loaders2").hide()
                
-  
+                location.reload()
                }
      
   })
