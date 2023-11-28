@@ -26,6 +26,8 @@ from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
 import string
 import pandas
+import numpy 
+import math
 import folium
 import time
 import json
@@ -289,25 +291,30 @@ def import_employee_data(request):
             file = request.FILES.get("file")
             emp_df = pandas.read_excel(file ,sheet_name='employee')
             settings_df = pandas.read_excel(file,sheet_name='attendance')
+            settings_df[settings_df.select_dtypes(include=numpy.number).columns.tolist()] = settings_df[settings_df.select_dtypes(include=numpy.number).columns.tolist()].applymap(lambda x:math.trunc(x) if math.isnan(x)==False else 0)
             for items in emp_df.to_dict('records'):
                 # create the user
 
                 passwd = str(hash(date.today()))+str(items["emp_id"])
                 # load employe data
-                emp = Employee(
-                    emp_id = items["emp_id"], first_name = items["first_name"],second_name = items["second_name"],national_no = items["national_no"],
-                    kra_pin = items["kra_pin"],email = items["email"],dob=items["dob"],phone=items["phone"],next_kin_name = items["next_kin_name"],next_kin_id=items["next_kin_id"],
-                    next_kin_phone = items["next_kin_phone"],address = items["address"],location = items["location"],station = Station.objects.filter(name = items["station_id"])[0],
-                    role = Roles.objects.filter(name = items["role_id"])[0],departments = Department.objects.filter(name = items["departments_id"])[0], education_level = items["education_level"],doj=items["doj"],
-                    dol = items["dol"],payroll_settings = PayRollSetting.objects.filter(category = items["payroll_settings_id"])[0],
-                    account_no = items["account_no"], bank_name = items["bank_name"],salary = items["salary"],
-                    allowance = items["allowance"], add_ons = items["add_ons"],status = "incomplete"
+                if Employee.objects.filter(emp_id=items["emp_id"]).exists() == False:
+                    emp = Employee(
+                        emp_id = items["emp_id"], first_name = items["first_name"],second_name = items["second_name"],national_no = items["national_no"],
+                        kra_pin = items["kra_pin"],email = items["email"],dob=items["dob"],phone=items["phone"],next_kin_name = items["next_kin_name"],next_kin_id=items["next_kin_id"],
+                        next_kin_phone = items["next_kin_phone"],address = items["address"],location = items["location"],station = Station.objects.filter(name = items["station_id"])[0],
+                        role = Roles.objects.filter(name = items["role_id"])[0],departments = Department.objects.filter(name = items["departments_id"])[0], education_level = items["education_level"],doj=items["doj"],
+                        dol = items["dol"],payroll_settings = PayRollSetting.objects.filter(category = items["payroll_settings_id"])[0],
+                        account_no = items["account_no"], bank_name = items["bank_name"],salary = items["salary"],
+                        allowance = items["allowance"], add_ons = items["add_ons"],status = "incomplete"
 
-                )
-                emp.save()
+                    )
+                    emp.save()
+                else:
+
+                    return JsonResponse(str(items["emp_id"])+" already exists",safe=False)
                 # create user
                 user = User(
-                    username = items["emp_id"],password=passwd,email = items["email"]
+                    username = math.trunc(items["emp_id"]),password=passwd,email = items["email"]
                 )
                 user.save()
 
@@ -363,11 +370,13 @@ def lookup_employee(request):
 
         file = request.FILES.get("file")
         settings_df = pandas.read_excel(file,sheet_name='employee')
+        settings_df[settings_df.select_dtypes(include=numpy.number).columns.tolist()] = settings_df[settings_df.select_dtypes(include=numpy.number).columns.tolist()].applymap(lambda x:math.trunc(x) if math.isnan(x)==False else 0)
         for items in settings_df.to_dict('records'):
             employee = Employee.objects.get(emp_id = items["emp_id"])
+            print(employee)
             employee.update(**items)
             
-            return JsonResponse("done",safe=False)
+        return JsonResponse("done",safe=False)
     except Exception as err:
 
         return JsonResponse(str(err),safe=False)
@@ -1113,7 +1122,7 @@ def show_map(request,coords):
    folium.Marker(coords).add_to(map)
    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)in javascript
    folium.LayerControl().add_to(map)
 
   
@@ -1179,10 +1188,10 @@ def sent_msg(request,pk):
         chat = data["msg"]
         anony = data["anony"]
       
-        print(anony)
+   
         #Profile.objects.get(user__username="hummingbird")
         if anony == "yes":
-            print("yes")
+     
             new_chat = ChatMessage(
                 body = chat , 
                 sender = Profile.objects.get(user__username="anonymous") ,
