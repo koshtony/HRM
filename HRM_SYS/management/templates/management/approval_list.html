@@ -66,6 +66,13 @@
     border:1px solid #94a0b4;
     color:#000
 }
+
+.modal-content{
+    -webkit-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    -moz-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    -o-box-shadow: 0 5px 15px rgba(0,0,0,0);
+    box-shadow: 0 5px 15px rgba(0,0,0,0);
+}
 </style>
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#recallModal" style="display:none"  id="recallModalBtn">
@@ -73,12 +80,12 @@
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="recallModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="recallModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       
         <div id="loaders5" style="display: none;">
           <div class="spinner-grow text-primary" role="status">
             <span class="sr-only">Loading...</span>
@@ -109,10 +116,7 @@
         </form>
        
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-       
-      </div>
+     
     </div>
   </div>
 </div>
@@ -127,19 +131,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">create approvals category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+       
       </div>
       <div class="modal-body">
       
        <iframe height="500px" width="100%" id="apprvFrame"></iframe>
        
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-       
-      </div>
+    
     </div>
   </div>
 </div>
@@ -161,7 +160,7 @@
             <div class="tree">
               <ul>
                 {% for application in applications %}
-                {% if application.applicant.username == request.user.username %}
+                
                   <li>
                       <span style="background-color:aquamarine"><i class="icon-calendar"></i>{{application.type.name}} -> {{application.created_time}} -> {{application.created_date}} </span>
                       <ul>
@@ -182,8 +181,7 @@
                           
                       </ul>
                   </li>
-                  
-                  {% endif %}
+                
                   {% endfor %}
                   
               </ul>
@@ -238,7 +236,7 @@
                                 {{application.applicant}}
                               </td>
                               <td>
-                                {{application.approvers}}
+                                <button class="btn btn-outline" onclick="getApprovers('{{application.pk}}')"><i class="fa fa-eye"></i></button>
                               </td>
                               <td>
                                 <div class="progress">
@@ -280,6 +278,7 @@
             
           </div>
         </div>
+        
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
@@ -289,8 +288,7 @@
       </div>
       
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
     <script>
@@ -313,7 +311,7 @@ new DataTable('#ApprovalTab');
 });
 
 function openRecallModal(id){
-  alert(id)
+  
 
     $("#recallModalBtn").click()
     $("#approvalId").val(id)
@@ -383,6 +381,25 @@ function createApprv(){
   $("#apprvModalBtn").click()
 
   document.getElementById("apprvFrame").src = "create_approval"
+}
+
+function getApprovers(id){
+
+      $.ajax({
+           
+          type:"post",
+          url:"{% url 'management_get_approvals_name' %}",
+          data:{
+
+               pk:id
+          },
+          success:function(data,status){
+
+              alert(data)
+          }
+      })
+    
+     
 }
 
 

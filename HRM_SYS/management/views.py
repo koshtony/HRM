@@ -38,11 +38,12 @@ import os
 def home(request):
     todos = []
     for todo in Applications.objects.all():
-        if request.user.username in todo.approvers.split(','):
+        if request.user.username == todo.approvers.split(',')[0]:
             apps = [
-                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,todo.applicant.username
+                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found'
             ]
             todos.append(apps)
+    print(todos)
     event = Events.objects.last()
     department = Department.objects.all()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
@@ -97,6 +98,30 @@ def view_approvals(request):
         }
 
     return render(request,'management/approval_list.html',context)
+
+@csrf_exempt
+def get_approvals_name(request):
+
+    if request.POST:
+        pk = request.POST.get("pk")
+      
+        apps = Applications.objects.get(pk=pk)
+        names = []
+        for id in apps.approvers.split(','):
+            
+            try:
+                Employee.objects.get(emp_id = id)
+
+                names.append(str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).first_name))
+            except:
+
+                names.append("couldn't find name for "+str(id))
+
+        return JsonResponse(" -> ".join(names),safe=False)
+
+
+
+
 
 def leave(request):
 
@@ -719,8 +744,8 @@ def get_approval_temp(request):
        
         try:
 
-            data = Applications.objects.filter(type=Approvals.objects.get(name=approval)).filter(applicant=request.user).filter(status="complete").details
-
+            data = Applications.objects.filter(type=Approvals.objects.get(pk=int(approval))).filter(applicant=request.user).filter(status="complete")[0].details
+            print(data)
             return JsonResponse(data,safe=False)
         except:
 
@@ -811,7 +836,7 @@ def approve(request):
         id = request.POST.get("id")
         application = Applications.objects.get(pk=id)
         application.approvers = ",".join([i for i in application.approvers.split(',') if i!=request.user.username])
-        print(application.approvers)
+        #print(application.approvers)
 
         application.stage +=1
         if application.stage == application.expected:

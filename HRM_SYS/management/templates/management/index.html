@@ -68,6 +68,7 @@
               </div>
             </div>
             <div class="col-md-6 grid-margin transparent">
+              <a>
               <div class="row">
                 <div class="col-md-6 mb-4 stretch-card transparent" >
                   <div class="card card-tale" style="background-color: yellowgreen;">
@@ -77,6 +78,7 @@
                       
                     </div>
                   </div>
+                </a>
                 </div>
                 <div class="col-md-6 mb-4 stretch-card transparent">
                   <div class="card card-dark-blue">
@@ -188,14 +190,14 @@
                   <p class="card-title">To do</p>
                                                                                                                                                                                           
                     
-                        <div class="li-wrapper px-3">
-                          <ul class="d-flex flex-column-reverse todo-list" style="backgroud-color:grey">
+                        <div class="li-wrapper px-3" >
+                          <ul class="d-flex flex-column-reverse todo-list">
                             {% for todo in todos %}
                             <li>
                               <div class="form-check">
                                 <label class="form-check-label">
                                   <input class="checkbox" type="checkbox" onclick="getPk('{{todo.0}}')">
-                                  {{todo.5}} {{todo.6}}
+                                  {{todo.5}} <strong style="color:green">{{todo.6}}</strong> <small> {{todo.2}}</small>
                                 </label>
                               </div>
                               &nbsp;&nbsp;&nbsp;&nbsp;

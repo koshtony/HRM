@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from .forms import ExtraPaymentsForm
 from management.models import * 
-from .formula import tax_amount,nhif_pay,nssf_pay,house_levy_pay
+from .formula import tax_amount,nhif_pay,nssf_pay,house_levy_pay,nhif_relief
 from .temps import gen_temp
 from .models import *
 import datetime
@@ -70,29 +70,42 @@ def monthly_payroll(request):
                 overtime_hours = sum([i.overtime_hours for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2 ])
 
                 overtime_pay = sum([(i.overtime_hours * i.overtime_rate) for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
-
+                if str(overtime_pay).isdecimal()==False:
+                    overtime_pay = 0.00
                 incentives  = sum([i.incentive for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                if str(incentives).isdecimal() ==False:
+                    incentives = 0.00
                 loan_deductions = sum([i.loan_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                if str(loan_deductions).isdecimal() == False:
+                    loan_deductions = 0.00
                 welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
+                if str(welfare_deductions).isdecimal == False:
+                    welfare_deductions == 0.00
                 try:
                     deductions = Decimal(((AttSettings.objects.get(employee_id=employee.emp_id).expected_days)-days)*AttSettings.objects.get(employee_id=employee.emp_id).deduction_per_day)
                 except:
                     deductions = 0.00
                 
-                gross_pay = Decimal(Decimal(employee.salary)+Decimal(incentives))+Decimal(overtime_pay)
+                if math.isnan(employee.salary)==True:
+                    gross_pay = Decimal(0.00+Decimal(incentives))+Decimal(overtime_pay)
+                
+                else:
+                    gross_pay = Decimal(employee.salary+incentives+overtime_pay)
 
                 nhif = nhif_pay(gross_pay)
 
-                nssf = nssf_pay(gross_pay)
+                nssf = employee.payroll_settings.nssf
 
                 house_levy = house_levy_pay(gross_pay)
         
                 taxable_income  = Decimal(Decimal(gross_pay)-(nssf))
 
                 tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief))
+                
+                nhif_relief = Decimal(nhif_relief(nhif,tax))
 
                 net_pay = gross_pay-Decimal(nssf)\
-                        -tax\
+                        -tax-nhif_relief\
                         -Decimal(nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(house_levy)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
                 
                 data = {
@@ -122,9 +135,9 @@ def monthly_payroll(request):
                     "tax": tax,
                     "nhif":nhif,
                     "nssf":nssf,
-                    "insurance":employee.payroll_settings.health_insurance,
+                    
                     "housing": house_levy,
-                    "others": employee.payroll_settings.others,
+                   
                     "net_pay":net_pay,
                     
                     "created_date": datetime.now(),
@@ -418,16 +431,18 @@ def flat_payroll(request):
             
             nhif = nhif_pay(gross_pay)
 
-            nssf = nssf_pay(gross_pay)
+
+            nssf = employee.payroll_settings.nssf
 
             house_levy = house_levy_pay(gross_pay)
 
             taxable_income  = Decimal(Decimal(gross_pay)-(nssf))
             tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief))
-            print(taxable_income)
-            print(tax)
+
+            nhif_relief = Decimal(nhif_relief(nhif,tax))
+            
             net_pay = gross_pay-Decimal(nssf)\
-                            -tax\
+                            -tax-nhif_relief\
                             -Decimal(nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(house_levy)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
       
             data = {
@@ -457,9 +472,9 @@ def flat_payroll(request):
                         "tax": tax,
                         "nhif":nhif,
                         "nssf":nssf,
-                        "insurance":employee.payroll_settings.health_insurance,
+                       
                         "housing": house_levy,
-                        "others": employee.payroll_settings.others,
+                        
                         "net_pay":net_pay,
                         
                         "created_date": datetime.now(),

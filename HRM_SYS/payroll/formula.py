@@ -54,10 +54,7 @@ def nhif_pay(gross):
                 if gross >= rows["from"] and gross <= rows["to"]:
 
                     nhif_amount = rows["amount"]
-    if nhif_amount*(rates.nhif_relief_rate/100) > 5000:
-        nhif_amount = nhif_amount - 5000
-    else:
-        nhif_amount = nhif_amount - (nhif_amount*(rates.nhif_relief_rate/100))
+    
     return nhif_amount
 
 #print(nhif_pay(20000))
@@ -78,4 +75,21 @@ def house_levy_pay(gross):
 
     return levy_amount
 
-print(tax_amount(tax_formula,40000,2400))
+def nhif_relief(nhif,paye):
+    rates = Payroll_Rates.objects.last()
+    amount = 0
+    if paye>0:
+        if nhif > 5000:
+            amount += nhif - 5000
+        else:
+            amount += nhif - (nhif*(rates.nhif_relief_rate/100))
+    else:
+
+        amount+=0
+
+    return amount
+
+
+
+
+

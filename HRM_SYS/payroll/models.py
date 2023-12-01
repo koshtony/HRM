@@ -54,10 +54,7 @@ class PayRollSetting(models.Model):
     tax_rate = models.TextField(default=tax_formula)
     relief = models.DecimalField(default=2400.00,max_digits=10,decimal_places=2)
     nssf = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    nhif = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    health_insurance = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    housing = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
-    others = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+   
 
 
     def __str__(self):
