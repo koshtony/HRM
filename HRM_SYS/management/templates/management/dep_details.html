@@ -385,7 +385,8 @@
                                         <th>Clock In Location</th>
                                         <th>Clock Out Location</th>
                                        
-                                        <th>Image</th>
+                                        <th>clock in Image</th>
+                                        <th>clock out Image</th>
                                         <th>Deductions</th>
                                         <th>Hours</th>
                                        
@@ -433,11 +434,17 @@
 
                                             </button>
                                         </td>
+                                        <td>
+                                            <button class="btn btn-outline" onclick="showImage('{{attendance.image2}}')">
+                                                <i class="fa fa-image"></i>
+
+                                            </button>
+                                        </td>
                                         
                                         <td>
 
                                            {{attendance.deductions}}
-                                        </td>
+                                        </td>show
                                         <td>
                                             {{attendance.hours}}
                                         </td>
