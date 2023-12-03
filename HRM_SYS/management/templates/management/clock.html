@@ -60,7 +60,7 @@
                 <a href="#groups" data-toggle="tab" class="nav-link btn-primary" style="background-color: blue;"><i class="fa fa-wrench"></i></a>
               </ul>
           </div>
-            <div class="col-md-6 grid-margin stretch-card" id="list-view">
+            <div class="col-md-4 grid-margin stretch-card" id="list-view">
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
@@ -118,43 +118,71 @@
                     </div>
                   </div>
                   </div>
-                  <button class="btn btn-primary btn-circle" style="margin: 25px;width:200px;height:200px;border-radius:35px; background-color:orange;" >
+                  <button class="btn btn-primary btn-circle" style="margin: 5px;width:100%;height:400px;border-radius:35px; background-color:yellowgreen;" >
                      <p style="color:white; font-weight: bold;" id="timenow"></p>
-                     <i class="fa fa-clock"></i>
+                    <svg width="113px" height="113px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M228.1 217.7h570.1V713H228.1z" fill="#D5D9CF"></path><path d="M803.6 718.4H222.7v-506h580.9v506z m-570.2-10.7h559.4V223.1H233.4v484.6z" fill="#333336"></path><path d="M765.6 182.7H258.4c-39.1 0-71 32-71 71v432.5c0 39.1 32 71 71 71h507.3c39.1 0 71-32 71-71V253.7c0-39.1-32-71-71.1-71zM770 656c0 19-15.5 34.5-34.5 34.5H288.6c-19 0-34.5-15.5-34.5-34.5V283.9c0-19 15.5-34.5 34.5-34.5h446.9c19 0 34.5 15.5 34.5 34.5V656z" fill="#68A240"></path><path d="M765.6 762.6H258.4c-42.1 0-76.4-34.3-76.4-76.4V253.7c0-42.1 34.3-76.4 76.4-76.4h507.3c42.1 0 76.4 34.3 76.4 76.4v432.5c-0.1 42.1-34.3 76.4-76.5 76.4zM258.4 188c-36.2 0-65.7 29.5-65.7 65.7v432.5c0 36.2 29.5 65.7 65.7 65.7h507.3c36.2 0 65.7-29.5 65.7-65.7V253.7c0-36.2-29.5-65.7-65.7-65.7H258.4z m477 507.9H288.6c-22 0-39.9-17.9-39.9-39.9V283.9c0-22 17.9-39.9 39.9-39.9h446.9c22 0 39.9 17.9 39.9 39.9V656c-0.1 22-18 39.9-40 39.9zM288.6 254.8c-16.1 0-29.1 13.1-29.1 29.1V656c0 16.1 13.1 29.1 29.1 29.1h446.9c16.1 0 29.1-13.1 29.1-29.1V283.9c0-16.1-13.1-29.1-29.1-29.1H288.6z" fill="#333336"></path><path d="M512 309.1c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4v54.3c0 3-2.4 5.4-5.4 5.4zM512 695.4c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4V690c0 3-2.4 5.4-5.4 5.4z" fill="#333336"></path><path d="M255.9 469.9h54.3" fill="#68A240"></path><path d="M310.2 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h54.3c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M715.7 469.9H770" fill="#68A240"></path><path d="M770 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4H770c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M512 469.9m-65.5 0a65.5 65.5 0 1 0 131 0 65.5 65.5 0 1 0-131 0Z" fill="#FFD632"></path><path d="M512 540.8c-39.1 0-70.8-31.8-70.8-70.8s31.8-70.8 70.8-70.8 70.8 31.8 70.8 70.8-31.7 70.8-70.8 70.8z m0-131c-33.1 0-60.1 27-60.1 60.1s27 60.1 60.1 60.1 60.1-27 60.1-60.1-27-60.1-60.1-60.1z" fill="#333336"></path><path d="M512 469.9m-24.3 0a24.3 24.3 0 1 0 48.6 0 24.3 24.3 0 1 0-48.6 0Z" fill="#D5D9CF"></path><path d="M512 499.6c-16.3 0-29.6-13.3-29.6-29.6s13.3-29.6 29.6-29.6 29.6 13.3 29.6 29.6-13.3 29.6-29.6 29.6z m0-48.6c-10.4 0-18.9 8.5-18.9 18.9s8.5 18.9 18.9 18.9c10.4 0 18.9-8.5 18.9-18.9S522.4 451 512 451z" fill="#333336"></path><path d="M663.3 475.3H538.8c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h124.5c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M487.7 445.7l-143.6-99.8" fill="#D5D9CF"></path><path d="M487.7 451c-1.1 0-2.1-0.3-3.1-1L341 350.2c-2.4-1.7-3-5-1.3-7.5 1.7-2.4 5-3 7.5-1.3l143.6 99.8c2.4 1.7 3 5 1.3 7.5-1 1.5-2.7 2.3-4.4 2.3z" fill="#333336"></path><path d="M724.9 841.3H300.8c-14.5 0-24.9-13.9-20.8-27.8l16.7-56.3H729l16.7 56.3c4.1 13.9-6.3 27.8-20.8 27.8z" fill="#FFD632"></path><path d="M724.9 846.7H300.8c-8.6 0-16.5-4-21.6-10.9-5.1-6.9-6.7-15.6-4.3-23.8l17.8-60.1H733l17.8 60.1c2.4 8.3 0.9 16.9-4.3 23.8-5.1 6.9-13 10.9-21.6 10.9z m-424.2-84.1L285.2 815c-1.5 5-0.5 10.2 2.6 14.4 3.1 4.2 7.9 6.5 13 6.5h424.1c5.2 0 9.9-2.4 13.1-6.5 3.1-4.2 4-9.4 2.6-14.4L725 762.6H300.7z" fill="#333336"></path></g></svg>
                   </button>
                 </div>
               </div>
             </div>
-            <div class="col-md-6 grid-margin stretch-card">
+            <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Image set</h4>
+                  <h4 class="card-title">Camera set</h4>
                   <p class="card-description">
                    capture image to complete process
                   </p>
                   <div class="row">
-                    <div class="col" style="border-color:green; border-style:dotted">
-                      <video id="video" width="280" height="240"  autoplay></video>
+                    <div class="col" style="border-color:green; border-style:dotted;">
+                      <video id="video"  style="height:100%; width:100%" autoplay></video>
                     </div>
                     
-                    <div class="col" style="border-color:blue; border-style:dotted">
-
-                      <canvas id="canvas" width="285" height="200" ></canvas>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                    <div class="col">
-                  <button class="btn btn-secondary" id="click-photo"><i class="ti-image"></i>capture</button>
-                  </div>
-                  <div class="col">
-                    <button class="btn btn-primary" onclick="subClockin();"><i class="ti-save"></i>submit</button>
-                  </div>
-                  </div>
-                  <br>
+                    
+                  
                   
                 </div>
+                <br>
+                <div class="col">
+                  <button class="btn btn-primary" id="click-photo"><svg viewBox="0 0 1024 1024" class="icon" version="1.1"  height="50px" width="50px" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M845 166l-49-13 49-13 13-48 13 48 48 13-48 13-13 49-13-49zM892 219l-18-4 18-5 5-19 4 19 19 5-19 4-4 19-5-19z" fill="#FDCD60"></path><path d="M79 711l-20-5 20-5 5-20 5 20 21 5-21 5-5 21-5-21zM148 862l-33-8 33-7 7-33 8 33 33 7-33 8-8 33-7-33z" fill="#FDCD60"></path><path d="M143 169m-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0Z" fill="#5546CB"></path><path d="M889 854a25 25 0 1 1 25-25 25 25 0 0 1-25 25z m0-36a10 10 0 1 0 10 10 10 10 0 0 0-10-10z" fill="#5546CB"></path><path d="M166 400v347a31 31 0 0 0 31 31h629a31 31 0 0 0 31-31V400z m362 358c-92 0-168-75-168-168s75-168 168-168 168 75 168 168-76 168-168 168zM858 380v-63a31 31 0 0 0-31-31H198a31 31 0 0 0-31 31v63z m-140-58h71v20h-71z" fill="#FDCD60"></path><path d="M826 266h-40l-15-59H653l-15 59H198a51 51 0 0 0-51 51v430a51 51 0 0 0 51 51h628a51 51 0 0 0 51-51V317a51 51 0 0 0-51-51z m-157-39h86l10 37H660z m-471 59h628a31 31 0 0 1 31 31v63H166v-63a31 31 0 0 1 32-31z m628 492H198a31 31 0 0 1-31-31V400h691v347a31 31 0 0 1-32 31z" fill="#5546CB"></path><path d="M528 443c-81 0-148 66-148 148s66 148 148 148 148-66 148-148-67-148-148-148z m0 264a116 116 0 1 1 116-117 116 116 0 0 1-116 116z" fill="#FFFFFF"></path><path d="M528 423c-92 0-168 75-168 168s75 168 168 168 168-75 168-168-76-168-168-168z m0 315c-81 0-148-66-148-148s66-148 148-148 148 66 148 148-67 148-148 148z" fill="#5546CB"></path><path d="M528 494a96 96 0 1 0 96 96 96 96 0 0 0-96-96z m43 81a18 18 0 1 1 18-18 18 18 0 0 1-18 18z" fill="#FF8859"></path><path d="M528 474a116 116 0 1 0 116 116 116 116 0 0 0-116-116z m0 212a96 96 0 1 1 96-96 96 96 0 0 1-96 96z" fill="#5546CB"></path><path d="M571 558m-18 0a18 18 0 1 0 36 0 18 18 0 1 0-36 0Z" fill="#FFFFFF"></path><path d="M755 227h-86l-9 37h105l-10-37z" fill="#AFBCF3"></path><path d="M718 322h71v20h-71z" fill="#5546CB"></path></g></svg></button>
+                  </div>
               </div>
+            </div>
+            </div>
+            <div class="col-md-4 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Captured Image</h4>
+                  <p class="card-description">
+                   submit captured image
+                  </p>
+                  <div id="loaders8" style="display: none;">
+                    <div class="spinner-grow text-primary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-secondary" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    <div class="spinner-grow text-success" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                    </div>
+                  <div class="row">
+                  <div class="col" style="border-color:blue; border-style:dotted">
+
+                    <canvas id="canvas"  style="height:100%; width:100%" ></canvas>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  
+                <div class="col">
+                  <button class="btn btn-primary" onclick="subClockin();"><svg viewBox="0 0 24 24" fill="none" height="50px" width="50px" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M18.1716 1C18.702 1 19.2107 1.21071 19.5858 1.58579L22.4142 4.41421C22.7893 4.78929 23 5.29799 23 5.82843V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H18.1716ZM4 3C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21L5 21L5 15C5 13.3431 6.34315 12 8 12L16 12C17.6569 12 19 13.3431 19 15V21H20C20.5523 21 21 20.5523 21 20V6.82843C21 6.29799 20.7893 5.78929 20.4142 5.41421L18.5858 3.58579C18.2107 3.21071 17.702 3 17.1716 3H17V5C17 6.65685 15.6569 8 14 8H10C8.34315 8 7 6.65685 7 5V3H4ZM17 21V15C17 14.4477 16.5523 14 16 14L8 14C7.44772 14 7 14.4477 7 15L7 21L17 21ZM9 3H15V5C15 5.55228 14.5523 6 14 6H10C9.44772 6 9 5.55228 9 5V3Z" fill="#040ac3"></path> </g></svg></button>
+                </div>
+                </div>
+                <br>
+
+            </div>
+            </div>
             </div>
             <div class="col-12 grid-margin stretch-card" id="groups">
               <div class="card">
@@ -317,14 +345,16 @@ getClock()
           var long = document.getElementById("longitudes").value
           var lat = document.getElementById("latitudes").value
 
-          var diff = distance(lat,long,lat1,long1)*1000
+          var diff = distance(lat,long,lat1,long1)
           
        
           if(diff > 200){
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
 
-          
+             if($("#image_info").val() != ''){
+
+             
           
              
             $.ajax({
@@ -338,11 +368,24 @@ getClock()
                  image_str:$("#image_info").val(),
                  csrfmiddlewaretoken:'{{ csrf_token }}'
               },
+              beforeSend:function(){
+                $("#loaders8").show()
+             },
 
               success:function(data,status){
                  alert(data)
-              }
+              },
+              complete:function(){
+                
+                $("#loaders8").hide()
+                
+  
+               }
+
             })
+          }else{
+            alert("failed no Image captured")
+          }
         }
       }
   
@@ -362,7 +405,7 @@ getClock()
         processData: false,
    contentType: false,
    beforeSend:function(){
-                $("#loaders").show()
+                $("#loaders6").show()
              },
 
         success:function(data,status){
@@ -471,7 +514,7 @@ getClock()
         dist = dist * 60 * 1.1515
         if (unit=="K") { dist = dist * 1.609344 }
         if (unit=="N") { dist = dist * 0.8684 }
-        return dist
+        return dist*1000
 }
     </script>
   {% endblock content %}

@@ -487,7 +487,7 @@ def clock(request):
             lat = request.POST.get('latitude')
             long = request.POST.get('longitude')
             image_info = request.POST.get('image_str')
-            #print(image_info)
+            print(image_info)
             empty = ""
             att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
             

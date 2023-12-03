@@ -102,11 +102,11 @@ def monthly_payroll(request):
 
                 tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief))
                 
-                nhif_relief = Decimal(nhif_relief(nhif,tax))
+                nhif_relf = Decimal(nhif_relief(nhif,tax))
 
                 net_pay = gross_pay-Decimal(nssf)\
-                        -tax-nhif_relief\
-                        -Decimal(nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(house_levy)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
+                        -tax-nhif_relf\
+                        -Decimal(nhif)-Decimal(house_levy)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
                 
                 data = {
                     "org_name":employee.payroll_settings.org_name,
@@ -439,11 +439,11 @@ def flat_payroll(request):
             taxable_income  = Decimal(Decimal(gross_pay)-(nssf))
             tax =  Decimal(tax_amount(employee.payroll_settings.tax_rate,taxable_income,employee.payroll_settings.relief))
 
-            nhif_relief = Decimal(nhif_relief(nhif,tax))
+            nhif_relf = Decimal(nhif_relief(nhif,tax))
             
             net_pay = gross_pay-Decimal(nssf)\
-                            -tax-nhif_relief\
-                            -Decimal(nhif)-Decimal(employee.payroll_settings.health_insurance)-Decimal(house_levy)-Decimal(employee.payroll_settings.others)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
+                            -tax-nhif_relf\
+                            -Decimal(nhif)-Decimal(house_levy)-Decimal(deductions)-Decimal(loan_deductions)-Decimal(welfare_deductions)
       
             data = {
                         "org_name":employee.payroll_settings.org_name,
