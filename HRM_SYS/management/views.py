@@ -1147,7 +1147,7 @@ def show_map(request,coords):
    folium.Marker(coords).add_to(map)
    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)in javascript
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
    folium.LayerControl().add_to(map)
 
   
