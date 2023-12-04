@@ -92,7 +92,7 @@ def approvals(request):
 def view_approvals(request):
 
     context = {
-        "applications":Applications.objects.all().order_by('-pk'),
+        "applications":Applications.objects.all().filter(applicant=request.user).order_by('-pk'),
         "tracks":approvalTrack.objects.all()
         
         }
@@ -107,17 +107,29 @@ def get_approvals_name(request):
       
         apps = Applications.objects.get(pk=pk)
         names = []
-        for id in apps.approvers.split(','):
+        for id in apps.type.approvers.split('/n'):
+
+            if id in apps.approvers.split(','):
             
-            try:
-                Employee.objects.get(emp_id = id)
+                try:
+                    Employee.objects.get(emp_id = id)
 
-                names.append(str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).first_name))
-            except:
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"approved"})
+                except:
 
-                names.append("couldn't find name for "+str(id))
+                    names.append({"name":"couldn't find name for "+str(id),"status":"approved"})
+            else:
 
-        return JsonResponse(" -> ".join(names),safe=False)
+                try:
+                    Employee.objects.get(emp_id = id)
+
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"pending"})
+                except:
+
+                    names.append({"name":"couldn't find name for "+str(id),"status":"pending"})
+
+
+        return JsonResponse(names,safe=False)
 
 
 
@@ -487,7 +499,7 @@ def clock(request):
             lat = request.POST.get('latitude')
             long = request.POST.get('longitude')
             image_info = request.POST.get('image_str')
-            print(image_info)
+            #print(image_info)
             empty = ""
             att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
             
@@ -1147,7 +1159,7 @@ def show_map(request,coords):
    folium.Marker(coords).add_to(map)
    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)in javascript
    folium.LayerControl().add_to(map)
 
   

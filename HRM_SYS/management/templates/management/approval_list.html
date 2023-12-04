@@ -206,6 +206,9 @@
                                 Applicant
                               </th>
                               <th>
+                                Initial Approvers
+                              </th>
+                              <th>
                                 Approvers
                               </th>
                               <th>
@@ -234,6 +237,9 @@
                               </td>
                               <td>
                                 {{application.applicant}}
+                              </td>
+                              <td>
+                                {{application.type.approvers}}
                               </td>
                               <td>
                                 <button class="btn btn-outline" onclick="getApprovers('{{application.pk}}')"><i class="fa fa-eye"></i></button>
@@ -276,6 +282,32 @@
               </div>
             </div>
             
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ApproversListModal" style="display:none" id="approversListBtn">
+        
+        </button>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="ApproversListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Approvers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" id="approversModalBdy">
+
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -384,6 +416,7 @@ function createApprv(){
 }
 
 function getApprovers(id){
+  $("#approversListBtn").click()
 
       $.ajax({
            
@@ -395,12 +428,51 @@ function getApprovers(id){
           },
           success:function(data,status){
 
-              alert(data)
+            //var data = JSON.parse(data)
+
+            for(key in data){
+
+              $("#approversModalBdy").html(
+
+              `
+              <div class="tree">
+              <ul>
+               
+                
+                  <li>
+                      <span style="background-color:aquamarine"><i class="icon-calendar"></i>${data[key]["status"]}</span>
+                      <ul>
+                        
+                          <li>
+                           
+                              <ul>
+                                  <li>
+                                    <strong>${data[key]["name"]}</strong>
+                                  </li>
+                              </ul>
+                          </li>
+                         
+                          
+                          
+                      </ul>
+                  </li>
+                
+         
+                  
+              </ul>
+          </div>
+              
+              
+              `
+
+              )
+            }
           }
       })
     
      
 }
+
 
 
 $('select').selectpicker();
