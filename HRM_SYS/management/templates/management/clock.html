@@ -4,6 +4,8 @@
      <!-- create camera modal here-->
 
      
+      
+    
 
 
 <style>
@@ -46,6 +48,7 @@
   animation: glow 1.4s ease-out infinite;
 }
 </style>
+<script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
 
 
 
@@ -54,77 +57,16 @@
         <div class="content-wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <ul class="nav nav-pills mb-3">
-                  <a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i></a>
-              
-                <a href="#groups" data-toggle="tab" class="nav-link btn-primary" style="background-color: blue;"><i class="fa fa-wrench"></i></a>
-              </ul>
+              <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
+              <img style="width: 50px; border-radius: 50%;" src="{{user.profile.image.url}}">
+              <marquee width="80%" direction="right" height="20px" id="statuss">
+                clock in and out
+                </marquee>
+                <p style="color:white; font-weight: bold;" id="timenow"></p>
+              <br>
+              <br>
           </div>
-            <div class="col-md-4 grid-margin stretch-card" id="list-view">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
-                  <img style="width: 50px; border-radius: 50%;" src="{{user.profile.image.url}}">
-                  <marquee width="80%" direction="right" height="20px" id="statuss">
-                    clock in and out
-                    </marquee>
-                  <br>
-                  <br>
-                  <form class="forms-sample" style="display:block">
-                    <div class="form-group">
-                      <input type="text" class="form-control" id="lat1" readonly>
-                      
-                   </div>
-                   <div class="form-group">
-                    <input type="text" class="form-control" id="long1" readonly>
-                    
-                 </div>
-                    <div class="form-group">
-                     <input type="text" class="form-control" id="longitudes" readonly>
-                     
-                  </div>
-                  <div class="form-group">
-                    
-                    <input type="text" class="form-control" id="latitudes" readonly>
-                    
-                 </div>
-                 <div class="form-group">
-                  <input type="text" class="form-control" id="image_info" readonly>
-                  
-               </div>
-               <div class="form-group">
-                <input type="text" class="form-control" id="my_ip" readonly>
-                
-             </div>
-                  </form>
-                  <div>
-
-                   
-
-                  </div>
-                  <p class="card-description" style="color:gree" id="video_msg">
-                   
-                  </p>
-                  <div>
-                    <p style="color:green">set clock in > <span id="h1"></span>:<span id="m1"></span></p>
-                    <p style="color:green">set clock out > <span id="h2">:</span><span id="m2"></span></p>
-                  <a class="ti-eye" onclick="getClock();">view</a>
-                  <div>
-                  <div>
-                  <i class="ti-alarm-clock" style="color:green" id="in"></i>
-                  </div>
-                  <div>
-                    <i class="ti-alarm-clock" style="color:blue" id="out"></i>
-                    </div>
-                  </div>
-                  </div>
-                  <button class="btn btn-primary btn-circle" style="margin: 5px;width:100%;height:400px;border-radius:35px; background-color:yellowgreen;" >
-                     <p style="color:white; font-weight: bold;" id="timenow"></p>
-                    <svg width="113px" height="113px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M228.1 217.7h570.1V713H228.1z" fill="#D5D9CF"></path><path d="M803.6 718.4H222.7v-506h580.9v506z m-570.2-10.7h559.4V223.1H233.4v484.6z" fill="#333336"></path><path d="M765.6 182.7H258.4c-39.1 0-71 32-71 71v432.5c0 39.1 32 71 71 71h507.3c39.1 0 71-32 71-71V253.7c0-39.1-32-71-71.1-71zM770 656c0 19-15.5 34.5-34.5 34.5H288.6c-19 0-34.5-15.5-34.5-34.5V283.9c0-19 15.5-34.5 34.5-34.5h446.9c19 0 34.5 15.5 34.5 34.5V656z" fill="#68A240"></path><path d="M765.6 762.6H258.4c-42.1 0-76.4-34.3-76.4-76.4V253.7c0-42.1 34.3-76.4 76.4-76.4h507.3c42.1 0 76.4 34.3 76.4 76.4v432.5c-0.1 42.1-34.3 76.4-76.5 76.4zM258.4 188c-36.2 0-65.7 29.5-65.7 65.7v432.5c0 36.2 29.5 65.7 65.7 65.7h507.3c36.2 0 65.7-29.5 65.7-65.7V253.7c0-36.2-29.5-65.7-65.7-65.7H258.4z m477 507.9H288.6c-22 0-39.9-17.9-39.9-39.9V283.9c0-22 17.9-39.9 39.9-39.9h446.9c22 0 39.9 17.9 39.9 39.9V656c-0.1 22-18 39.9-40 39.9zM288.6 254.8c-16.1 0-29.1 13.1-29.1 29.1V656c0 16.1 13.1 29.1 29.1 29.1h446.9c16.1 0 29.1-13.1 29.1-29.1V283.9c0-16.1-13.1-29.1-29.1-29.1H288.6z" fill="#333336"></path><path d="M512 309.1c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4v54.3c0 3-2.4 5.4-5.4 5.4zM512 695.4c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4V690c0 3-2.4 5.4-5.4 5.4z" fill="#333336"></path><path d="M255.9 469.9h54.3" fill="#68A240"></path><path d="M310.2 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h54.3c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M715.7 469.9H770" fill="#68A240"></path><path d="M770 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4H770c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M512 469.9m-65.5 0a65.5 65.5 0 1 0 131 0 65.5 65.5 0 1 0-131 0Z" fill="#FFD632"></path><path d="M512 540.8c-39.1 0-70.8-31.8-70.8-70.8s31.8-70.8 70.8-70.8 70.8 31.8 70.8 70.8-31.7 70.8-70.8 70.8z m0-131c-33.1 0-60.1 27-60.1 60.1s27 60.1 60.1 60.1 60.1-27 60.1-60.1-27-60.1-60.1-60.1z" fill="#333336"></path><path d="M512 469.9m-24.3 0a24.3 24.3 0 1 0 48.6 0 24.3 24.3 0 1 0-48.6 0Z" fill="#D5D9CF"></path><path d="M512 499.6c-16.3 0-29.6-13.3-29.6-29.6s13.3-29.6 29.6-29.6 29.6 13.3 29.6 29.6-13.3 29.6-29.6 29.6z m0-48.6c-10.4 0-18.9 8.5-18.9 18.9s8.5 18.9 18.9 18.9c10.4 0 18.9-8.5 18.9-18.9S522.4 451 512 451z" fill="#333336"></path><path d="M663.3 475.3H538.8c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h124.5c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M487.7 445.7l-143.6-99.8" fill="#D5D9CF"></path><path d="M487.7 451c-1.1 0-2.1-0.3-3.1-1L341 350.2c-2.4-1.7-3-5-1.3-7.5 1.7-2.4 5-3 7.5-1.3l143.6 99.8c2.4 1.7 3 5 1.3 7.5-1 1.5-2.7 2.3-4.4 2.3z" fill="#333336"></path><path d="M724.9 841.3H300.8c-14.5 0-24.9-13.9-20.8-27.8l16.7-56.3H729l16.7 56.3c4.1 13.9-6.3 27.8-20.8 27.8z" fill="#FFD632"></path><path d="M724.9 846.7H300.8c-8.6 0-16.5-4-21.6-10.9-5.1-6.9-6.7-15.6-4.3-23.8l17.8-60.1H733l17.8 60.1c2.4 8.3 0.9 16.9-4.3 23.8-5.1 6.9-13 10.9-21.6 10.9z m-424.2-84.1L285.2 815c-1.5 5-0.5 10.2 2.6 14.4 3.1 4.2 7.9 6.5 13 6.5h424.1c5.2 0 9.9-2.4 13.1-6.5 3.1-4.2 4-9.4 2.6-14.4L725 762.6H300.7z" fill="#333336"></path></g></svg>
-                  </button>
-                </div>
-              </div>
-            </div>
+          
             <div class="col-md-4 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -184,6 +126,67 @@
             </div>
             </div>
             </div>
+            <div class="col-md-4 grid-margin stretch-card" id="list-view">
+              <div class="card">
+                <div class="card-body">
+                
+                  <form class="forms-sample" style="display:block">
+                    <div class="form-group">
+                      <input type="text" class="form-control" id="lat1" readonly>
+                      
+                   </div>
+                   <div class="form-group">
+                    <input type="text" class="form-control" id="long1" readonly>
+                    
+                 </div>
+                    <div class="form-group">
+                     <input type="text" class="form-control" id="longitudes" readonly>
+                     
+                  </div>
+                  <div class="form-group">
+                    
+                    <input type="text" class="form-control" id="latitudes" readonly>
+                    
+                 </div>
+                 <div class="form-group">
+                  <input type="text" class="form-control" id="image_info" readonly>
+                  
+               </div>
+               <div class="form-group">
+                <input type="text" class="form-control" id="my_ip" readonly>
+                
+             </div>
+                  </form>
+                  <div>
+
+                   
+
+                  </div>
+                  <p class="card-description" style="color:gree" id="video_msg">
+                   
+                  </p>
+                  <div>
+                    <p style="color:green">set clock in > <span id="h1"></span>:<span id="m1"></span></p>
+                    <p style="color:green">set clock out > <span id="h2">:</span><span id="m2"></span></p>
+                  <a class="ti-eye" onclick="getClock();">view</a>
+                  <div>
+                  <div>
+                  <i class="ti-alarm-clock" style="color:green" id="in"></i>
+                  </div>
+                  <div>
+                    <i class="ti-alarm-clock" style="color:blue" id="out"></i>
+                    </div>
+                  </div>
+                  </div>
+                  <!--
+                  <button class="btn btn-primary btn-circle" style="margin: 5px;width:100%;height:400px;border-radius:35px; background-color:yellowgreen;" >
+                     <p style="color:white; font-weight: bold;" id="timenow"></p>
+                    <svg width="113px" height="113px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M228.1 217.7h570.1V713H228.1z" fill="#D5D9CF"></path><path d="M803.6 718.4H222.7v-506h580.9v506z m-570.2-10.7h559.4V223.1H233.4v484.6z" fill="#333336"></path><path d="M765.6 182.7H258.4c-39.1 0-71 32-71 71v432.5c0 39.1 32 71 71 71h507.3c39.1 0 71-32 71-71V253.7c0-39.1-32-71-71.1-71zM770 656c0 19-15.5 34.5-34.5 34.5H288.6c-19 0-34.5-15.5-34.5-34.5V283.9c0-19 15.5-34.5 34.5-34.5h446.9c19 0 34.5 15.5 34.5 34.5V656z" fill="#68A240"></path><path d="M765.6 762.6H258.4c-42.1 0-76.4-34.3-76.4-76.4V253.7c0-42.1 34.3-76.4 76.4-76.4h507.3c42.1 0 76.4 34.3 76.4 76.4v432.5c-0.1 42.1-34.3 76.4-76.5 76.4zM258.4 188c-36.2 0-65.7 29.5-65.7 65.7v432.5c0 36.2 29.5 65.7 65.7 65.7h507.3c36.2 0 65.7-29.5 65.7-65.7V253.7c0-36.2-29.5-65.7-65.7-65.7H258.4z m477 507.9H288.6c-22 0-39.9-17.9-39.9-39.9V283.9c0-22 17.9-39.9 39.9-39.9h446.9c22 0 39.9 17.9 39.9 39.9V656c-0.1 22-18 39.9-40 39.9zM288.6 254.8c-16.1 0-29.1 13.1-29.1 29.1V656c0 16.1 13.1 29.1 29.1 29.1h446.9c16.1 0 29.1-13.1 29.1-29.1V283.9c0-16.1-13.1-29.1-29.1-29.1H288.6z" fill="#333336"></path><path d="M512 309.1c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4v54.3c0 3-2.4 5.4-5.4 5.4zM512 695.4c-3 0-5.4-2.4-5.4-5.4v-54.3c0-3 2.4-5.4 5.4-5.4 3 0 5.4 2.4 5.4 5.4V690c0 3-2.4 5.4-5.4 5.4z" fill="#333336"></path><path d="M255.9 469.9h54.3" fill="#68A240"></path><path d="M310.2 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h54.3c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M715.7 469.9H770" fill="#68A240"></path><path d="M770 475.3h-54.3c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4H770c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M512 469.9m-65.5 0a65.5 65.5 0 1 0 131 0 65.5 65.5 0 1 0-131 0Z" fill="#FFD632"></path><path d="M512 540.8c-39.1 0-70.8-31.8-70.8-70.8s31.8-70.8 70.8-70.8 70.8 31.8 70.8 70.8-31.7 70.8-70.8 70.8z m0-131c-33.1 0-60.1 27-60.1 60.1s27 60.1 60.1 60.1 60.1-27 60.1-60.1-27-60.1-60.1-60.1z" fill="#333336"></path><path d="M512 469.9m-24.3 0a24.3 24.3 0 1 0 48.6 0 24.3 24.3 0 1 0-48.6 0Z" fill="#D5D9CF"></path><path d="M512 499.6c-16.3 0-29.6-13.3-29.6-29.6s13.3-29.6 29.6-29.6 29.6 13.3 29.6 29.6-13.3 29.6-29.6 29.6z m0-48.6c-10.4 0-18.9 8.5-18.9 18.9s8.5 18.9 18.9 18.9c10.4 0 18.9-8.5 18.9-18.9S522.4 451 512 451z" fill="#333336"></path><path d="M663.3 475.3H538.8c-3 0-5.4-2.4-5.4-5.4 0-3 2.4-5.4 5.4-5.4h124.5c3 0 5.4 2.4 5.4 5.4-0.1 3-2.5 5.4-5.4 5.4z" fill="#333336"></path><path d="M487.7 445.7l-143.6-99.8" fill="#D5D9CF"></path><path d="M487.7 451c-1.1 0-2.1-0.3-3.1-1L341 350.2c-2.4-1.7-3-5-1.3-7.5 1.7-2.4 5-3 7.5-1.3l143.6 99.8c2.4 1.7 3 5 1.3 7.5-1 1.5-2.7 2.3-4.4 2.3z" fill="#333336"></path><path d="M724.9 841.3H300.8c-14.5 0-24.9-13.9-20.8-27.8l16.7-56.3H729l16.7 56.3c4.1 13.9-6.3 27.8-20.8 27.8z" fill="#FFD632"></path><path d="M724.9 846.7H300.8c-8.6 0-16.5-4-21.6-10.9-5.1-6.9-6.7-15.6-4.3-23.8l17.8-60.1H733l17.8 60.1c2.4 8.3 0.9 16.9-4.3 23.8-5.1 6.9-13 10.9-21.6 10.9z m-424.2-84.1L285.2 815c-1.5 5-0.5 10.2 2.6 14.4 3.1 4.2 7.9 6.5 13 6.5h424.1c5.2 0 9.9-2.4 13.1-6.5 3.1-4.2 4-9.4 2.6-14.4L725 762.6H300.7z" fill="#333336"></path></g></svg>
+                  </button>
+                -->
+                </div>
+              </div>
+            </div>
             <div class="col-12 grid-margin stretch-card" id="groups">
               <div class="card">
                 <div class="card-body">
@@ -238,7 +241,9 @@
 
     <script>
       // creating live clock
+    
 getClock()
+getLoc()
       function startTime() {
           const today = new Date();
           
@@ -282,12 +287,7 @@ getClock()
             if(navigator.geolocation){
 
               navigator.geolocation.getCurrentPosition(getCoord);
-              $.getJSON("https://api.ipify.org?format=json", function(data) {
-         
-         // Setting text of element P with id gfg
-        
-         document.getElementById("my_ip").value = data.ip
-     })
+              
               
             }else{
                 
@@ -308,7 +308,7 @@ getClock()
           document.getElementById("longitudes").value = long
           document.getElementById("latitudes").value = lat
        }
-
+      /**
 
        let camera_button = document.querySelector("#timenow");
         let video = document.querySelector("#video");
@@ -318,7 +318,7 @@ getClock()
         camera_button.addEventListener('click', async function() {
             let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
           video.srcObject = stream;
-          getLoc();
+          
           document.getElementById("video_msg").innerHTML = "scroll down video initiated";
 
         });
@@ -331,6 +331,30 @@ getClock()
             //console.log(image_data_url);
             document.getElementById("image_info").value = image_data_url
             video.srcObject.getVideoTracks().forEach(track => track.stop());
+        });
+      **/
+     
+     
+
+      const webcamElement = document.querySelector('video');
+      const canvasElement = document.querySelector('canvas');
+      //const snapSoundElement = document.getElementById('snapSound');
+      const webcam = new Webcam(webcamElement, 'user', canvasElement);
+      webcam.start()
+      .then(result =>{
+      console.log("webcam started");
+   })
+   .catch(err => {
+       console.log(err);
+   });
+   
+
+   let click_button = document.querySelector("#click-photo");
+
+   click_button.addEventListener('click', function() {
+            	
+        let picture = webcam.snap();
+        document.getElementById("image_info").value = picture
         });
 
       // submit clock in details 
@@ -348,7 +372,7 @@ getClock()
           var diff = distance(lat,long,lat1,long1)
           
        
-          if(diff > 200){
+          if(diff > 500){
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
 
