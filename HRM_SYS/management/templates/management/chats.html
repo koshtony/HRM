@@ -204,7 +204,7 @@
             <input type="text" class="form-control my-3" placeholder="@" list="searchUser" id="pname" onkeyup="search()">
             <datalist id="searchUser">
                 {% for profile in profiles %}
-                <option value="{{profile.user.username}}">{{profile.user.username}}</option>
+                <option value="{{profile.user.username}}">{{profile.first}}</option>
                 {% endfor %}
             </datalist>
         </div>

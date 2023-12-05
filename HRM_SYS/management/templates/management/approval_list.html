@@ -205,9 +205,7 @@
                               <th>
                                 Applicant
                               </th>
-                              <th>
-                                Initial Approvers
-                              </th>
+                              
                               <th>
                                 Approvers
                               </th>
@@ -238,9 +236,7 @@
                               <td>
                                 {{application.applicant}}
                               </td>
-                              <td>
-                                {{application.type.approvers}}
-                              </td>
+                             
                               <td>
                                 <button class="btn btn-outline" onclick="getApprovers('{{application.pk}}')"><i class="fa fa-eye"></i></button>
                               </td>
@@ -295,6 +291,17 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Approvers</h5>
+                <div id="loaders860" style="display: none;">
+                  <div class="spinner-grow text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-secondary" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  <div class="spinner-grow text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                  </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -426,13 +433,17 @@ function getApprovers(id){
 
                pk:id
           },
+          beforeSend:function(){
+                $("#loaders860").show()
+             },
           success:function(data,status){
 
             //var data = JSON.parse(data)
-
+            $("#approversModalBdy").html('')
             for(key in data){
+              
 
-              $("#approversModalBdy").html(
+              $("#approversModalBdy").append(
 
               `
               <div class="tree">
@@ -467,7 +478,15 @@ function getApprovers(id){
 
               )
             }
-          }
+
+            
+          },
+          complete:function(){
+                
+                $("#loaders860").hide()
+              
+  
+               }
       })
     
      
