@@ -313,3 +313,16 @@ class ChatMessage(models.Model):
         
         return self.sender.user.username
     
+class MailMessage(models.Model):
+
+    sender = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="mail_sender")
+    recipient = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="mail_recipient")
+    subject = models.CharField(max_length=200)
+    body = models.TextField()
+    attachment = models.FileField(null=True,upload_to='mail_files')
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+
+        return str(self.subject)+" by "+str(self.sender)
+    

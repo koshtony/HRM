@@ -107,22 +107,10 @@ def get_approvals_name(request):
       
         apps = Applications.objects.get(pk=pk)
         names = []
-        for id in apps.type.approvers.split('\r\n'):
-            
+        for id in apps.type.approvers.split('/n'):
 
             if id in apps.approvers.split(','):
-                
             
-                try:
-                    Employee.objects.get(emp_id = id)
-
-                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"pending"})
-                except:
-
-                    names.append({"name":"couldn't find name for "+str(id),"status":"pending"})
-            else:
-                
-
                 try:
                     Employee.objects.get(emp_id = id)
 
@@ -130,8 +118,17 @@ def get_approvals_name(request):
                 except:
 
                     names.append({"name":"couldn't find name for "+str(id),"status":"approved"})
+            else:
 
-        print(names)
+                try:
+                    Employee.objects.get(emp_id = id)
+
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"pending"})
+                except:
+
+                    names.append({"name":"couldn't find name for "+str(id),"status":"pending"})
+
+
         return JsonResponse(names,safe=False)
 
 
@@ -531,7 +528,7 @@ def clock(request):
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
-                        clock_in = datetime.now()+timedelta(hours=3),
+                        clock_in = datetime.now(),
                         clock_out = empty,
                         lat =lat ,long=long,image1=image_info,
                         lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
@@ -546,7 +543,7 @@ def clock(request):
             
             elif len(att_filt)>0 and att_filt[0].clock_out == '':
                 
-                att_filt[0].clock_out = datetime.now()+timedelta(hours=3)
+                att_filt[0].clock_out = datetime.now()
                 att_filt[0].lat1 = lat
                 att_filt[0].long1 = long 
                 att_filt[0].image2 = image_info
@@ -566,7 +563,7 @@ def clock(request):
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
                         clock_in = empty,
-                        clock_out = datetime.now()+timedelta(hours=3),
+                        clock_out = datetime.now(),
                         lat = empty ,long=empty,image1=empty,
                         lat1 = lat, long1 = long, image2 = image_info,remarks="clock out",
                         deductions  = 0,
@@ -741,7 +738,7 @@ def create_approval(request):
 
             name = approval, 
             approvers = approvers,
-            created = datetime.now()+timedelta(hours=3),
+            created = datetime.now(),
             remarks = "created by -> "+str(request.user.username)
         )
         apps.save()
@@ -787,7 +784,7 @@ def upload_leave(request):
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
-                created_date = datetime.now(),created_time = datetime.now()+timedelta(hours=3),
+                created_date = datetime.now(),created_time = datetime.now(),
                 start = form.cleaned_data.get("start"), end = form.cleaned_data.get("end"),
                 days = form.cleaned_data.get("days")
 
@@ -817,7 +814,7 @@ def upload_process(request):
                     recipient = User.objects.get(username=approve),
                     info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
                     date = datetime.now(),
-                    time = datetime.now()+timedelta(hours=3),
+                    time = datetime.now(),
                     url = "{}"
          
                 )
@@ -830,7 +827,7 @@ def upload_process(request):
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
                 created_date = datetime.now(),
-                created_time = datetime.now()+timedelta(hours=3)
+                created_time = datetime.now()
                
                 
             )
@@ -940,7 +937,7 @@ def approve_by_details(request):
                 comments = comments,
                 status = status,
                 date = date.today(),
-                time = datetime.now()+timedelta(hours=3)
+                time = datetime.now()
                 )
             else:
                 application.status = "pending"
@@ -953,7 +950,7 @@ def approve_by_details(request):
                     comments = comments,
                     status = status,
                     date = date.today(),
-                    time = datetime.now()+timedelta(hours=3)
+                    time = datetime.now()
                 )
                 track.save()
         
@@ -970,7 +967,7 @@ def approve_by_details(request):
                 comments = comments,
                 status = status,
                 date = date.today(),
-                time = datetime.now()+timedelta(hours=3)
+                time = datetime.now()
             )
             track.save()
 
@@ -1007,7 +1004,7 @@ def recall_by_comment(request):
             comments =remark,
             status = "cancelled",
             date = datetime.now(),
-            time = datetime.now()+timedelta(hours=3)
+            time = datetime.now()
         )
         track.save()
         return JsonResponse("remark added successfully",safe=False)
@@ -1157,12 +1154,12 @@ def get_notify(request):
 def show_map(request,coords):
    
    coords = [float(cord) for cord in coords.split('_')]
-   print(coords)
+
    map = folium.Map(coords)
    folium.Marker(coords).add_to(map)
    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)in javascript
    folium.LayerControl().add_to(map)
 
   
@@ -1237,7 +1234,7 @@ def sent_msg(request,pk):
                 sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = ind_profile,
-                sent = datetime.now()+timedelta(hours=3),
+                sent = datetime.now(),
                 seen = False
                 
                 )
@@ -1251,7 +1248,7 @@ def sent_msg(request,pk):
                 sender = request.user.profile,
                 anonymous_sender = request.user.profile,
                 recep = ind_profile,
-                sent = datetime.now()+timedelta(hours=3),
+                sent = datetime.now(),
                 seen = False
                 
                 )
@@ -1278,7 +1275,7 @@ def chat_reply(request):
                 sender = request.user.profile,
                 anonymous_sender = request.user.profile,
                 recep = chats.sender,
-                sent = datetime.now()+timedelta(hours=3),
+                sent = datetime.now(),
                 seen = False
                 
                 )
@@ -1291,7 +1288,7 @@ def chat_reply(request):
                 sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = chats.anonymous_sender,
-                sent = datetime.now()+timedelta(hours=3),
+                sent = datetime.now(),
                 seen = False
                 
                 )
@@ -1328,6 +1325,7 @@ def chat_notify(request):
 
 
                 }
+    print(res_dict)
     return JsonResponse(res_dict,safe=False)
 
 
@@ -1356,6 +1354,56 @@ def del_chat(request):
         mssg_del.delete()
 
         return JsonResponse("message deleted",safe=False)
+    
+def mail_box(request):
+
+    employee = Employee.objects.all()
+    messages = MailMessage.objects.all()
+
+
+    if request.POST:
+        
+        to = request.POST.get("to")
+        body = request.POST.get("message")
+        subject = request.POST.get("subject")
+        try:
+            attachment = request.FILES["attachment"]
+        
+            
+
+            mail = MailMessage(
+
+                sender = request.user.profile ,
+                recipient = Profile.objects.get(user__username=to),
+                subject = subject,
+                body = body,
+                attachment = attachment,
+                created = datetime.now()+timedelta(hours=3)
+            )
+
+            mail.save()
+        except:
+
+            mail = MailMessage(
+
+                sender = request.user.profile ,
+                recipient = Profile.objects.get(user__username=to),
+                subject = subject,
+                body = body,
+              
+                created = datetime.now()+timedelta(hours=3)
+            )
+
+            mail.save()
+
+
+        
+
+        return JsonResponse("message sent successfully",safe=False)
+
+    context= {"employees":employee,"messages":messages}
+
+    return render(request,'management/mail_box.html',context)
 
 class EditEmpView(LoginRequiredMixin,UpdateView):
     

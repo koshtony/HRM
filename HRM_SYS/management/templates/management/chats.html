@@ -310,13 +310,14 @@
          
 
            	var noChatDiv = document.getElementsByClassName("badge bg-success float-right")
+            
 			var sum = 0
-			for(var i=0;i<numbers.length;i++){
+			for(var i=0;i<numbers.length;i++){ 
 				noChatDiv[i].innerHTML = numbers[i]
 				sum += parseInt(numbers[i])
 
 			}
-
+            console.log(sum)
 			document.getElementById("unread").innerHTML = sum
               
             document.getElementById("not-p").innerHTML = '<strong>'+sender[sender.length-1].toString()+'</strong>'+' '+msgs[msgs.length-1].toString()+ ' sent on:'+dates[dates.length-1]
