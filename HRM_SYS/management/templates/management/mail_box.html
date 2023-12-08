@@ -243,13 +243,13 @@
         
                                 <div>
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li class="header">Folders</li>
-                                        <li class="active"><a href="#"><i class="fa fa-inbox"></i> Inbox (14)</a></li>
+                                        
+                                        <li class="active"><a href="#inbox" data-toggle="tab"><i class="fa fa-inbox"></i> Inbox (14)</a></li>
                                         <li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
                                         <li><a href="#"><i class="fa fa-bookmark"></i> Important</a></li>
-                                        <li><a href="#"><i class="fa fa-mail-forward"></i> Sent</a></li>
-                                        <li><a href="#"><i class="fa fa-pencil-square-o"></i> Drafts</a></li>
-                                        <li><a href="#"><i class="fa fa-folder"></i> Spam (217)</a></li>
+                                        <li><a href="#outbox" data-toggle="tab"><i class="fa fa-mail-forward"></i> Sent</a></li>
+                                        
+                                        <li><a href="#"><i class="fa fa-folder"></i> Anonymous (217)</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -267,12 +267,9 @@
                                                 Action <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a href="#">Mark as read</a></li>
-                                                <li><a href="#">Mark as unread</a></li>
-                                                <li><a href="#">Mark as important</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="#">Report spam</a></li>
-                                                <li><a href="#">Delete</a></li>
+                                                <li><a class="btn btn-success" onclick="Actions(1)">star</a></li>
+                                               
+                                                <li><a class="btn btn-primary" onclick="Actions(2)">Delete</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -289,15 +286,16 @@
                                 </div>
                                 
                                 <div class="padding"></div>
-                                
+                                <div id="inbox" class="tab-pane fade active show col-lg-12">
                                 <div class="table-responsive">
                                     <table class="table">
                                         <tbody>
                                             {% for message in messages %}
+                                            {% if message.recipient.user.username == user.username %}
                                             {% if message.body|length >= 50 %}
                                             <tr>
-                                            <td class="action"><input type="checkbox" value="{{message.pk}}" /></td>
-                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
                                             
                                             <td class="name"><a href="#"></a></td>
                                             <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
@@ -307,7 +305,7 @@
                                         </tr>
                                         {% else %}
                                         <tr>
-                                            <td class="action"><input type="checkbox" value="{{message.pk}}" /></td>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
                                             <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
                                             
                                             <td class="name"><a href="#"></a></td>
@@ -317,6 +315,7 @@
                                             
                                         </tr>
                                             
+                                            {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                        
@@ -331,7 +330,69 @@
                                     <li><a href="#">4</a></li>
                                     <li><a href="#">5</a></li>
                                     <li><a href="#">»</a></li>
-                                </ul>						
+                                </ul>	
+                            </div>		
+                            <div id="outbox" class="tab-pane fade col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tbody>
+                                            {% for message in messages %}
+                                       
+                                            {% if message.sender.user.username == user.username %}
+                                            {% if message.body|length >= 50 %}
+                                            <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action" id="{{message.pk}}">
+                                                {% if message.label == "star" %}
+                                                <i class="fa fa-star"></i>
+                                                {% else %}
+                                                <i class="fa fa-star-o"></i>
+                                                {% endif %}
+                                            
+                                            </td>
+                                            
+                                            <td class="name">{{message.recipient.first}}<a href="#"></a></td>
+                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.cerated}}</td>
+
+                                            
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action" id="{{message.pk}}">
+                                                {% if message.label == "star" %}
+                                                <i class="fa fa-star"></i>
+                                                {% else %}
+                                                <i class="fa fa-star-o"></i>
+                                                {% endif %}
+                                            
+                                            </td>
+                                            
+                                            <td class="name">{{message.recipient.first}}<a href="#"></a></td>
+                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.cerated}}</td>
+
+                                            
+                                        </tr>
+                                            
+                                            {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                       
+                                    </tbody></table>
+                                </div>
+        
+                                <ul class="pagination">
+                                    <li class="disabled"><a href="#">«</a></li>
+                                    <li class="active"><a href="#">1</a></li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#">4</a></li>
+                                    <li><a href="#">5</a></li>
+                                    <li><a href="#">»</a></li>
+                                </ul>
+                            </div>			
                             </div>
                             <!-- END INBOX CONTENT -->
                             
@@ -401,6 +462,31 @@
         </div>
 
 <script>
+
+ function Actions(id){
+    var checks = []
+    $(".checkboxall:checked").each(function(){
+    checks.push($(this).val());
+    });
+      $.ajax({
+          
+        method:"POST",
+        url:"{% url 'management_mail_actions' %}",
+        data:{
+            id:id,
+            pks:checks.toString()
+        },
+        success:function(data,status){
+
+            for(var i=0;i<=checks.length;i++){
+
+                document.getElementById(checks[i].toString()).innerHTML = '<i class="fa fa-star"></i>'
+            }
+           console.log("starred")
+
+        }
+      })
+ }
 
   function sendMail(){
 

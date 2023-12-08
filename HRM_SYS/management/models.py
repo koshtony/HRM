@@ -320,6 +320,8 @@ class MailMessage(models.Model):
     subject = models.CharField(max_length=200)
     body = models.TextField()
     attachment = models.FileField(null=True,upload_to='mail_files')
+    label = models.CharField(max_length=100,default="")
+    seen = models.BooleanField(default=False)
     created = models.DateTimeField(default=timezone.now)
 
     def __str__(self):

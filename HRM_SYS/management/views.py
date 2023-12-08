@@ -1404,6 +1404,31 @@ def mail_box(request):
     context= {"employees":employee,"messages":messages}
 
     return render(request,'management/mail_box.html',context)
+@csrf_exempt
+def mail_actions(request):
+
+    if request.POST:
+
+        id = request.POST.get("id")
+        pks = request.POST.get("pks").split(',')
+        print(pks)
+        if int(id) == 1:
+
+            for pk in pks:
+                mail_filt_pk = MailMessage.objects.get(pk=pk)
+                mail_filt_pk.label = "star"
+                mail_filt_pk.save()
+        elif int(id) == 2:
+
+            for pk in pks:
+
+                mail_filt_pk = MailMessage.objects.get(pk=pk)
+                mail_filt_pk.delete()
+
+        return JsonResponse("action completed",safe=False)
+
+
+
 
 class EditEmpView(LoginRequiredMixin,UpdateView):
     
