@@ -889,9 +889,11 @@
               <input list="emp_ids" class="form-control" id="emps">
               <datalist id="emp_ids">
                 {% for emp in employee %}
+                  {% if emp.emp_id == request.user.username %}
                 <option value="{{emp.emp_id}}">
                   {{emp.emp_id}}
                 </option>
+                {% endif %}
                 {% endfor %}
               </datalist>
               

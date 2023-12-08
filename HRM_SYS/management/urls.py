@@ -7,7 +7,8 @@ from .views import home,clock,add_department,view_attendance,\
       get_employee,reject_approval,approve_by_details,get_notify,departments,dep_details, recall_approval,recall_by_comment,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
             files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details,view_approval_details,\
-            resign_employee,employee_profile,create_approval,import_att_settings,lookup_employee,get_approval_temp,get_approvals_name,mail_box,mail_actions
+            resign_employee,employee_profile,create_approval,import_att_settings,lookup_employee,get_approval_temp,get_approvals_name,mail_box,mail_actions,\
+            get_mail_body,mail_notify
 
             
 
@@ -73,6 +74,8 @@ urlpatterns = [
       path('password-reset', ResetPasswordView.as_view(), name='password_reset'),
 
       path('mail_box',views.mail_box,name="management_mail_box"),
-      path('mail_actions',views.mail_actions,name="management_mail_actions")
+      path('mail_actions',views.mail_actions,name="management_mail_actions"),
+      path('get_mail_body',views.get_mail_body,name="management_get_mail_body"),
+      path('mail_notify',views.mail_notify,name="management_mail_notify")
 
 ]

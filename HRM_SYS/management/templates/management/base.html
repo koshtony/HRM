@@ -139,6 +139,23 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
        
         
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+              <i class="fa fa-envelope"></i>
+              <span class="count" id="unread"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="mail-notify">
+              <p class="mb-0 font-weight-normal float-left dropdown-header" id="mail-not"></p>
+              
+          
+            </div>
+           
+
+          </a>
+       
+        
+          </li>
+         
          
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
@@ -436,7 +453,7 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
             <div class="collapse" id="icons">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="{% url 'management_live_chat' %}"><i class="fa fa-comment"></i>sema</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{% url 'management_mail_box' %}"><i class="fa fa-comment"></i>Mail Box</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{% url 'management_mail_box' %}"><i class="fa fa-envelope"></i>Beezy Box</a></li>
               </ul>
             </div>
           </li>
@@ -548,6 +565,9 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 
 <script>
+
+
+
   $.ajax({
 
        type:"get",
@@ -579,6 +599,41 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
        display(data)
       }
   })
+
+  // mail notifications ====================
+function getMailNot(){
+  $.ajax({
+
+type:"get",
+url:"{% url 'management_mail_notify' %}",
+success:function(data,status){
+  console.log(data)
+
+ var data = JSON.parse(data)
+ for(key in data){
+  $("#mail-notify").append(
+
+   `
+   <a class="dropdown-item preview-item" href="/mail_box">
+        <p>${data[key].sender}</p>
+         <div class="preview-item-content">
+           <h6 class="preview-subject font-weight-normal">${data[key].subject}</h6>
+           <p class="font-weight-light small-text mb-0 text-muted">
+             ${data[key].time}
+           </p>
+         </div>
+     </a>
+   
+   `
+  )
+}
+
+}
+})
+
+}
+
+setInterval(getMailNot,1000)
 
   const showNotification = (data) => {
 

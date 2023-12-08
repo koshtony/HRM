@@ -19,6 +19,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.db.models import Count,Sum
 from django.db.models.functions import ExtractMonth
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm,CreateApprovalForm
 from .models import *
 from .temps import gen_temp
@@ -1358,7 +1359,18 @@ def del_chat(request):
 def mail_box(request):
 
     employee = Employee.objects.all()
-    messages = MailMessage.objects.all()
+    
+
+    messages_list = MailMessage.objects.all().order_by('-created')
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(messages_list, 10)
+    try:
+        messages = paginator.page(page)
+    except PageNotAnInteger:
+        messages = paginator.page(1)
+    except EmptyPage:
+        messages = paginator.page(paginator.num_pages)
 
 
     if request.POST:
@@ -1366,37 +1378,45 @@ def mail_box(request):
         to = request.POST.get("to")
         body = request.POST.get("message")
         subject = request.POST.get("subject")
+        category = request.POST.get("category")
+
+        if category == "anonymous":
+            sender_ = Profile.objects.get(user__username="anonymous")
+        else:
+            sender_ = request.user.profile
+
+
         try:
-            attachment = request.FILES["attachment"]
-        
+                attachment = request.FILES["attachment"]
             
+                
 
-            mail = MailMessage(
+                mail = MailMessage(
 
-                sender = request.user.profile ,
-                recipient = Profile.objects.get(user__username=to),
-                subject = subject,
-                body = body,
-                attachment = attachment,
-                created = datetime.now()+timedelta(hours=3)
-            )
+                    sender = sender_,
+                    recipient = Profile.objects.get(user__username=to),
+                    subject = subject,
+                    body = body,
+                    attachment = attachment,
+                    created = datetime.now()+timedelta(hours=3)
+                )
 
-            mail.save()
+                mail.save()
         except:
 
-            mail = MailMessage(
+                mail = MailMessage(
 
-                sender = request.user.profile ,
-                recipient = Profile.objects.get(user__username=to),
-                subject = subject,
-                body = body,
-              
-                created = datetime.now()+timedelta(hours=3)
-            )
+                    sender = sender_,
+                    recipient = Profile.objects.get(user__username=to),
+                    subject = subject,
+                    body = body,
+                
+                    created = datetime.now()+timedelta(hours=3)
+                )
 
-            mail.save()
+                mail.save()
 
-
+        
         
 
         return JsonResponse("message sent successfully",safe=False)
@@ -1426,6 +1446,49 @@ def mail_actions(request):
                 mail_filt_pk.delete()
 
         return JsonResponse("action completed",safe=False)
+    
+@csrf_exempt
+def get_mail_body(request):
+
+    if request.POST:
+        
+        pk = request.POST.get("id")
+
+        message_filt =  MailMessage.objects.get(pk=pk)
+
+        message_filt.seen = True
+
+        message_filt.save()
+
+        message_dict = {
+
+              "subject":message_filt.subject, "body":message_filt.body,
+              "attachment":message_filt.attachment.url
+        }
+
+        return JsonResponse(message_dict,safe=False)
+    
+@csrf_exempt
+def mail_notify(request):
+
+    messages = MailMessage.objects.filter(recipient = request.user.profile).filter(seen=False)
+ 
+    msg_list = []
+    for message in messages:
+
+        msg_dict ={
+
+             "sender":str(message.sender.first)+" @ " +str(message.sender.user.username),
+             "subject":message.subject,
+             "time":message.created,
+        }
+
+        msg_list.append(msg_dict)
+
+    msg_dict_list = json.dumps(msg_list,default=str)
+    
+    return JsonResponse(msg_dict_list,safe=False)
+
 
 
 

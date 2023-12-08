@@ -236,20 +236,20 @@
                         <div class="row">
                             <!-- BEGIN INBOX MENU -->
                             <div class="col-md-3">
-                                <h2 class="grid-title"><i class="fa fa-inbox"></i> Inbox</h2>
-                                <a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;NEW MESSAGE</a>
+                                <h4 class="grid-title"><i class="fa fa-inbox"></i> Beezy Box</h4>
+                                <a class="btn btn-block btn-primary" data-toggle="modal" data-target="#compose-modal"><i class="fa fa-pencil"></i>&nbsp;&nbsp;compose</a>
         
                                 <hr>
         
                                 <div>
                                     <ul class="nav nav-pills nav-stacked">
                                         
-                                        <li class="active"><a href="#inbox" data-toggle="tab"><i class="fa fa-inbox"></i> Inbox (14)</a></li>
-                                        <li><a href="#"><i class="fa fa-star"></i> Starred</a></li>
-                                        <li><a href="#"><i class="fa fa-bookmark"></i> Important</a></li>
+                                        <li class="active"><a href="#inbox" data-toggle="tab"><i class="fa fa-inbox"></i> Inbox</a></li>
+                                        <li><a href="#starred" data-toggle="tab"><i class="fa fa-star"></i> Starred</a></li>
+                                        <li><a href="#anonymous" data-toggle="tab"><i class="fa fa-user-secret"></i> anonymous</a></li>
                                         <li><a href="#outbox" data-toggle="tab"><i class="fa fa-mail-forward"></i> Sent</a></li>
                                         
-                                        <li><a href="#"><i class="fa fa-folder"></i> Anonymous (217)</a></li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -267,29 +267,28 @@
                                                 Action <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                <li><a class="btn btn-success" onclick="Actions(1)">star</a></li>
+                                                <li><a class="btn btn-outline" onclick="Actions(1)">star</a></li>
                                                
-                                                <li><a class="btn btn-primary" onclick="Actions(2)">Delete</a></li>
+                                                <li><a class="btn btn-outline" onclick="Actions(2)">Delete</a></li>
                                             </ul>
                                         </div>
                                     </div>
         
                                     <div class="col-md-6 search-form">
-                                        <form action="#" class="text-right">
+                                      
                                             <div class="input-group">
-                                                <input type="text" class="form-control input-sm" placeholder="Search">
-                                                <span class="input-group-btn">
-                                                    <button type="submit" name="search" class="btn_ btn-primary btn-sm search"><i class="fa fa-search"></i></button></span>
+                                                <input type="text" id="mailsearch" class="form-control input-sm" placeholder="Search">
+                                               
                                             </div>			 
-                                        </form>
+                                        
                                     </div>
                                 </div>
                                 
                                 <div class="padding"></div>
                                 <div id="inbox" class="tab-pane fade active show col-lg-12">
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
+                                    <table class="table" id="inboxTab">
+                                        <tbody id="myTable">
                                             {% for message in messages %}
                                             {% if message.recipient.user.username == user.username %}
                                             {% if message.body|length >= 50 %}
@@ -297,8 +296,8 @@
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
                                             <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
                                             
-                                            <td class="name"><a href="#"></a></td>
-                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
                                             <td class="time">08:30 PM</td>
 
                                             
@@ -308,9 +307,16 @@
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
                                             <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
                                             
-                                            <td class="name"><a href="#"></a></td>
-                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
-                                            <td class="time">09:30 PM</td>
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
 
                                             
                                         </tr>
@@ -322,20 +328,32 @@
                                     </tbody></table>
                                 </div>
         
+                                {% if messages.has_other_pages %}
                                 <ul class="pagination">
-                                    <li class="disabled"><a href="#">«</a></li>
-                                    <li class="active"><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">»</a></li>
-                                </ul>	
+                                  {% if messages.has_previous %}
+                                    <li><a href="?page={{ messages.previous_page_number }}">&laquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                  {% endif %}
+                                  {% for i in messages.paginator.page_range %}
+                                    {% if messages.number == i %}
+                                      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                  {% endfor %}
+                                  {% if messages.has_next %}
+                                    <li><a href="?page={{ messages.next_page_number }}">&raquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                  {% endif %}
+                                </ul>
+                              {% endif %}	
                             </div>		
                             <div id="outbox" class="tab-pane fade col-lg-12">
                                 <div class="table-responsive">
-                                    <table class="table">
-                                        <tbody>
+                                    <table class="table" id="outboxTab">
+                                        <tbody id="myTable">
                                             {% for message in messages %}
                                        
                                             {% if message.sender.user.username == user.username %}
@@ -351,9 +369,16 @@
                                             
                                             </td>
                                             
-                                            <td class="name">{{message.recipient.first}}<a href="#"></a></td>
-                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
-                                            <td class="time">{{message.cerated}}</td>
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
 
                                             
                                         </tr>
@@ -369,9 +394,16 @@
                                             
                                             </td>
                                             
-                                            <td class="name">{{message.recipient.first}}<a href="#"></a></td>
-                                            <td class="subject"><a href="#">{{message.body|slice:"0:50"}}</a></td>
-                                            <td class="time">{{message.cerated}}</td>
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
 
                                             
                                         </tr>
@@ -383,15 +415,171 @@
                                     </tbody></table>
                                 </div>
         
+                                {% if messages.has_other_pages %}
                                 <ul class="pagination">
-                                    <li class="disabled"><a href="#">«</a></li>
-                                    <li class="active"><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">»</a></li>
+                                  {% if messages.has_previous %}
+                                    <li><a href="?page={{ messages.previous_page_number }}">&laquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                  {% endif %}
+                                  {% for i in messages.paginator.page_range %}
+                                    {% if messages.number == i %}
+                                      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                  {% endfor %}
+                                  {% if messages.has_next %}
+                                    <li><a href="?page={{ messages.next_page_number }}">&raquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                  {% endif %}
                                 </ul>
+                              {% endif %}
+                            </div>	
+                            <div id="anonymous" class="tab-pane fade col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table" id="anonymousTab">
+                                        <tbody id="myTable">
+                                            {% for message in messages %}
+                                            {% if message.recipient.user.username == user.username and message.sender.user.username == "anonymous" %}
+                                            {% if message.body|length >= 50 %}
+                                            <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
+                                            
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                        </tr>
+                                            
+                                            {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                       
+                                    </tbody></table>
+                                </div>
+        
+                                {% if messages.has_other_pages %}
+                                <ul class="pagination">
+                                  {% if messages.has_previous %}
+                                    <li><a href="?page={{ messages.previous_page_number }}">&laquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                  {% endif %}
+                                  {% for i in messages.paginator.page_range %}
+                                    {% if messages.number == i %}
+                                      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                  {% endfor %}
+                                  {% if messages.has_next %}
+                                    <li><a href="?page={{ messages.next_page_number }}">&raquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                  {% endif %}
+                                </ul>
+                              {% endif %}	
+                            </div>
+                            <div id="starred" class="tab-pane fade col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table" id="anonymousTab">
+                                        <tbody id="myTable">
+                                            {% for message in messages %}
+                                            {% if message.recipient.user.username == user.username and message.label == "star" %}
+                                            {% if message.body|length >= 50 %}
+                                            <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
+                                            
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
+                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            
+                                            <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
+                                            <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
+                                            <td class="time">{{message.created}}</td>
+                                            <td>
+                                                {% if message.seen == True %}
+                                                <i class="fa fa-check"></i>
+                                                {% else %}
+                                                <i></i>
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                        </tr>
+                                            
+                                            {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                       
+                                    </tbody></table>
+                                </div>
+        
+                                {% if messages.has_other_pages %}
+                                <ul class="pagination">
+                                  {% if messages.has_previous %}
+                                    <li><a href="?page={{ messages.previous_page_number }}">&laquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&laquo;</span></li>
+                                  {% endif %}
+                                  {% for i in messages.paginator.page_range %}
+                                    {% if messages.number == i %}
+                                      <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                      <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                  {% endfor %}
+                                  {% if messages.has_next %}
+                                    <li><a href="?page={{ messages.next_page_number }}">&raquo;</a></li>
+                                  {% else %}
+                                    <li class="disabled"><span>&raquo;</span></li>
+                                  {% endif %}
+                                </ul>
+                              {% endif %}	
                             </div>			
                             </div>
                             <!-- END INBOX CONTENT -->
@@ -437,6 +625,13 @@
                                                         <input name="subject" type="text" class="form-control" placeholder="Subject" required>
                                                     </div>
                                                     <div class="form-group">
+                                                        <select class="form-control" name="category">
+                                                            <option value="normal">normal</option>
+                                                            <option value="anonymous">anonymous</option>
+
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <textarea name="message" id="email_message" class="form-control" placeholder="Message" style="height: 120px;" required></textarea>
                                                     </div>
                                                     <div class="form-group">
@@ -444,7 +639,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Discard</button>
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> close</button>
                                                     <button type="submit" class="btn btn-primary pull-right" onclick="sendMail()"><i class="fa fa-envelope"></i> Send Message</button>
                                                 </div>
                                             </form>
@@ -453,6 +648,57 @@
                                 </div>
                             </div>
                             <!-- END COMPOSE MESSAGE -->
+
+                          
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" style="display: none;" id="bodyModals">
+                                Launch demo modal
+                              </button>
+                              
+                              <!-- Modal -->
+                              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h4 class="modal-title" id="subjectHead" style="color:blue"></h4>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body" style="height:500px; overflow-y: scroll;">
+                                      <p id="body">
+
+                                      </p>
+
+                                      
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a id="attachmentFile" download><i class="fa fa-download"></i>attachment</a>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                      
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -460,8 +706,45 @@
             <!-- END INBOX -->
         </div>
         </div>
-
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script>
+
+$(document).ready(function(){
+  $("#mailsearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+new DataTable('#anonymousTab');
+new DataTable('#inboxTab');
+new DataTable('#outboxTab');
+
+function getBody(id){
+
+    $("#bodyModals").click()
+    $.ajax({
+
+        method:"POST",
+        url:"{% url 'management_get_mail_body' %}",
+        data:{
+
+            id:id
+        },
+        success:function(data,status){
+          
+        
+            document.getElementById("subjectHead").innerHTML = data["subject"]
+            document.getElementById("body").innerHTML = data["body"]
+            document.getElementById("attachmentFile").href = data["attachment"]
+
+        }
+    })
+}
 
  function Actions(id){
     var checks = []
@@ -482,7 +765,7 @@
 
                 document.getElementById(checks[i].toString()).innerHTML = '<i class="fa fa-star"></i>'
             }
-           console.log("starred")
+           alert("action completed")
 
         }
       })
@@ -520,6 +803,8 @@
    })
   })
   }
+
+ 
 </script>
 
 
