@@ -35,12 +35,20 @@ class ApplicationsAdmin(admin.ModelAdmin):
 
 class AttAdmin(admin.ModelAdmin):
         list_display = ("employee","clock_in","clock_out","lat","long","lat1","long1","image1","image2")
-        list_filter = ("employee",)
+        
+        search_fields = ["employee"]
         
 class FilesAdmin(admin.ModelAdmin):
 
         list_display = ("employee","category","properties","created","document")
-        list_filter = ("employee",)
+        search_fields = ["employee"]
+
+class AttSettingsAdmin(admin.ModelAdmin):
+
+        list_display = ("employee_id","start","end","deduction_per_day","expected_days","clock_in_latitude","clock_in_longitude")
+        search_fields = ["employee_id"]
+
+
 
 
         
@@ -53,7 +61,7 @@ admin.site.register(Approvals,ApprovalsAdmin)
 admin.site.register(Applications,ApplicationsAdmin)
 admin.site.register(Attendance,AttAdmin)
 admin.site.register(EmpFiles,FilesAdmin)
-admin.site.register(AttSettings)
+admin.site.register(AttSettings,AttSettingsAdmin)
 admin.site.register(FilesCategory)
 admin.site.register(Leave)
 admin.site.register(Profile)
