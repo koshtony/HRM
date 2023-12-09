@@ -250,7 +250,7 @@
                               </td> <td>
                                 {{application.created_time}}
                               </td>
-                              {% if application.status == "rejected" %}
+                              {% if application.status == "rejected" or application.status == "cancelled"  %}
                               <td style="color:red">
                                 {{application.status}}
                               </td>
