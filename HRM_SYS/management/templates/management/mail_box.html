@@ -272,6 +272,18 @@
                                                 <li><a class="btn btn-outline" onclick="Actions(2)">Delete</a></li>
                                             </ul>
                                         </div>
+                                        <div id="loaders44" style="display: none;">
+                                          <div class="spinner-grow text-primary" role="status">
+                                            <span class="sr-only">sending...</span>
+                                          </div>
+                                          <div class="spinner-grow text-secondary" role="status">
+                                            <span class="sr-only">sending...</span>
+                                          </div>
+                                          <div class="spinner-grow text-success" role="status">
+                                            <span class="sr-only">sending...</span>
+                                          </div>
+                                        
+                                          </div>
                                     </div>
         
                                     <div class="col-md-6 search-form">
@@ -294,7 +306,14 @@
                                             {% if message.body|length >= 50 %}
                                             <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -305,7 +324,14 @@
                                         {% else %}
                                         <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -442,11 +468,18 @@
                                     <table class="table" id="anonymousTab">
                                         <tbody id="myTable">
                                             {% for message in messages %}
-                                            {% if message.recipient.user.username == user.username and message.sender.user.username == "anonymous" %}
+                                            {% if message.masked_sender == user.username and message.sender.user.username == "anonymous" %}
                                             {% if message.body|length >= 50 %}
                                             <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -464,7 +497,14 @@
                                         {% else %}
                                         <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -518,7 +558,14 @@
                                             {% if message.body|length >= 50 %}
                                             <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action" id="{{message.pk}}"><i class="fa fa-star-o"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -536,7 +583,14 @@
                                         {% else %}
                                         <tr>
                                             <td class="action"><input type="checkbox" class="checkboxall" value="{{message.pk}}" /></td>
-                                            <td class="action"><i class="fa fa-star-o" value="{{message.pk}}"></i></td>
+                                            <td class="action" id="{{message.pk}}">
+                                              {% if message.label == "star" %}
+                                              <i class="fa fa-star"></i>
+                                              {% else %}
+                                              <i class="fa fa-star-o"></i>
+                                              {% endif %}
+                                          
+                                          </td>
                                             
                                             <td class="name">{{messsage.sender.first}}@{{message.sender.user.username}}</td>
                                             <td class="subject"><a onclick="getBody('{{message.pk}}')">{{message.body|slice:"0:50"}}</a></td>
@@ -720,9 +774,6 @@ $(document).ready(function(){
   });
 });
 
-new DataTable('#anonymousTab');
-new DataTable('#inboxTab');
-new DataTable('#outboxTab');
 
 function getBody(id){
 
@@ -759,15 +810,34 @@ function getBody(id){
             id:id,
             pks:checks.toString()
         },
+        beforeSend:function(){
+                $("#loaders44").show()
+             },
         success:function(data,status){
+          
+          if(data=="starred"){
 
             for(var i=0;i<=checks.length;i++){
 
                 document.getElementById(checks[i].toString()).innerHTML = '<i class="fa fa-star"></i>'
             }
-           alert("action completed")
+            $("#loaders44").hide()
 
-        }
+          }else{
+
+            alert(data+" successfully")
+          }
+           
+
+        },
+        complete:function(){
+                
+                $("#loaders44").hide()
+                
+  
+               }
+
+
       })
  }
 

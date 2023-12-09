@@ -200,10 +200,10 @@
                           <thead>
                             <tr>
                               <th>
-                                Type
+                                #
                               </th>
                               <th>
-                                Applicant
+                                Type
                               </th>
                               
                               <th>
@@ -231,10 +231,10 @@
                             {% if application.applicant.username == request.user.username %}
                             <tr>
                               <td class="py-1">
-                                 {{application.type}}
+                                 {{application.pk}}
                               </td>
                               <td>
-                                {{application.applicant}}
+                                {{application.type}}
                               </td>
                              
                               <td>

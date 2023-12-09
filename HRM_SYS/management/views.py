@@ -93,7 +93,7 @@ def approvals(request):
 def view_approvals(request):
 
     context = {
-        "applications":Applications.objects.all().filter(applicant=request.user).order_by('-pk'),
+        "applications":Applications.objects.filter(applicant=request.user).order_by('-pk'),
         "tracks":approvalTrack.objects.all()
         
         }
@@ -529,7 +529,7 @@ def clock(request):
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
-                        clock_in = datetime.now(),
+                        clock_in = datetime.now()+timedelta(hours=3),
                         clock_out = empty,
                         lat =lat ,long=long,image1=image_info,
                         lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
@@ -544,7 +544,7 @@ def clock(request):
             
             elif len(att_filt)>0 and att_filt[0].clock_out == '':
                 
-                att_filt[0].clock_out = datetime.now()
+                att_filt[0].clock_out = datetime.now()+timedelta(hours=3)
                 att_filt[0].lat1 = lat
                 att_filt[0].long1 = long 
                 att_filt[0].image2 = image_info
@@ -564,7 +564,7 @@ def clock(request):
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
                         clock_in = empty,
-                        clock_out = datetime.now(),
+                        clock_out = datetime.now()+timedelta(hours=3),
                         lat = empty ,long=empty,image1=empty,
                         lat1 = lat, long1 = long, image2 = image_info,remarks="clock out",
                         deductions  = 0,
@@ -739,7 +739,7 @@ def create_approval(request):
 
             name = approval, 
             approvers = approvers,
-            created = datetime.now(),
+            created = datetime.now()+timedelta(hours=3),
             remarks = "created by -> "+str(request.user.username)
         )
         apps.save()
@@ -785,7 +785,7 @@ def upload_leave(request):
                 applicant = request.user,details = form.cleaned_data.get("details"),
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
-                created_date = datetime.now(),created_time = datetime.now(),
+                created_date = datetime.now(),created_time = datetime.now()+timedelta(hours=3),
                 start = form.cleaned_data.get("start"), end = form.cleaned_data.get("end"),
                 days = form.cleaned_data.get("days")
 
@@ -815,7 +815,7 @@ def upload_process(request):
                     recipient = User.objects.get(username=approve),
                     info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
                     date = datetime.now(),
-                    time = datetime.now(),
+                    time = datetime.now()+timedelta(hours=3),
                     url = "{}"
          
                 )
@@ -828,7 +828,7 @@ def upload_process(request):
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
                 created_date = datetime.now(),
-                created_time = datetime.now()
+                created_time = datetime.now()+timedelta(hours=3)
                
                 
             )
@@ -938,7 +938,7 @@ def approve_by_details(request):
                 comments = comments,
                 status = status,
                 date = date.today(),
-                time = datetime.now()
+                time = datetime.now()+timedelta(hours=3)
                 )
             else:
                 application.status = "pending"
@@ -951,7 +951,7 @@ def approve_by_details(request):
                     comments = comments,
                     status = status,
                     date = date.today(),
-                    time = datetime.now()
+                    time = datetime.now()+timedelta(hours=3)
                 )
                 track.save()
         
@@ -968,7 +968,7 @@ def approve_by_details(request):
                 comments = comments,
                 status = status,
                 date = date.today(),
-                time = datetime.now()
+                time = datetime.now()+timedelta(hours=3)
             )
             track.save()
 
@@ -1005,7 +1005,7 @@ def recall_by_comment(request):
             comments =remark,
             status = "cancelled",
             date = datetime.now(),
-            time = datetime.now()
+            time = datetime.now()+timedelta(hours=3)
         )
         track.save()
         return JsonResponse("remark added successfully",safe=False)
@@ -1160,7 +1160,7 @@ def show_map(request,coords):
    folium.Marker(coords).add_to(map)
    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
    folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)in javascript
+   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
    folium.LayerControl().add_to(map)
 
   
@@ -1235,7 +1235,7 @@ def sent_msg(request,pk):
                 sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = ind_profile,
-                sent = datetime.now(),
+                sent = datetime.now()+timedelta(hours=3),
                 seen = False
                 
                 )
@@ -1249,7 +1249,7 @@ def sent_msg(request,pk):
                 sender = request.user.profile,
                 anonymous_sender = request.user.profile,
                 recep = ind_profile,
-                sent = datetime.now(),
+                sent = datetime.now()+timedelta(hours=3),
                 seen = False
                 
                 )
@@ -1276,7 +1276,7 @@ def chat_reply(request):
                 sender = request.user.profile,
                 anonymous_sender = request.user.profile,
                 recep = chats.sender,
-                sent = datetime.now(),
+                sent = datetime.now()+timedelta(hours=3),
                 seen = False
                 
                 )
@@ -1289,7 +1289,7 @@ def chat_reply(request):
                 sender = Profile.objects.get(user__username="anonymous") ,
                 anonymous_sender = request.user.profile,
                 recep = chats.anonymous_sender,
-                sent = datetime.now(),
+                sent = datetime.now()+timedelta(hours=3),
                 seen = False
                 
                 )
@@ -1385,7 +1385,7 @@ def mail_box(request):
         else:
             sender_ = request.user.profile
 
-
+       
         try:
                 attachment = request.FILES["attachment"]
             
@@ -1394,6 +1394,7 @@ def mail_box(request):
                 mail = MailMessage(
 
                     sender = sender_,
+                    masked_sender = str(request.user.username),
                     recipient = Profile.objects.get(user__username=to),
                     subject = subject,
                     body = body,
@@ -1407,6 +1408,7 @@ def mail_box(request):
                 mail = MailMessage(
 
                     sender = sender_,
+                    masked_sender = str(request.user.username),
                     recipient = Profile.objects.get(user__username=to),
                     subject = subject,
                     body = body,
@@ -1431,21 +1433,24 @@ def mail_actions(request):
 
         id = request.POST.get("id")
         pks = request.POST.get("pks").split(',')
-        print(pks)
+        msg = ''
         if int(id) == 1:
-
+            
             for pk in pks:
-                mail_filt_pk = MailMessage.objects.get(pk=pk)
+                mail_filt_pk = MailMessage.objects.get(pk=int(pk))
                 mail_filt_pk.label = "star"
                 mail_filt_pk.save()
+                msg+="starred"
+
         elif int(id) == 2:
 
             for pk in pks:
 
-                mail_filt_pk = MailMessage.objects.get(pk=pk)
+                mail_filt_pk = MailMessage.objects.get(pk=int(pk))
                 mail_filt_pk.delete()
+                msg+="deleted"
 
-        return JsonResponse("action completed",safe=False)
+        return JsonResponse(msg,safe=False)
     
 @csrf_exempt
 def get_mail_body(request):
@@ -1459,12 +1464,20 @@ def get_mail_body(request):
         message_filt.seen = True
 
         message_filt.save()
+        try:
+            message_dict = {
 
-        message_dict = {
+                "subject":message_filt.subject, "body":message_filt.body,
+                "attachment":message_filt.attachment.url
+            }
+        except:
 
-              "subject":message_filt.subject, "body":message_filt.body,
-              "attachment":message_filt.attachment.url
-        }
+            message_dict = {
+
+                "subject":message_filt.subject, "body":message_filt.body,
+                "attachment":""
+            }
+
 
         return JsonResponse(message_dict,safe=False)
     

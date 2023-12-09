@@ -317,6 +317,7 @@ class MailMessage(models.Model):
 
     sender = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="mail_sender")
     recipient = models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="mail_recipient")
+    masked_sender = models.CharField(max_length=100,default="")
     subject = models.CharField(max_length=200)
     body = models.TextField()
     attachment = models.FileField(null=True,upload_to='mail_files')
