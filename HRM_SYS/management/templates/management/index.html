@@ -117,7 +117,7 @@
           </div>
         
           <div class="row">
-            <div class="col-md-4 stretch-card grid-margin" style="overflow-y: scroll; height: 300px;">
+            <div class="col-md-4 stretch-card grid-margin"  style="overflow-y: scroll; height: 300px;">
               <div class="card">
                 <div class="card-body">
                   <p class="card-title mb-0">System Generated Files</p>
@@ -197,7 +197,7 @@
                     
                         <div class="li-wrapper px-3" >
                           <ul class="d-flex flex-column-reverse todo-list">
-                            {% cache 500 todo_list %}
+                            
                             {% for todo in todos %}
                             <li>
                               <div class="form-check">
@@ -217,7 +217,7 @@
                             </li>
                             {% endfor %}
 
-                            {% endcache %}
+                         
                             
                             
                             
