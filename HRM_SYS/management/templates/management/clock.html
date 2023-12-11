@@ -254,7 +254,7 @@ getLoc()
           m = checkTime(min);
           s = checkTime(sec);
           document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "";
-          if((h>=document.getElementById("h1").innerHTML && min>document.getElementById("m1").innerHTML) && document.getElementById("in").innerHTML == ""){
+          if((h>=document.getElementById("h1").innerHTML && min>document.getElementById("m1").innerHTML) && (document.getElementById("in").innerHTML == "" && h<=document.getElementById("h2").innerHTML)){
             document.getElementById('timenow').style.color = "red";
             document.getElementById('timenow').innerHTML =  h + ":" + m + ":" + s+ "late";
           }else if((h>=document.getElementById("h2").innerHTML && min>document.getElementById("m2").innerHTML) || document.getElementById("in").innerHTML != ""){
@@ -376,7 +376,7 @@ getLoc()
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
 
-             if($("#image_info").val() != ''){
+             if($("#image_info").val() != '' || $("#longitudes").val() != ''){
 
              
           

@@ -1,5 +1,7 @@
 {% extends 'management/base.html' %}
 
+{% load cache %}
+
 {% block content %}
 <style>
 
@@ -198,7 +200,36 @@
 
     <div class="main-panel">
 
-		<h1 class="h3 mb-3">Messages</h1>
+		<h1 class="h3 mb-3">New Messages</h1>
+        <div class="row">
+           
+            
+             
+               
+                <div class="col-md-6 stretch-card grid-margin" >
+                    <input  id="new" list="users" type="text" class="form-control" placeholder="To" required>
+                    <datalist id="users">
+                        {% cache 600 profile_list %}
+                      {% for profile in profiles %}
+                        <option value="{{profile.user.id}}">{{profile.first}}@{{profile.user.username}}</option>
+                      {% endfor %}
+                      {% endcache %}
+
+                    </datalist>
+                </div>
+                <br>
+                <br>
+                <div class="col-md-6 stretch-card grid-margin" >
+                   <button class="btn btn-primary" onclick="newMessage()">+ conversation</button>
+                </div>
+                <br>
+                <br>
+                <div id="newConvo">
+
+                </div>
+
+            
+          </div>
        
        
 
@@ -217,37 +248,79 @@
                               <thead>
                                 <tr>
                                   <th>
-                                    id
+                                  sender
                                   </th>
+                                 
                                   <th>
-                                    name
-                                  </th>
-                                  <th>
-                                    new
+                                    seen
                                   </th>
                                   <th>
                                     inbox
+                                  </th>
+                                  <th>
+                                    time
                                   </th>
                             </tr>
                            
 
                             </thead>
                             <tbody>
-                                {% for profile in profiles %}
+                                {% for message in messages %}
+                                {% if anonymous == true %}
                                 <tr>
                                     <td>
-                                        {{profile.user.username}}
+                                        {{message.sender.user.username}}@{{message.sender.first}}
+                                    </td>
+                                    <!--
+                                    {% if message.body|length >= 50 %}
+                                    <td>
+                                        <p style="color:yellowgreen; font-weight:bold;">{{message.body|slice:"0:50"|safe}}</p>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <p style="color:yellowgreen; font-weight:bold;">{{message.body|safe}}</p>
+                                    </td>
+                                    {% endif %}
+                                -->
+                                    <td>
+                                        {{message.seen}}
+                                    </td>
+                                    
+                                    <td>
+                                        <a href="{% url 'management_live_chat_user' message.sender.user.id %}"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 13.7596 1.41318 15.4228 2.14781 16.8977C2.34303 17.2897 2.40801 17.7377 2.29483 18.1607L1.63966 20.6093C1.35525 21.6723 2.32772 22.6447 3.39068 22.3603L5.83932 21.7052C6.26233 21.592 6.71033 21.657 7.10228 21.8522C8.5772 22.5868 10.2404 23 12 23Z" fill="#0135df"></path> <path d="M10.9 12.0004C10.9 12.6079 11.3925 13.1004 12 13.1004C12.6075 13.1004 13.1 12.6079 13.1 12.0004C13.1 11.3929 12.6075 10.9004 12 10.9004C11.3925 10.9004 10.9 11.3929 10.9 12.0004Z" fill="#0135df"></path> <path d="M6.5 12.0004C6.5 12.6079 6.99249 13.1004 7.6 13.1004C8.20751 13.1004 8.7 12.6079 8.7 12.0004C8.7 11.3929 8.20751 10.9004 7.6 10.9004C6.99249 10.9004 6.5 11.3929 6.5 12.0004Z" fill="#0135df"></path> <path d="M15.3 12.0004C15.3 12.6079 15.7925 13.1004 16.4 13.1004C17.0075 13.1004 17.5 12.6079 17.5 12.0004C17.5 11.3929 17.0075 10.9004 16.4 10.9004C15.7925 10.9004 15.3 11.3929 15.3 12.0004Z" fill="#0135df"></path> </g></svg></a>
                                     </td>
                                     <td>
-                                        @{{profile.first}}
-                                    </td>
-                                    <td>
-                                        <div class="badge bg-success float-right" id="chats-no" style="color:black"></div>
-                                    </td>
-                                    <td>
-                                        <a href="{% url 'management_live_chat_user' profile.user.id %}"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 13.7596 1.41318 15.4228 2.14781 16.8977C2.34303 17.2897 2.40801 17.7377 2.29483 18.1607L1.63966 20.6093C1.35525 21.6723 2.32772 22.6447 3.39068 22.3603L5.83932 21.7052C6.26233 21.592 6.71033 21.657 7.10228 21.8522C8.5772 22.5868 10.2404 23 12 23Z" fill="#0135df"></path> <path d="M10.9 12.0004C10.9 12.6079 11.3925 13.1004 12 13.1004C12.6075 13.1004 13.1 12.6079 13.1 12.0004C13.1 11.3929 12.6075 10.9004 12 10.9004C11.3925 10.9004 10.9 11.3929 10.9 12.0004Z" fill="#0135df"></path> <path d="M6.5 12.0004C6.5 12.6079 6.99249 13.1004 7.6 13.1004C8.20751 13.1004 8.7 12.6079 8.7 12.0004C8.7 11.3929 8.20751 10.9004 7.6 10.9004C6.99249 10.9004 6.5 11.3929 6.5 12.0004Z" fill="#0135df"></path> <path d="M15.3 12.0004C15.3 12.6079 15.7925 13.1004 16.4 13.1004C17.0075 13.1004 17.5 12.6079 17.5 12.0004C17.5 11.3929 17.0075 10.9004 16.4 10.9004C15.7925 10.9004 15.3 11.3929 15.3 12.0004Z" fill="#0135df"></path> </g></svg></a>
+                                        {{message.sent}}
                                     </td>
                                 </tr>
+                                {% else %}
+                                <tr>
+                                    <td>
+                                        {{message.anonymous_sender.user.username}}@{{message.anonymous_sender.first}}
+                                    </td>
+                                    <!--
+                                    {% if message.body|length >= 50 %}
+                                    <td>
+                                        <p style="color:yellowgreen; font-weight:bold;">{{message.body|slice:"0:50"|safe}}</p>
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        <p style="color:yellowgreen; font-weight:bold;">{{message.body|safe}}</p>
+                                    </td>
+                                    {% endif %}
+                                -->
+                                    <td>
+                                        {{message.seen}}
+                                    </td>
+                                    
+                                    <td>
+                                        <a href="{% url 'management_live_chat_user' message.anonymous_sender.user.id %}"><svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="0.5" d="M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 13.7596 1.41318 15.4228 2.14781 16.8977C2.34303 17.2897 2.40801 17.7377 2.29483 18.1607L1.63966 20.6093C1.35525 21.6723 2.32772 22.6447 3.39068 22.3603L5.83932 21.7052C6.26233 21.592 6.71033 21.657 7.10228 21.8522C8.5772 22.5868 10.2404 23 12 23Z" fill="#0135df"></path> <path d="M10.9 12.0004C10.9 12.6079 11.3925 13.1004 12 13.1004C12.6075 13.1004 13.1 12.6079 13.1 12.0004C13.1 11.3929 12.6075 10.9004 12 10.9004C11.3925 10.9004 10.9 11.3929 10.9 12.0004Z" fill="#0135df"></path> <path d="M6.5 12.0004C6.5 12.6079 6.99249 13.1004 7.6 13.1004C8.20751 13.1004 8.7 12.6079 8.7 12.0004C8.7 11.3929 8.20751 10.9004 7.6 10.9004C6.99249 10.9004 6.5 11.3929 6.5 12.0004Z" fill="#0135df"></path> <path d="M15.3 12.0004C15.3 12.6079 15.7925 13.1004 16.4 13.1004C17.0075 13.1004 17.5 12.6079 17.5 12.0004C17.5 11.3929 17.0075 10.9004 16.4 10.9004C15.7925 10.9004 15.3 11.3929 15.3 12.0004Z" fill="#0135df"></path> </g></svg></a>
+                                    </td>
+                                    <td>
+                                        {{message.sent}}
+                                    </td>
+                                </tr>
+                                {% endif %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -291,9 +364,10 @@
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script>
 
-     setInterval(getLatest,1000)
+  
 	
      new DataTable('#chatTab');
+     /**
 	function getLatest(){
 
 		var url = "{% url 'management_chat_notify' %}"
@@ -306,6 +380,7 @@
            var msgs = data["msg"]
            var sender = data["sender"]
            var dates = data["dates"]
+           var pks = data["pks"]
           
          
 
@@ -313,16 +388,29 @@
             
 			var sum = 0
 			for(var i=0;i<numbers.length;i++){ 
-				noChatDiv[i].innerHTML = numbers[i]
+				
 				sum += parseInt(numbers[i])
 
 			}
             console.log(sum)
 			document.getElementById("unread").innerHTML = sum
-              
-            document.getElementById("not-p").innerHTML = '<strong>'+sender[sender.length-1].toString()+'</strong>'+' '+msgs[msgs.length-1].toString()+ ' sent on:'+dates[dates.length-1]
 
-         
+           
+              
+            $("#not-p").html(`
+            
+
+            <a class="dropdown-item preview-item" href="live_chat" style="background-color:yellowgreen">
+        <p>${sender[sender.length-1]}</p>
+         <div class="preview-item-content">
+           <h6 class="preview-subject font-weight-normal">latest message</h6>
+           <p class="font-weight-light small-text mb-0 text-muted">
+            sent on ${dates[dates.length-1]}
+           </p>
+         </div>
+     </a>`
+
+            )
 
 			
            }
@@ -330,12 +418,18 @@
 			)
 	}
 
-	function insertChatBox(id){
-       $("#profilez").hide()
-       $("#chatBtn").show()
-       document.getElementById("chatBox").src = 'live_chat/live_chat_user/'+id
-	}
+	**/
+   function newMessage(){
+    
+      var id = document.getElementById("new").value
+      var link = 'live_chat/live_chat_user/'+id 
 
+      document.getElementById("newConvo").innerHTML = `
+        
+           <a href='${link}' class='btn btn-outline' style="color:green"> click here start new conversation</a>
+      `
+        
+   }
    function search(){
           var value = $("#pname").val()
               var value=value.toLowerCase();
@@ -349,10 +443,6 @@
           
         }
 
-function showProfiles(){
-    $("#profilez").show()
-    $("#chatBtn").hide()
-}
 </script>
 
 {% endblock content %}

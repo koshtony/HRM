@@ -16,11 +16,13 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
 from django.conf import settings
 from django.db.models import Count,Sum
 from django.db.models.functions import ExtractMonth
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm,CreateApprovalForm
+from django.contrib.auth import update_session_auth_hash
 from .models import *
 from .temps import gen_temp
 from payroll.models import PayRoll
@@ -35,8 +37,8 @@ import json
 import os
 # Create your views here.
 @login_required
-
 def home(request):
+    cache.clear()
     todos = []
     for todo in Applications.objects.all():
         if request.user.username == todo.approvers.split(',')[0]:
@@ -44,13 +46,14 @@ def home(request):
                  todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found'
             ]
             todos.append(apps)
-    print(todos)
     event = Events.objects.last()
     department = Department.objects.all()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
     attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
     context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
     return render(request,'management/index.html',context)
+
+
 @login_required
 def register(request):
     form=UserRegForm()
@@ -108,9 +111,11 @@ def get_approvals_name(request):
       
         apps = Applications.objects.get(pk=pk)
         names = []
-        for id in apps.type.approvers.split('/n'):
-
+        for id in apps.type.approvers.split('\r\n'):
+            
+            
             if id in apps.approvers.split(','):
+                
             
                 try:
                     Employee.objects.get(emp_id = id)
@@ -122,20 +127,21 @@ def get_approvals_name(request):
             else:
 
                 try:
+                    print(id)
                     Employee.objects.get(emp_id = id)
 
                     names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"pending"})
                 except:
 
                     names.append({"name":"couldn't find name for "+str(id),"status":"pending"})
-
+           
 
         return JsonResponse(names,safe=False)
 
 
 
 
-
+@login_required
 def leave(request):
 
   
@@ -207,6 +213,7 @@ def add_employee(request):
     context = {"emp_form":EmpForm()}
 
     return render(request,'management/add_employees.html',context)
+@login_required
 @csrf_exempt
 def resign_employee(request):
 
@@ -227,7 +234,7 @@ def resign_employee(request):
         return JsonResponse("resignation successfully set",safe=False)
 
 
-
+@login_required
 def list_employee(request):
     
     dep_count =  Employee.objects.values('departments__name').annotate(all_deps = Count('departments__name'))
@@ -270,7 +277,7 @@ def list_employee(request):
         }
     
     return render(request,'management/list_employees.html',context)
-
+@login_required
 def get_employee(request):
 
     if request.POST:
@@ -285,7 +292,7 @@ def get_employee(request):
         
         print(employee)
         return JsonResponse(employee, safe=False)
-    
+@login_required   
 def employee_profile(request,id):
 
     employee = Employee.objects.get(emp_id = id)
@@ -309,7 +316,7 @@ def get_emp_other_details(request):
             other_fields_all.append({"name":str(other_field.split(":")[0]),"value":str(other_field.split(":")[1])})
         
         return JsonResponse(other_fields_all,safe=False)
-
+@login_required
 def get_employee_template(request):
 
     filename = 'employee_template.xlsx'
@@ -322,6 +329,7 @@ def get_employee_template(request):
     response = FileResponse(path,as_attachment=True)
 
     return response
+@login_required
 @csrf_exempt
 def import_employee_data(request):
 
@@ -381,7 +389,7 @@ def import_employee_data(request):
 
             return JsonResponse(str(err),safe=False)
 
-
+@login_required
 @csrf_exempt
 def import_att_settings(request):
 
@@ -400,7 +408,7 @@ def import_att_settings(request):
         return JsonResponse(str(err),safe=False)
 
 
-
+@login_required
 @csrf_exempt
 def lookup_employee(request):
 
@@ -425,6 +433,7 @@ def lookup_employee(request):
     
 
 
+@login_required
 def list_files(request):
 
     context ={"files":EmpFiles.objects.all(),"file_form":filesForm()}
@@ -438,7 +447,7 @@ def list_files(request):
             
             return JsonResponse("file uploaded successfully",safe=False)
     return render(request,'management/files.html',context)
-
+@login_required
 def get_emp_files(request):
 
     if request.POST:
@@ -456,7 +465,7 @@ def get_emp_files(request):
             all_my_files.append(file_inst)
         print(all_my_files)
         return JsonResponse(all_my_files,safe=False)
-    
+@login_required    
 def files_details(request,id):
 
         emp_files = EmpFiles.objects.filter(employee=Employee.objects.get(emp_id=id))
@@ -469,6 +478,7 @@ def files_details(request,id):
 
         return render(request,'management/files_details.html',context)
 # delete all selected files
+@login_required
 @csrf_exempt
 def files_del(request):
 
@@ -482,7 +492,7 @@ def files_del(request):
             count+=1
         
         return JsonResponse(str(count)+" file(s) deleted successfully",safe=False)
-
+    
 @login_required
 def clock(request):
 
@@ -588,7 +598,7 @@ def clock(request):
 
 
     return render(request,'management/clock.html',context)
-
+@login_required
 def get_attendance(request):
 
     today_att = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
@@ -632,7 +642,7 @@ def get_attendance(request):
             }
         
         return JsonResponse(details,safe=False)
-
+@login_required
 def view_attendance(request):
 
     attendances =  Attendance.objects.all().order_by('-pk')
@@ -714,7 +724,7 @@ def view_attendance(request):
     context = {"attendances":attendances,"lates":late, "leaves":today_leaves,"absents":absents}
 
     return render(request,'management/list_attendance.html',context)
-
+@login_required
 def edit_att_settings(request,emp_id):
 
     settings = AttSettings.objects.filter(employee_id = emp_id)[0]
@@ -728,6 +738,7 @@ def edit_att_settings(request,emp_id):
 
     return render(request,'management/edit_attendance.html',context)
 @csrf_exempt
+@login_required
 def create_approval(request):
     
     if request.POST:
@@ -973,7 +984,7 @@ def approve_by_details(request):
             track.save()
 
             return JsonResponse("application rejected successfully",safe=False)
-        
+@login_required        
 def recall_approval(request):
 
     if request.POST:
@@ -1009,6 +1020,7 @@ def recall_by_comment(request):
         )
         track.save()
         return JsonResponse("remark added successfully",safe=False)
+@login_required
 @csrf_exempt
 def view_approval_details(request):
 
@@ -1069,6 +1081,7 @@ def change_password(request):
 ''''
     displays both announcements and events
 '''
+@login_required
 def Event(request):
     
     events = Events.objects.all().order_by('-created')
@@ -1094,6 +1107,7 @@ def Event(request):
 '''
     saves created post
 '''
+@login_required
 def add_event(request):
 
     if request.method == 'POST':
@@ -1119,7 +1133,7 @@ def add_event(request):
 
            return JsonResponse("created successfully",safe=False)
 
-
+@login_required
 def del_event(request):
 
     if request.POST:
@@ -1129,7 +1143,7 @@ def del_event(request):
         Events.objects.get(pk=pk).delete()
 
         return JsonResponse("deleted successfully",safe=False)
-
+@login_required
 def Post(request):
 
     return render(request,'management/post.html')
@@ -1151,7 +1165,7 @@ def get_notify(request):
 
 
     return JsonResponse(notifications,safe=False)
-
+@login_required
 def show_map(request,coords):
    
    coords = [float(cord) for cord in coords.split('_')]
@@ -1176,17 +1190,18 @@ def iframe_redirect(request):
 
     return render(request,'management/iframe_redirect.html')
 
-
+@login_required
 def live_chat(request):
 
     profiles = Profile.objects.all()
+    messages = ChatMessage.objects.filter(recep=request.user.profile).order_by('-pk')[:5]
     contxt = {
         
-        "profiles":profiles
+        "messages":messages,"profiles":profiles,
     }
     return render(request,'management/chats.html',contxt)
 
-
+@login_required
 def live_chat_user(request,pk):
     
     
@@ -1215,6 +1230,7 @@ def live_chat_user(request,pk):
             
     
     return render(request,'management/chat.html',contxt)
+@login_required
 @csrf_exempt
 def sent_msg(request,pk):
     
@@ -1256,7 +1272,7 @@ def sent_msg(request,pk):
             new_chat.save()
             return JsonResponse({"mssg":new_chat.body,"date":str(new_chat.sent)},safe=False)
 
-            
+@login_required           
 @csrf_exempt
 def chat_reply(request):
 
@@ -1300,7 +1316,7 @@ def chat_reply(request):
 
 
 
-
+@login_required
 def chat_notify(request):
     
     
@@ -1308,15 +1324,16 @@ def chat_notify(request):
 
     
     
-    usrs_arr,chats_arr,send_arr,dates_arr = [],[],[],[]
+    usrs_arr,chats_arr,send_arr,dates_arr,pk_arr = [],[],[],[],[]
 
     for usr in usrs:
-        chats = ChatMessage.objects.filter(sender__id = usr.id , recep = request.user.profile,seen=False)
+        chats = ChatMessage.objects.filter(sender__id = usr.id , recep = request.user.profile,seen=True)
         usrs_arr.append(chats.count())
         for chat in chats:
             chats_arr.append(chat.body)
-            send_arr.append(chat.sender.user.username)
+            send_arr.append(str(chat.sender.first)+"@"+str(chat.sender.user.username))
             dates_arr.append(chat.sent)
+            
 
     res_dict = {
 
@@ -1326,10 +1343,10 @@ def chat_notify(request):
 
 
                 }
-    print(res_dict)
+   
     return JsonResponse(res_dict,safe=False)
 
-
+@login_required
 def recv_msg(request,pk):
     
     ind_profile = Profile.objects.get(user_id=pk)
@@ -1343,7 +1360,7 @@ def recv_msg(request,pk):
         chats_arr.append(chat.body)
         
     return JsonResponse(chats_arr,safe=False)
-
+@login_required
 def del_chat(request):
 
     if request.POST:
@@ -1355,7 +1372,7 @@ def del_chat(request):
         mssg_del.delete()
 
         return JsonResponse("message deleted",safe=False)
-    
+@login_required 
 def mail_box(request):
 
     employee = Employee.objects.all()
@@ -1426,6 +1443,7 @@ def mail_box(request):
     context= {"employees":employee,"messages":messages}
 
     return render(request,'management/mail_box.html',context)
+@login_required
 @csrf_exempt
 def mail_actions(request):
 
@@ -1451,7 +1469,7 @@ def mail_actions(request):
                 msg+="deleted"
 
         return JsonResponse(msg,safe=False)
-    
+@login_required  
 @csrf_exempt
 def get_mail_body(request):
 
@@ -1480,11 +1498,11 @@ def get_mail_body(request):
 
 
         return JsonResponse(message_dict,safe=False)
-    
+@login_required   
 @csrf_exempt
 def mail_notify(request):
 
-    messages = MailMessage.objects.filter(recipient = request.user.profile).filter(seen=False)
+    messages = MailMessage.objects.filter(recipient = request.user.profile).filter(seen=True)
  
     msg_list = []
     for message in messages:

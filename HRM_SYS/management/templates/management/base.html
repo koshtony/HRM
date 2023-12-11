@@ -108,7 +108,7 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
             <a onclick="multiWindows()"><i class="fa-solid fa-mobile-screen"></i></a>
             </li>
           <li class="nav-item dropdown">
-            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+            <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="/" data-toggle="dropdown">
               <i class="icon-bell mx-0"></i>
               <span class="count"></span>
             </a>
@@ -125,11 +125,11 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="fa fa-comment"></i>
-              <span class="count" id="unread"></span>
+              <i class="fa fa-comment" id="unread"></i>
+             
             </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="notify">
-              <p class="mb-0 font-weight-normal float-left dropdown-header" id="not-p"></p>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="not-p">
+            
               
           
             </div>
@@ -142,10 +142,10 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
               <i class="fa fa-envelope"></i>
-              <span class="count" id="unread"></span>
+              <span class="count" id="unread-mail"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="mail-notify">
-              <p class="mb-0 font-weight-normal float-left dropdown-header" id="mail-not"></p>
+              
               
           
             </div>
@@ -601,6 +601,7 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
   })
 
   // mail notifications ====================
+  setInterval(getMailNot,6*1000)
 function getMailNot(){
   $.ajax({
 
@@ -610,11 +611,12 @@ success:function(data,status){
   console.log(data)
 
  var data = JSON.parse(data)
+ $("#mail-notify").html('')
  for(key in data){
   $("#mail-notify").append(
 
    `
-   <a class="dropdown-item preview-item" href="/mail_box">
+   <a class="dropdown-item preview-item" href="/mail_box" style="background-color:yellowgreen">
         <p>${data[key].sender}</p>
          <div class="preview-item-content">
            <h6 class="preview-subject font-weight-normal">${data[key].subject}</h6>
@@ -633,7 +635,7 @@ success:function(data,status){
 
 }
 
-setInterval(getMailNot,60*1000)
+
 
   const showNotification = (data) => {
 
@@ -660,6 +662,56 @@ setInterval(getMailNot,60*1000)
 
         });
   }
+  setInterval(getLatest,15*1000)
+  function getLatest(){
+
+var url = "{% url 'management_chat_notify' %}"
+
+$.get(url,
+
+       function(data,status){
+       
+       var numbers = data["no"]
+       var msgs = data["msg"]
+       var sender = data["sender"]
+       var dates = data["dates"]
+       var pks = data["pks"]
+      
+     
+
+         var noChatDiv = document.getElementsByClassName("badge bg-success float-right")
+        
+  var sum = 0
+  for(var i=0;i<numbers.length;i++){ 
+    
+    sum += parseInt(numbers[i])
+
+  }
+        console.log(sum)
+  document.getElementById("unread").innerHTML = sum
+
+       
+          
+        $("#not-p").html(`
+        
+
+        <a class="dropdown-item preview-item" href="live_chat" style="background-color:aqua">
+    <p>${sender[sender.length-1]}</p>
+     <div class="preview-item-content">
+       <h6 class="preview-subject font-weight-normal">latest message</h6>
+       <p class="font-weight-light small-text mb-0 text-muted">
+        sent on ${dates[dates.length-1]}
+       </p>
+     </div>
+ </a>`
+
+        )
+
+  
+       }
+
+  )
+}
 
 function goTo(id){
   $.ajax({
