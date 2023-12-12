@@ -1150,7 +1150,7 @@ def Post(request):
 
 def get_notify(request):
 
-    notifications = Notifications.objects.filter(recipient=request.user)
+    notifications = Notifications.objects.filter(recipient=request.user).filter(seen=False).order_by('-pk')[:5]
     popups = []
     for notification in notifications:
         notifs = {
@@ -1168,23 +1168,28 @@ def get_notify(request):
 @login_required
 def show_map(request,coords):
    
-   coords = [float(cord) for cord in coords.split('_')]
+   try:
+        
+        coords = [float(cord) for cord in coords.split('_')]
 
-   map = folium.Map(coords)
-   folium.Marker(coords).add_to(map)
-   folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
-   folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
-   folium.LayerControl().add_to(map)
+        map = folium.Map(coords)
+        folium.Marker(coords).add_to(map)
+        folium.raster_layers.TileLayer('Stamen Terrain').add_to(map)
+        folium.raster_layers.TileLayer('Stamen Toner').add_to(map)
+        folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map)
+        folium.LayerControl().add_to(map)
 
-  
-   map = map._repr_html_()
+        
+        map = map._repr_html_()
 
-   context = {
-       'map':map
-   }
-   
-   return render(request,'management/map.html',context)
+        context = {
+            'map':map
+        }
+        
+        return render(request,'management/map.html',context)
+   except:
+       
+       return HttpResponse("No coordinates recorded!!")
 
 def iframe_redirect(request):
 
@@ -1327,7 +1332,7 @@ def chat_notify(request):
     usrs_arr,chats_arr,send_arr,dates_arr,pk_arr = [],[],[],[],[]
 
     for usr in usrs:
-        chats = ChatMessage.objects.filter(sender__id = usr.id , recep = request.user.profile,seen=True)
+        chats = ChatMessage.objects.filter(sender__id = usr.id , recep = request.user.profile,seen=False).order_by('-pk')
         usrs_arr.append(chats.count())
         for chat in chats:
             chats_arr.append(chat.body)
@@ -1502,7 +1507,7 @@ def get_mail_body(request):
 @csrf_exempt
 def mail_notify(request):
 
-    messages = MailMessage.objects.filter(recipient = request.user.profile).filter(seen=True)
+    messages = MailMessage.objects.filter(recipient = request.user.profile).filter(seen=False).order_by('-pk')[:5]
  
     msg_list = []
     for message in messages:

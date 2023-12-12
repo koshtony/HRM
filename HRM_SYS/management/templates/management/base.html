@@ -109,8 +109,8 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
             </li>
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="/" data-toggle="dropdown">
-              <i class="icon-bell mx-0"></i>
-              <span class="count"></span>
+              <i class="icon-bell mx-0" id="unread-approvals" style="color:green"></i>
+              
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="notify">
               <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
@@ -125,7 +125,7 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="fa fa-comment" id="unread"></i>
+              <i class="fa fa-comment" id="unread" style="color:green"></i>
              
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="not-p">
@@ -141,8 +141,8 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-              <i class="fa fa-envelope"></i>
-              <span class="count" id="unread-mail"></span>
+              <i class="fa fa-envelope" id="unread-mail" style="color:green"></i>
+              
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown" id="mail-notify">
               
@@ -575,6 +575,8 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
        success:function(data,status){
 
         var data = JSON.parse(data)
+        
+        var key_array = []
         for(key in data){
          $("#notify").append(
 
@@ -595,7 +597,11 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
           
           `
          )
+         key_array.push(key)
        }
+
+       document.getElementById("unread-approvals").innerHTML = key_array.length
+       console.log(key_array.length)
        display(data)
       }
   })
@@ -611,8 +617,10 @@ success:function(data,status){
   console.log(data)
 
  var data = JSON.parse(data)
+ var key_mail_array = []
  $("#mail-notify").html('')
  for(key in data){
+  key_mail_array.push(key)
   $("#mail-notify").append(
 
    `
@@ -629,6 +637,8 @@ success:function(data,status){
    `
   )
 }
+
+document.getElementById("unread-mail").innerHTML = key_mail_array.length
 
 }
 })
