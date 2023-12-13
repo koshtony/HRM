@@ -161,7 +161,7 @@ input:checked + .slider:before {
 						<div class="chat-messages p-4" id="chat-bdy">
                         {% for chat in chats %}
                         
-						   {% if chat.sender.user.username == user.username and chat.recep.user.username == ind.user.username or chat.anonymous_sender.user.username == user.username and chat.recep.user.username == ind.user.username %}
+						   {% if chat.anonymous_sender.user.username == user.username and chat.recep.user.username == ind.user.username%}
 							<div class="chat-message-right pb-4" id="chat{{chat.pk}}">
 								<div id="loaders5" style="display: none;">
 									<div class="spinner-grow text-primary" role="status">
@@ -303,7 +303,7 @@ function sendMsg(event){
 			chatBox.classList.add("chat-message-right")
 			chatBox.innerHTML = `
 			<div>
-									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
+									
 									<div class="text-muted small text-nowrap mt-2">${data["date"]}</div>
 								</div>
 								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
@@ -349,7 +349,7 @@ function recvMsg(){
 			chatBox.classList.add("chat-message-left")
 			chatBox.innerHTML = `
 			<br>
-			<div>
+			<div style="background-color: greenyellow;">
 									
 									<div class="text-muted small text-nowrap mt-2">${nows}</div>
 								</div>
@@ -394,7 +394,7 @@ function delMssg(id){
 }
 
 function Reply(id){
-	alert(id)
+
 
 	event.preventDefault()
  
@@ -402,10 +402,12 @@ function Reply(id){
    
     tinyMCE.triggerSave();
 	var chat = $('#id_body').val()
-	var anony = $("#anony").val()
-    
-	alert(anony)
-
+	var anony = ""
+    if (document.getElementById("anony").checked){
+		anony+="yes"
+	}else{
+		anony+="no"
+	}
 	
     var data  = {"msg":chat,"id":id,"anony":anony}
 	var url = "{% url 'management_chat_reply'%}"
@@ -429,7 +431,6 @@ function Reply(id){
 			chatBox.classList.add("chat-message-right")
 			chatBox.innerHTML = `
 			<div>
-									<img src="{{user.profile.image.url}}" class="rounded-circle mr-1"  width="40" height="40">
 									<div class="text-muted small text-nowrap mt-2">${data["date"]}</div>
 								</div>
 								<div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">
@@ -440,6 +441,7 @@ function Reply(id){
 			`
 			document.getElementById("id_body").value = ""
            chatBody.append(chatBox)
+		   tinyMCE.get('id_body').setContent('');
 
 		}
 	).catch((error) => {

@@ -1212,7 +1212,7 @@ def live_chat_user(request,pk):
     
     ind_profile = Profile.objects.get(user_id=pk)
     profiles = Profile.objects.all()
-    chats = ChatMessage.objects.all()
+    chats = ChatMessage.objects.all().order_by('pk')
     in_chats = ChatMessage.objects.filter(sender = ind_profile , recep = request.user.profile)
     in_chats.update(seen=True)
     chat_form = ChatForm()
@@ -1307,9 +1307,9 @@ def chat_reply(request):
 
             new_chat = ChatMessage(
                 body = msg, 
-                sender = Profile.objects.get(user__username="anonymous") ,
+                sender = request.user.profile ,
                 anonymous_sender = request.user.profile,
-                recep = chats.anonymous_sender,
+                recep = chats.sender,
                 sent = datetime.now()+timedelta(hours=3),
                 seen = False
                 
