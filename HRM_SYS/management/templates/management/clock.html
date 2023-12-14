@@ -57,7 +57,7 @@
         <div class="content-wrapper">
           <div class="row">
             <div class="col-lg-12">
-              <h4 class="card-title">clock in <i class="fa fa-clock"></i></h4>
+              <h4 class="card-title" id="timenow">clock in <i class="fa fa-clock"></i></h4>
               <img style="width: 50px; border-radius: 50%;" src="{{user.profile.image.url}}">
               <marquee width="80%" direction="right" height="20px" id="statuss">
                 clock in and out
@@ -376,7 +376,7 @@ getLoc()
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
 
-             if($("#image_info").val() != '' || $("#longitudes").val() != ''){
+             if($("#image_info").val() != '' && $("#longitudes").val() != ''){
 
              
           
@@ -408,7 +408,13 @@ getLoc()
 
             })
           }else{
-            alert("failed no Image captured")
+            if($("#image_info").val()==''){
+              alert("image not captured");
+            }else if($("#longitudes").val() == ''){
+
+              alert("location not captured, please allow location!!")
+
+            }
           }
         }
       }

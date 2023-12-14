@@ -402,7 +402,7 @@ def import_att_settings(request):
                     **items
                 )
             sett.save()
-            return JsonResponse("done",safe=False)
+        return JsonResponse("done",safe=False)
     except Exception as err:
 
         return JsonResponse(str(err),safe=False)
@@ -535,7 +535,7 @@ def clock(request):
                 late_diff = 0
                                         
             
-            if len(att_filt) == 0: #record initial data
+            if len(att_filt) == 0 and (datetime.now().hour > 24 and datetime.now().hour <= 14): #record initial data
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
@@ -565,10 +565,10 @@ def clock(request):
 
                 return JsonResponse("clock out successful",safe=False)
             
-            elif att_filt[0].clock_in != '' and att_filt[0].clock_out != '':
+            elif len(att_filt)>0 and  (att_filt[0].clock_in != '' and att_filt[0].clock_out != ''):
 
                 return JsonResponse("clock in and clockout already completed",safe=False)
-            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and len(att_filt):
+            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and (att_filt[0].clock_out == ''):
 
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
@@ -584,7 +584,12 @@ def clock(request):
 
                     )
                 attendance.save()
-                return JsonResponse("clock in successful",safe=False)
+                return JsonResponse("clock out successful",safe=False)
+            
+            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and (att_filt[0].clock_out != ''):
+                return JsonResponse("clock out already completed",safe=False)
+
+
 
 
         except Exception as e:
@@ -650,7 +655,7 @@ def view_attendance(request):
     #print(attendances)
     today_leaves = []
     for leave in leaves:
-        print([datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date() + timedelta(days=i) for i in range((datetime.strptime(leave.remarks.split(' ')[3],'%Y-%m-%d').date() - datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date()).days + 1)])
+        
         if date.today() in [datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date() + timedelta(days=i) for i in range((datetime.strptime(leave.remarks.split(' ')[3],'%Y-%m-%d').date() - datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date()).days + 1)]:
 
             today_leaves_dict = {
