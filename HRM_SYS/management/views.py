@@ -535,7 +535,7 @@ def clock(request):
                 late_diff = 0
                                         
             
-            if len(att_filt) == 0 and (datetime.now().hour > 24 and datetime.now().hour <= 14): #record initial data
+            if len(att_filt) == 0 and (datetime.now().hour > 0 and datetime.now().hour <= 14): #record initial data
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
