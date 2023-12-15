@@ -795,6 +795,18 @@ def upload_leave(request):
             
             approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
+            for approve in approvers:
+            
+                notify = Notifications(
+                    recipient = User.objects.get(username=approve),
+                    info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
+                    date = datetime.now(),
+                    time = datetime.now()+timedelta(hours=3),
+                    url = "{}"
+         
+                )
+
+                notify.save()
            
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
@@ -824,34 +836,37 @@ def upload_process(request):
             '''
             approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
             approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
-     
-            for approve in approvers:
             
-                notify = Notifications(
-                    recipient = User.objects.get(username=approve),
-                    info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
-                    date = datetime.now(),
-                    time = datetime.now()+timedelta(hours=3),
-                    url = "{}"
-         
-                )
-
-                notify.save()
-          
-            application = Applications(
-                type = Approvals.objects.get(name=form.cleaned_data.get("approvals")),
-                applicant = request.user,details = form.cleaned_data.get("details"),
-                attachment = form.cleaned_data.get("attachments"),remarks = "",
-                approvers = ",".join(approvers),expected = len(approvers),
-                created_date = datetime.now(),
-                created_time = datetime.now()+timedelta(hours=3)
-               
+            if "leave" in str(Approvals.objects.get(name=form.cleaned_data.get("approvals")).name):
+                return JsonResponse("kindly, submit leave applications on attendance page!!",safe=False)
+            else:
+                for approve in approvers:
                 
-            )
-            application.save()
-
+                    notify = Notifications(
+                        recipient = User.objects.get(username=approve),
+                        info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
+                        date = datetime.now(),
+                        time = datetime.now()+timedelta(hours=3),
+                        url = "{}"
             
-            return JsonResponse("application submitted successfully",safe=False)
+                    )
+
+                    notify.save()
+            
+                application = Applications(
+                    type = Approvals.objects.get(name=form.cleaned_data.get("approvals")),
+                    applicant = request.user,details = form.cleaned_data.get("details"),
+                    attachment = form.cleaned_data.get("attachments"),remarks = "",
+                    approvers = ",".join(approvers),expected = len(approvers),
+                    created_date = datetime.now(),
+                    created_time = datetime.now()+timedelta(hours=3)
+                
+                    
+                )
+                application.save()
+
+                
+                return JsonResponse("application submitted successfully",safe=False)
     
 
 
