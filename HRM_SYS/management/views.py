@@ -603,6 +603,13 @@ def clock(request):
 
 
     return render(request,'management/clock.html',context)
+
+'''
+=========================================================================
+    get today attendance and attendance settings for current user
+    purpose compare with input details in clock in page
+========================================================================
+'''
 @login_required
 def get_attendance(request):
 
@@ -647,10 +654,19 @@ def get_attendance(request):
             }
         
         return JsonResponse(details,safe=False)
+    
+'''
+============================================================================================
+        display recorded attendance details for employees
+        divided into; overall details, late employee, employee on leave and absent details
+============================================================================================
+
+'''
+@csrf_exempt
 @login_required
 def view_attendance(request):
 
-    attendances =  Attendance.objects.all().order_by('-pk')
+    attendances =  Attendance.objects.filter(day=date.today()).order_by('-pk')
     leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
     #print(attendances)
     today_leaves = []
@@ -669,8 +685,35 @@ def view_attendance(request):
                 "remarks":leave.remarks
             }
             today_leaves.append(today_leaves_dict)
+    
+    if request.POST:
+
+        date1 = request.POST.get("date1")
+        date2 = request.POST.get("date2")
+
+        att_filt_by_date = Attendance.objects.filter(day__gte=date1,day__lte=date2)
+
+        att_filt_by_date_list = [{
+            
+            "emp_id":attendance.employee.emp_id,"name":str(attendance.employee.first_name)+str(attendance.employee.second_name),
+            
+            "day":str(attendance.day),"clock_in":str(attendance.clock_in),"clock_out":str(attendance.clock_out),"lat":attendance.lat,
+
+            "long":attendance.long,"lat1":attendance.lat1,"long1":attendance.long1,"image1":attendance.image1,"image2":attendance.image2,
+
+            "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
+
+            "leave_days":attendance.leave_days,"remarks":attendance.remarks,
+                                  
+                                  
+                                  
+                                  } for attendance in att_filt_by_date]
+            
+        
+        return JsonResponse(json.dumps(att_filt_by_date_list),safe=False)
 
 
+    '''
     late = []
     for attendance in attendances:
          if attendance.clock_in != '':
@@ -725,10 +768,105 @@ def view_attendance(request):
 
 
             absents.append(absent_dict)
+            '''
 
-    context = {"attendances":attendances,"lates":late, "leaves":today_leaves,"absents":absents}
+    context = {"attendances":attendances,"leaves":today_leaves}
 
     return render(request,'management/list_attendance.html',context)
+
+''' 
+=========================================================
+    return list of employees late on a given date
+=========================================================
+'''
+
+@csrf_exempt
+@login_required
+def view_late_attendance(request):
+
+    if request.POST:
+
+        date1 = request.POST.get("date1")
+        date2 = request.POST.get("date2")
+
+        attendances = Attendance.objects.filter(day__gte=date1,day__lte=date2)
+
+        late = []
+        for attendance in attendances:
+            if attendance.clock_in != '':
+                try:
+                    if datetime.strptime(attendance.clock_in, '%Y-%m-%d %H:%M:%S.%f').time() > AttSettings.objects.get(employee_id = attendance.employee.emp_id).start:
+                
+                        late_dict = {
+                        "employee":attendance.employee.emp_id,
+                        "employee_name":attendance.employee.first_name + " "+attendance.employee.second_name,
+                        "day":str(attendance.day),
+                        "clock_in":str(attendance.clock_in),
+                        "clock_out":str(attendance.clock_out),
+                        "set_clock_in":str(AttSettings.objects.get(employee_id = attendance.employee.emp_id).start),
+                        "set_clock_out":str(AttSettings.objects.get(employee_id = attendance.employee.emp_id).end),
+                        "count": attendance.days,
+                        "status":attendance.status,
+                        
+
+                    }
+                        late.append(late_dict)
+                except:
+                    late.append({})
+        return JsonResponse(json.dumps(late),safe=False)    
+
+'''
+===============================================================
+     return list of absent employees in a given range of date   
+===============================================================
+'''
+@csrf_exempt
+@login_required
+def view_absent_attendance(request):
+
+    if request.POST:
+
+        date1 = request.POST.get("date1")
+        date2 = request.POST.get("date2")
+
+        absents = []
+
+        for employee in Employee.objects.all():
+
+            if employee.emp_id not in [att.employee.emp_id for att in Attendance.objects.filter(day__gte = date1,day__lte=date2)]:
+                print(employee)
+                try:
+                    absent_dict = {
+                        "employee_id":employee.emp_id,
+                        "name":employee.first_name + employee.second_name ,
+                        "email":employee.email ,
+                        "phone":employee.phone ,
+                        "next_of_kin":employee.next_kin_name,
+                        "next_kin_phone":employee.next_kin_phone,
+                        "address":employee.address + employee.location,
+                        "set_clock_in":str(AttSettings.objects.get(employee_id = employee.emp_id).start),
+                        "expected_days":AttSettings.objects.get(employee_id = employee.emp_id).expected_days
+                    }
+                except:
+                    absent_dict = {
+                        "employee_id":employee.emp_id,
+                        "name":employee.first_name + employee.second_name ,
+                        "email":employee.email ,
+                        "phone":employee.phone ,
+                        "next_of_kin":employee.next_kin_name,
+                        "next_kin_phone":employee.next_kin_phone,
+                        "address":employee.address + employee.location,
+                        "set_clock_in":"no settings",
+                        "expected_days":"no settings"
+                    }
+
+
+                absents.append(absent_dict)
+        print(absents)
+
+        return JsonResponse(json.dumps(absents),safe=False)
+
+
 @login_required
 def edit_att_settings(request,emp_id):
 

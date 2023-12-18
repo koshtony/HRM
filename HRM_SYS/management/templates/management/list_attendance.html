@@ -71,15 +71,47 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i>overall</a></li>
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i>today</a></li>
                     <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-danger"><i class="fa fa-user-minus"></i>Late</a></li>
                     <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="fa fa-user-ninja"></i>on leave</a></li>
                     <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-dark" ><i class="fa fa-user-times"></i>absent</a></li>
                 </ul>
             </div>
+            <h4>Filter+Download attendance data</h4>
             <div class="col-lg-12">
                 <div class="row tab-content">
                     <div id="list-view" class="tab-pane fade active show col-lg-12">
+                        
+                        <div class="row" >
+                            
+                            <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">From</label>
+                            <input type="date" class="form-control" id="today_date1">
+                          </div>
+                            </div>
+                            <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="exampleInputEmail3">To</label>
+                            <input type="date" class="form-control" id="today_date2">
+                          </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <button class="btn btn-light" onclick="overallGen()"><svg fill="#0ee00b" width="44px" height="44px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>pull</title> <path d="M0 26.016q0-1.952 1.12-3.488t2.88-2.144v-8.736q-1.76-0.64-2.88-2.176t-1.12-3.488q0-2.464 1.76-4.224t4.256-1.76 4.224 1.76 1.76 4.224q0 1.952-1.12 3.488t-2.88 2.176v8.736q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.224t-4.224 1.76-4.256-1.76-1.76-4.224zM4 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM4 6.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM14.016 6.016q0-0.832 0.576-1.408l4-4q0.416-0.448 1.024-0.544t1.152 0.096q0.576 0.224 0.896 0.736t0.352 1.12v1.984q2.464 0 4.224 1.76t1.76 4.256v10.368q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.256t-4.224 1.76-4.256-1.76-1.76-4.256q0-1.952 1.12-3.488t2.88-2.144v-10.368q0-0.832-0.576-1.408t-1.408-0.608v2.016q0 0.608-0.352 1.12t-0.896 0.704-1.152 0.128-1.024-0.544l-4-4q-0.576-0.608-0.576-1.408zM24 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408z"></path> </g></svg></button>
+                            </div>
+                            <div id="loaders10" style="display: none;">
+                                <div class="spinner-grow text-primary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-secondary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                </div>
+                        </div>
+
                         <div class="card">
                             
                             <div class="card-body">
@@ -107,7 +139,7 @@
                                                
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="overallTab">
                                             {% for attendance in attendances %}
                                             <tr>
 
@@ -174,6 +206,34 @@
                         </div>
                     </div>
                     <div id="grid-view" class="tab-pane fade col-lg-12">
+                        <div class="row">
+                            <div class="col-lg-4">
+                        <div class="form-group">
+                            <label for="exampleInputEmail3">From</label>
+                            <input type="date" class="form-control" id="late_date1">
+                          </div>
+                            </div>
+                            <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="exampleInputEmail3">To</label>
+                            <input type="date" class="form-control" id="late_date2">
+                          </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <button class="btn btn-light" onclick="lateGen()"><svg fill="#0ee00b" width="44px" height="44px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>pull</title> <path d="M0 26.016q0-1.952 1.12-3.488t2.88-2.144v-8.736q-1.76-0.64-2.88-2.176t-1.12-3.488q0-2.464 1.76-4.224t4.256-1.76 4.224 1.76 1.76 4.224q0 1.952-1.12 3.488t-2.88 2.176v8.736q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.224t-4.224 1.76-4.256-1.76-1.76-4.224zM4 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM4 6.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM14.016 6.016q0-0.832 0.576-1.408l4-4q0.416-0.448 1.024-0.544t1.152 0.096q0.576 0.224 0.896 0.736t0.352 1.12v1.984q2.464 0 4.224 1.76t1.76 4.256v10.368q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.256t-4.224 1.76-4.256-1.76-1.76-4.256q0-1.952 1.12-3.488t2.88-2.144v-10.368q0-0.832-0.576-1.408t-1.408-0.608v2.016q0 0.608-0.352 1.12t-0.896 0.704-1.152 0.128-1.024-0.544l-4-4q-0.576-0.608-0.576-1.408zM24 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408z"></path> </g></svg></button>
+                            </div>
+                            <div id="loaders70" style="display: none;">
+                                <div class="spinner-grow text-primary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-secondary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                </div>
+                        </div>
                         <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx','late','late')"><svg width="44px" height="44px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="#15d912"></path> </g></svg></button>
                        
                         <div>
@@ -198,20 +258,8 @@
                                                
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            {% for late in lates %}
-                                            <tr>
-                                                  <td>{{late.employee}}</td>
-                                                  <td>{{late.employee_name}}</td>
-                                                  <td>{{late.day}}</td>
-                                                  <td>{{late.clock_in}}</td>
-                                                  <td>{{late.clock_out}}</td>
-                                                  <td>{{late.set_clock_in}}</td>
-                                                  <td>{{late.set_clock_out}}</td>
-                                                  <td>{{late.count}}</td>
-                                                  <td>{{late.status}}</td>
-                                            </tr>
-                                            {% endfor %}
+                                        <tbody id="lateTab">
+                                           
                                         </tbody>
                                         </table>
                               
@@ -262,6 +310,34 @@
                        </div>
             </div>
             <div id="groups" class="tab-pane fade show col-lg-12">
+                <div class="row">
+                    <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="exampleInputEmail3">From</label>
+                    <input type="date" class="form-control" id="absent_date1">
+                  </div>
+                    </div>
+                    <div class="col-lg-4">
+                  <div class="form-group">
+                    <label for="exampleInputEmail3">To</label>
+                    <input type="date" class="form-control" id="absent_date2">
+                  </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <button class="btn btn-light" onclick="absentGen()"><svg fill="#0ee00b" width="44px" height="44px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>pull</title> <path d="M0 26.016q0-1.952 1.12-3.488t2.88-2.144v-8.736q-1.76-0.64-2.88-2.176t-1.12-3.488q0-2.464 1.76-4.224t4.256-1.76 4.224 1.76 1.76 4.224q0 1.952-1.12 3.488t-2.88 2.176v8.736q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.224t-4.224 1.76-4.256-1.76-1.76-4.224zM4 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM4 6.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM14.016 6.016q0-0.832 0.576-1.408l4-4q0.416-0.448 1.024-0.544t1.152 0.096q0.576 0.224 0.896 0.736t0.352 1.12v1.984q2.464 0 4.224 1.76t1.76 4.256v10.368q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.256t-4.224 1.76-4.256-1.76-1.76-4.256q0-1.952 1.12-3.488t2.88-2.144v-10.368q0-0.832-0.576-1.408t-1.408-0.608v2.016q0 0.608-0.352 1.12t-0.896 0.704-1.152 0.128-1.024-0.544l-4-4q-0.576-0.608-0.576-1.408zM24 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408z"></path> </g></svg></button>
+                    </div>
+                    <div id="loaders40" style="display: none;">
+                        <div class="spinner-grow text-primary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-secondary" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        <div class="spinner-grow text-success" role="status">
+                          <span class="sr-only">Loading...</span>
+                        </div>
+                        </div>
+                </div>
                 <button class="btn btn-outline" onclick="htmlTableToExcel('xlsx','absent','absent')"><svg width="44px" height="44px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM12 6.25C12.4142 6.25 12.75 6.58579 12.75 7V12.1893L14.4697 10.4697C14.7626 10.1768 15.2374 10.1768 15.5303 10.4697C15.8232 10.7626 15.8232 11.2374 15.5303 11.5303L12.5303 14.5303C12.3897 14.671 12.1989 14.75 12 14.75C11.8011 14.75 11.6103 14.671 11.4697 14.5303L8.46967 11.5303C8.17678 11.2374 8.17678 10.7626 8.46967 10.4697C8.76256 10.1768 9.23744 10.1768 9.53033 10.4697L11.25 12.1893V7C11.25 6.58579 11.5858 6.25 12 6.25ZM8 16.25C7.58579 16.25 7.25 16.5858 7.25 17C7.25 17.4142 7.58579 17.75 8 17.75H16C16.4142 17.75 16.75 17.4142 16.75 17C16.75 16.5858 16.4142 16.25 16 16.25H8Z" fill="#15d912"></path> </g></svg></button>
                 <div class="card">
                     <div class="row">
@@ -283,21 +359,8 @@
                                    
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for absent in absents %}
-                                <tr>
-                                      <td>{{absent.employee_id}}</td>
-                                      <td>{{absent.name}}</td>
-                                      <td>{{absent.email}}</td>
-                                      <td>{{absent.phone}}</td>
-                                      <td>{{absent.next_of_kin}}</td>
-                                      <td>{{absent.next_kin_phone}}</td>
-                                      <td>{{absent.address}}</td>
-                                      <td>{{absent.set_clock_in}}</td>
-                                      <th>{{absent.expected_days}}</th>
-                                     
-                                </tr>
-                                {% endfor %}
+                            <tbody id="absentTab">
+                                
                             </tbody>
                             </table>
 
@@ -315,10 +378,10 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-     new DataTable('#attendance');
-     new DataTable('#late');
+    // new DataTable('#attendance');
+     //new DataTable('#late');
      new DataTable('#leave');
-     new DataTable('#absent');
+     //new DataTable('#absent');
    
 
      function showMap(lat,long){
@@ -416,8 +479,184 @@ function showMap(lat,long){
 $("#payId").val(Math.trunc(Date.now() + Math.random()))
 
 
-// add filter by date *table
+//==================add filter by date *table=======================
 
+function overallGen(){
+
+     $.ajax({
+
+        type:"post",
+        url:"{% url 'management_view_attendance' %}",
+        data:{
+
+            date1:$("#today_date1").val(),
+            date2:$("#today_date2").val(),
+        },
+        beforeSend:function(){
+            $("#loaders10").show()
+          },
+        success:function(data,status){
+
+            var data = JSON.parse(data)
+            //$("#overallTab").html('')
+
+            var overallTab= new DataTable("#attendance")
+            for (key in data){
+
+                overallTab.row.add(
+
+              [
+
+              data[key]["emp_id"],
+              data[key]["name"],
+              data[key]["day"],
+              data[key]["clock_in"],
+              data[key]["clock_out"],
+              `<button onclick="showMap(${data[key]["lat"]},${data[key]["long"]});"><i class="fa fa-map-marker"></i>${data[key]["lat"]},${data[key]["long"]}</button>`,
+              `
+                            <button onclick="showMap(${data[key]["lat1"]},${data[key]["long1"]});"><i class="fa fa-map-marker"></i>${data[key]["lat1"]},${data[key]["long1"]}</button>`,
+            
+               `<button class="btn btn-outline" onclick="showImage('${data[key]["image1"]}')">
+                                <i class="fa fa-image"></i>
+
+                            </button>`,
+
+                `<button class="btn btn-outline" onclick="showImage('${data[key]["image2"]}')">
+                                <i class="fa fa-image"></i>
+
+                            </button>`,
+                data[key]["status"],
+                data[key]["counts"],
+                data[key]["deductions"],
+                data[key]["leave"],
+                data[key]["leave_days"],
+                data[key]["remarks"]
+                
+
+              ]
+              ).draw(false)
+
+
+
+
+}
+            
+        },
+
+        complete:function(){
+            $("#loaders10").hide()
+          },
+
+     })
+}
+
+
+//=============generate list of late employees
+
+function lateGen(){
+
+
+    $.ajax({
+
+        "type":"post",
+        "url":"{% url 'management_view_late_attendance' %}",
+        data:{
+
+            date1:$("#late_date1").val(),
+            date2:$("#late_date2").val(),
+        },
+        beforeSend:function(){
+            $("#loaders70").show()
+          },
+
+        success:function(data,status){
+
+            var data = JSON.parse(data)
+
+            $("#lateTab").html('')
+
+            var lateTab = new DataTable("#late")
+
+            for (key in data){
+                 
+                lateTab.row.add([
+                    
+                    data[key]["employee"],data[key]["employee_name"],
+                    data[key]["day"],
+                    data[key]["clock_in"],
+                    data[key]["clock_out"],
+                    data[key]["set_clock_in"],
+                    data[key]["set_clock_out"],
+                    data[key]["count"],
+                    data[key]["status"],
+
+                   
+                ]).draw(false)
+
+
+                
+            }
+        },
+
+        complete:function(){
+            $("#loaders70").hide()
+          }
+
+
+
+    })
+}
+
+//=================generate list of absent employees====================
+
+
+function absentGen(){
+
+    $.ajax({
+
+        type:"post",
+        url:"{% url 'management_view_absent_attendance' %}",
+        data:{
+            
+            date1:$("#absent_date1").val(),
+            date2:$("#absent_date2").val(),
+            
+        },
+        beforeSend:function(){
+            $("#loaders40").show()
+          },
+
+        success:function(data,success){
+
+            var data = JSON.parse(data)
+
+            var absentTab = new DataTable("#absent")
+            for(key in data){
+
+                absentTab.row.add([
+                    
+                data[key]["employee_id"],
+                data[key]["name"],
+                data[key]["email"],
+                data[key]["phone"],
+                data[key]["next_of_kin"],
+                data[key]["next_kin_phone"],
+                data[key]["address"],
+                data[key]["set_clock_in"],
+                data[key]["expected_days"]
+
+
+
+                
+                ]).draw(false)
+            }
+        },
+        complete:function(){
+            $("#loaders40").hide()
+          }
+
+    })
+}
 
     
 </script>

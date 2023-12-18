@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+bo43m_vcns%1t_9u(n3f$8!t+0^b=99s7&ppvi(tyxw@53@=&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'storages',
     'mathfilters',
     'user_visit',
+    'online_users',
  
 
 
@@ -78,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
+    'online_users.middleware.OnlineNowMiddleware',
 ]
 
 ROOT_URLCONF = 'HRM_SYS.urls'
