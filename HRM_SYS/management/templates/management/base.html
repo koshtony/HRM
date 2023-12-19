@@ -559,6 +559,7 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
 <script>
 
 
+function getApprovalNot(){
 
   $.ajax({
 
@@ -593,13 +594,15 @@ box-shadow: inset 0 0 0 200px rgb(255 255 255 / 8%);
        }
 
        document.getElementById("unread-approvals").innerHTML = key_array.length
-       console.log(key_array.length)
+      
        display(data)
       }
   })
+}
+setInterval(getApprovalNot,90*1000)
 
   // mail notifications ====================
-  setInterval(getMailNot,6*1000)
+  setInterval(getMailNot,60*1000)
 function getMailNot(){
   $.ajax({
 
@@ -664,7 +667,7 @@ document.getElementById("unread-mail").innerHTML = key_mail_array.length
 
         });
   }
-  setInterval(getLatest,15*1000)
+  setInterval(getLatest,45*1000)
   function getLatest(){
 
 var url = "{% url 'management_chat_notify' %}"

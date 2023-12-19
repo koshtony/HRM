@@ -38,7 +38,6 @@ import os
 # Create your views here.
 @login_required
 def home(request):
-    cache.clear()
     todos = []
     for todo in Applications.objects.all():
         if request.user.username == todo.approvers.split(',')[0]:
@@ -1357,7 +1356,8 @@ def iframe_redirect(request):
 def live_chat(request):
 
     profiles = Profile.objects.all()
-    messages = ChatMessage.objects.filter(recep=request.user.profile).order_by('-pk')[:5]
+    
+    messages = ChatMessage.objects.filter(recep=request.user.profile,seen=False).order_by('-pk')[:5]
     contxt = {
         
         "messages":messages,"profiles":profiles,
