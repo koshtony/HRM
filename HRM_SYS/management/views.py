@@ -49,7 +49,7 @@ def home(request):
     department = Department.objects.count()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
     attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
-    context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
+    context = {"todos":todos,"employees":Employee.objects.count(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
     return render(request,'management/index.html',context)
 
 
@@ -250,7 +250,6 @@ def list_employee(request):
     except:
         rate = 0;
     
-    print(resign_trends)
     context = {
         
         "employee":Employee.objects.all(),
@@ -1369,26 +1368,20 @@ def live_chat_user(request,pk):
     
     
     ind_profile = Profile.objects.get(user_id=pk)
-    profiles = Profile.objects.all()
+    
     chats = ChatMessage.objects.all().order_by('pk')
     in_chats = ChatMessage.objects.filter(sender = ind_profile , recep = request.user.profile)
     in_chats.update(seen=True)
     chat_form = ChatForm()
 
     contxt = {
-        "profiles":profiles,
+        
         "ind":ind_profile,
         "chats":chats,
         "counts":in_chats.count(),
         "form": chat_form
     }
-    if request.method=="POST":
-        c_form = ChatForm(request.POST)
-        if c_form.is_valid():
-            chat_msg = c_form.save(commit=False)
-            chat_msg.sender = request.user.profile 
-            chat_msg.recep = ind_profile 
-            chat_msg.save()
+    
             
             
     

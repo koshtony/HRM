@@ -113,6 +113,7 @@
 
                     <canvas id="canvas"  style="height:100%; width:100%" ></canvas>
                   </div>
+                  <audio id="snapSound" src="https://www.fesliyanstudios.com/play-mp3/1644" preload = "auto"></audio>
                 </div>
                 <br>
                 <div class="row">
@@ -122,6 +123,7 @@
                 </div>
                 </div>
                 <br>
+                
 
             </div>
             </div>
@@ -304,6 +306,8 @@ getLoc()
 
           var lat = position.coords.latitude;
           var long = position.coords.longitude;
+
+          alert(lat)
          
           document.getElementById("longitudes").value = long
           document.getElementById("latitudes").value = lat
@@ -338,8 +342,8 @@ getLoc()
 
       const webcamElement = document.querySelector('video');
       const canvasElement = document.querySelector('canvas');
-      //const snapSoundElement = document.getElementById('snapSound');
-      const webcam = new Webcam(webcamElement, 'user', canvasElement);
+      const snapSoundElement = document.getElementById('snapSound');
+      const webcam = new Webcam(webcamElement, 'user', canvasElement,snapSoundElement);
       webcam.start()
       .then(result =>{
       console.log("webcam started");
@@ -355,6 +359,7 @@ getLoc()
             	
         let picture = webcam.snap();
         document.getElementById("image_info").value = picture
+        
         });
 
       // submit clock in details 
@@ -375,6 +380,8 @@ getLoc()
           if(diff > 500000000000000000){
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
+
+            webcam.stop()
 
              if($("#image_info").val() != '' && $("#longitudes").val() != ''){
 

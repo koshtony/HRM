@@ -427,9 +427,6 @@
                       <thead>
                         <tr>
                           <th>
-                            Image
-                          </th>
-                          <th>
                             Employee Id
                           </th>
                           <th>
@@ -448,35 +445,7 @@
                           <th>
                             Department
                           </th>
-                          <th>
-                            Station
-                          </th>
-                          <th>
-                            Education Level
-                           </th>
-                          <th>
-                            DOJ
-                          </th>
-                          <th>
-                            DOL
-                          </th>
                           
-                         
-                          <th>
-                            Account #
-                          </th>
-                          <th>
-                            Bank
-                          </th>
-                          <th>
-                            Salary
-                          </th>
-                          <th>
-                            Allowance
-                          </th>
-                          <th>
-                            Addons
-                          </th>
                           <th>
                             Status
                           </th>
@@ -496,9 +465,7 @@
                         {% for emp in employee %}
                         {% if user.is_staff %}
                         <tr>
-                          <td class="py-1">
-                            <img src="{{emp.image.url}}" alt="image"/>
-                          </td>
+                          
                           <td>
                             <a style="color:blue" onclick="Profile('{{emp.emp_id}}')"> <i class="ti-eye"></i>{{emp.emp_id}}</a>
                           </td>
@@ -518,33 +485,7 @@
                           <td>
                              {{emp.department}}
                           </td>
-                          <td>
-                            {{emp.station}}
-                          </td>
-                          <td>
-                            {{emp.education_level}}
-                         </td>
-                         <td>
-                            {{emp.doj}}
-                         </td>
-                         <td>
-                            {{emp.dol}}
-                         </td>
-                         <td>
-                            {{emp.account_no}}
-                         </td>
-                         <td>
-                            {{emp.bank_name}}
-                         </td>
-                         <td>
-                            {{emp.salary}}
-                         </td>
-                         <td>
-                            {{emp.allowance}}
-                         </td>
-                         <td>
-                            {{emp.add_ons}}
-                         </td>
+                         
                          <td>
                             {{emp.status}}
                          </td>
@@ -566,9 +507,7 @@
                         {% elif emp.emp_id == request.user.username %}
                         
                         <tr>
-                          <td class="py-1">
-                            <img src="{{emp.image.url}}" alt="image"/>
-                          </td>
+                          
                           <td>
                             {{emp.emp_id}}
                           </td>
@@ -588,33 +527,7 @@
                           <td>
                              {{emp.department}}
                           </td>
-                          <th>
-                            {{emp.station}}
-                          </th>
-                          <td>
-                            {{emp.education_level}}
-                         </td>
-                         <td>
-                            {{emp.doj}}
-                         </td>
-                         <td>
-                            {{emp.dol}}
-                         </td>
-                         <td>
-                            {{emp.account_no}}
-                         </td>
-                         <td>
-                            {{emp.bank_name}}
-                         </td>
-                         <td>
-                            {{emp.salary}}
-                         </td>
-                         <td>
-                            {{emp.allowance}}
-                         </td>
-                         <td>
-                            {{emp.add_ons}}
-                         </td>
+                        
                          <td>
                             {{emp.status}}
                          </td>
@@ -939,6 +852,7 @@
 
 
 <script>
+  new DataTable('#EmpTab');
   // employee charts
   var dep_div = document.getElementById("dep")
 var data = [

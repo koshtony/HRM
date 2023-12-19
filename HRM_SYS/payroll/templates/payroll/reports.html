@@ -237,6 +237,7 @@
                                             <th>Taxable Income</th>
                                             <th>PAYE</th>
                                             <th>NHIF</th>
+                                            <th>NSSF</th>
                                             <th>Housing</th>
                                             <th>Others</th>
                                             <th>Net Pay</th>
@@ -324,6 +325,9 @@
                                             <td>
                                                 {{val.nhif}}
                                             </td>
+                                            <td>
+                                              {{val.nssf}}
+                                          </td>
                                             <td>
                                                 {{val.housing}}
                                             </td>
@@ -676,7 +680,7 @@ function inclusive(){
 }
 
 function flat(){
-  alert("yes")
+  confirm("This may take some time: estimated time 5-10 mins")
 
   $.ajax({
 

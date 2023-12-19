@@ -509,7 +509,7 @@ def grouping(request):
             emp_filt.payroll_settings = PayRollSetting.objects.get(category=group)
             emp_filt.save()
 
-        return JsonResponse(str(range1),safe=False)
+        return JsonResponse(str(range1)+" to "+str(range2)+" set to group1",safe=False)
 
 
 
