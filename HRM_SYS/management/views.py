@@ -46,7 +46,7 @@ def home(request):
             ]
             todos.append(apps)
     event = Events.objects.last()
-    department = Department.objects.all()
+    department = Department.objects.count()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username).order_by('-created_date')[:4]
     attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
     context = {"todos":todos,"employees":Employee.objects.all(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
