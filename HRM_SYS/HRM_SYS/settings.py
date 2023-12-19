@@ -71,6 +71,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -172,6 +173,7 @@ MEDIA_URL = 'media/'
 '''
     django.core.files.storage.FileSystemStorage
     storages.backends.dropbox.DropBoxStorage
+    "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 '''
 
@@ -180,7 +182,7 @@ STORAGES = {
         "BACKEND": "storages.backends.dropbox.DropBoxStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
     "mediafiles": {
         "BACKEND": "storages.backends.dropbox.DropBoxStorage",
