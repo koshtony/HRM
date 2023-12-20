@@ -114,25 +114,26 @@ def get_approvals_name(request):
             
             
             if id in apps.approvers.split(','):
+                print(id)
                 
             
                 try:
-                    Employee.objects.get(emp_id = id)
-
-                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"approved"})
-                except:
-
-                    names.append({"name":"couldn't find name for "+str(id),"status":"approved"})
-            else:
-
-                try:
-                    print(id)
                     Employee.objects.get(emp_id = id)
 
                     names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"pending"})
                 except:
 
                     names.append({"name":"couldn't find name for "+str(id),"status":"pending"})
+            else:
+
+                try:
+                    print(id)
+                    Employee.objects.get(emp_id = id)
+
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"approved"})
+                except:
+
+                    names.append({"name":"couldn't find name for "+str(id),"status":"approved"})
            
 
         return JsonResponse(names,safe=False)
