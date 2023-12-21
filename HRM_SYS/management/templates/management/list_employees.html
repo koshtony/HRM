@@ -1,5 +1,5 @@
 {% extends 'management/base.html' %}
-{% load cache %}
+
 {% block content %}
 
 <style>
@@ -461,7 +461,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% cache 600 emp_list %}
+                      
                         {% for emp in employee %}
                         {% if user.is_staff %}
                         <tr>
@@ -545,7 +545,7 @@
                         </tr>
                         {% endif %}
                         {% endfor %}
-                       {% endcache %}
+                       
                       </tbody>
                     </table>
                   </div>
