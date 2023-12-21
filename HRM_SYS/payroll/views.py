@@ -526,6 +526,37 @@ def grouping(request):
         return JsonResponse(str(range1)+" to "+str(range2)+" set to group1",safe=False)
 
 
+def payroll_action(request):
+
+    if request.POST:
+
+        action = request.POST.get("action")
+        pks = request.POST.get("pks").split(',')
+
+        for pk in pks:
+            if action == "delete":
+                payroll = PayRoll.objects.get(pk=pk)
+                payroll.delete()
+            elif action =="audit":
+
+                payroll = PayRoll.objects.get(pk=pk)
+                payroll.status = "audited"
+                payroll.save()
+
+            elif action == "revert":
+
+                payroll = PayRoll.objects.get(pk=pk)
+                payroll.status = "audit"
+                payroll.save()
+
+
+
+        return JsonResponse(str(action)+" completed successfully",safe=False)
+
+
+            
+
+
 
 
 class EditPayrollView(LoginRequiredMixin,UpdateView):

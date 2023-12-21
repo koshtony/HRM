@@ -567,7 +567,7 @@ def clock(request):
             elif len(att_filt)>0 and  (att_filt[0].clock_in != '' and att_filt[0].clock_out != ''):
 
                 return JsonResponse("clock in and clockout already completed",safe=False)
-            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and (att_filt[0].clock_out == ''):
+            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and len(att_filt)==0:
 
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
