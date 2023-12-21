@@ -35,8 +35,7 @@
                  
                                         </div>
                 <div class="col-12 col-xl-4">
-                  <small>cached!! updates reflect after 15 mins, clear cache for upadtes to reflect now.</small>
-                  <svg width="44px" height="44px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <defs> <path id="info-a" d="M10.5134277,0.293457031 C12.3116048,6.98051974 11.4737956,10.510549 8,10.8835449 C1.8918457,10.8835449 -0.0366210938,14.6247559 0.773681641,16.5002441 C1.58398438,18.3757324 4.12866211,19.8500977 6.21289062,20.2067871 C8.29711914,20.5634766 11.6750488,20.5915527 15.8925781,16.5002441 C20.1101074,12.4089355 17.1142578,5.80639648 15.8925781,4.07495117 C15.078125,2.9206543 13.2850749,1.66015625 10.5134277,0.293457031 Z"></path> <path id="info-c" d="M11,22 C4.92486775,22 0,17.0751322 0,11 C0,4.92486775 4.92486775,0 11,0 C17.0751322,0 22,4.92486775 22,11 C22,17.0751322 17.0751322,22 11,22 Z M11,20.24 C16.1031111,20.24 20.24,16.1031111 20.24,11 C20.24,5.89688891 16.1031111,1.76 11,1.76 C5.89688891,1.76 1.76,5.89688891 1.76,11 C1.76,16.1031111 5.89688891,20.24 11,20.24 Z M10,10 C10,9.44771525 10.4477153,9 11,9 C11.5522847,9 12,9.44771525 12,10 L12,15 C12,15.5522847 11.5522847,16 11,16 C10.4477153,16 10,15.5522847 10,15 L10,10 Z M11,8 C10.4477153,8 10,7.55228475 10,7 C10,6.44771525 10.4477153,6 11,6 C11.5522847,6 12,6.44771525 12,7 C12,7.55228475 11.5522847,8 11,8 Z"></path> </defs> <g fill="none" fill-rule="evenodd" transform="translate(1 1)"> <g transform="translate(3 1)"> <mask id="info-b" fill="#ffffff"> <use xlink:href="#info-a"></use> </mask> <use fill="#D8D8D8" xlink:href="#info-a"></use> <g fill="#1512d9" mask="url(#info-b)"> <rect width="24" height="24" transform="translate(-4 -2)"></rect> </g> </g> <mask id="info-d" fill="#ffffff"> <use xlink:href="#info-c"></use> </mask> <use fill="#000000" fill-rule="nonzero" xlink:href="#info-c"></use> <g fill="#7600FF" mask="url(#info-d)"> <rect width="24" height="24" transform="translate(-1 -1)"></rect> </g> </g> </g></svg>
+                  
                   
                  <div class="justify-content-end d-flex">
                   <div class="dropdown flex-md-grow-1 flex-xl-grow-0">
@@ -132,7 +131,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        {% cache 500 payroll_list %}
+                    
                         {% for payroll in payrolls %}
                         <tr>
                           <td class="pl-0">{{payroll.employee_id}}</td>
@@ -140,7 +139,7 @@
                           <td class="text-muted"><a href="{% url 'payroll-payslip' payroll.sign_id %}" download><i class="ti-download"></i></a></td>
                         </tr>
                         {% endfor %}
-                        {% endcache %}
+                        
                         
                       </tbody>
                     </table>

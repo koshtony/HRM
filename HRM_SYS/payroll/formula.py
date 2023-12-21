@@ -79,10 +79,10 @@ def nhif_relief(nhif,paye):
     rates = Payroll_Rates.objects.last()
     amount = 0
     if paye>0:
-        if nhif > 5000:
-            amount += nhif - 5000
+        if nhif*(rates.nhif_relief_rate/100) > 5000:
+            amount += 5000
         else:
-            amount += nhif - (nhif*(rates.nhif_relief_rate/100))
+            amount += nhif*(rates.nhif_relief_rate/100)
     else:
 
         amount+=0
