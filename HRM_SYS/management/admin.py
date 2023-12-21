@@ -29,7 +29,7 @@ class ApprovalsAdmin(admin.ModelAdmin):
 
 
 class ApplicationsAdmin(admin.ModelAdmin):
-        list_display = ("type","details","created_date","created_time","attachment")
+        list_display = ("type","created_date","created_time","attachment")
         list_filter = ("type",)
         search_fields = ["approvers"]
 
@@ -68,5 +68,5 @@ admin.site.register(Profile)
 admin.site.register(Events)
 admin.site.register(Station)
 admin.site.register(approvalTrack)
-admin.site.register(MailMessage)
+#admin.site.register(MailMessage)
 
