@@ -665,7 +665,7 @@ def get_attendance(request):
 @login_required
 def view_attendance(request):
 
-    attendances =  Attendance.objects.filter(day=date.today()).order_by('-pk')
+    
     leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
     #print(attendances)
     today_leaves = []
@@ -769,7 +769,7 @@ def view_attendance(request):
             absents.append(absent_dict)
             '''
 
-    context = {"attendances":attendances,"leaves":today_leaves}
+    context = {"leaves":today_leaves}
 
     return render(request,'management/list_attendance.html',context)
 

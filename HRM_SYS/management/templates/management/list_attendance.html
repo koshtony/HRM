@@ -71,7 +71,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <ul class="nav nav-pills mb-3">
-                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i>today</a></li>
+                    <li class="nav-item"><a href="#list-view" data-toggle="tab" class="nav-link btn-outline mr-1 show active"><i class="ti-timer"></i>full</a></li>
                     <li class="nav-item"><a href="#grid-view" data-toggle="tab" class="nav-link btn-danger"><i class="fa fa-user-minus"></i>Late</a></li>
                     <li class="nav-item"><a href="#settings" data-toggle="tab" class="nav-link btn-primary" style="background-color: orange;"><i class="fa fa-user-ninja"></i>on leave</a></li>
                     <li class="nav-item"><a href="#groups" data-toggle="tab" class="nav-link btn-dark" ><i class="fa fa-user-times"></i>absent</a></li>
@@ -140,64 +140,6 @@
                                             </tr>
                                         </thead>
                                         <tbody id="overallTab">
-                                            {% for attendance in attendances %}
-                                            <tr>
-
-                                                <td>
-                                                    {{attendance.employee.emp_id}}
-
-                                                </td>
-                                                <td>
-                                                    {{attendance.employee.first_name}} {{attendance.employee.second_name}}
-
-                                                </td>
-                                                <td>
-                                                    {{attendance.day}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.clock_in}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.clock_out}}
-                                                </td>
-                                                <td>
-                                                    <button onclick="showMap('{{attendance.lat}}','{{attendance.long}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
-                                                </td>
-                                                <td>
-                                                    <button onclick="showMap('{{attendance.lat1}}','{{attendance.long1}}');"><i class="fa fa-map-marker">{{attendance.lat}},{{attendance.long}}</i></button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image1}}')">
-                                                        <i class="fa fa-image"></i>
-        
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-outline" onclick="showImage('{{attendance.image2}}')">
-                                                        <i class="fa fa-image"></i>
-        
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    {{attendance.status}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.counts}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.deductions}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.is_leave}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.leave_days}}
-                                                </td>
-                                                <td>
-                                                    {{attendance.remarks}}
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
                                             
                                         </tbody>
                                     </table>
@@ -378,7 +320,7 @@
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
 <script>
-    new DataTable('#attendance');
+    //new DataTable('#attendance');
      //new DataTable('#late');
      new DataTable('#leave');
      //new DataTable('#absent');
@@ -498,7 +440,9 @@ function overallGen(){
         success:function(data,status){
 
             var data = JSON.parse(data)
-            //$("#overallTab").html('')
+            var allTab= new DataTable("#attendance")
+            allTab.clear().draw()
+            allTab.destroy()
 
             var overallTab= new DataTable("#attendance")
             for (key in data){
@@ -573,7 +517,10 @@ function lateGen(){
 
             var data = JSON.parse(data)
 
-            $("#lateTab").html('')
+            var latesTab = new DataTable("#late")
+
+            latesTab.clear().draw()
+            latesTab.destroy()
 
             var lateTab = new DataTable("#late")
 
@@ -629,6 +576,10 @@ function absentGen(){
         success:function(data,success){
 
             var data = JSON.parse(data)
+            var absentsTab = new DataTable("#absent")
+            absentsTab.clear().draw()
+            absentsTab.destroy()
+
 
             var absentTab = new DataTable("#absent")
             for(key in data){

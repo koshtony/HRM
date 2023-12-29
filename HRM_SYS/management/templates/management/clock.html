@@ -381,9 +381,27 @@ getLoc()
           var lat = document.getElementById("latitudes").value
 
           var diff = distance(lat,long,lat1,long1)
+          if (document.getElementById("in").innerHTML != ''){
+
+            var resp = confirm("sure! you want to clock out?")
+            if (resp==true){
+                
+              clockSub(lat1,long1,long,lat,diff)
+            }else{
+              alert("process cancelled")
+            }
+          }else{
+            clockSub(lat1,long1,long,lat,diff)
+          }
           
-       
-          if(diff > 500000000000000000){
+         
+          
+      
+      }
+
+function clockSub(lat1,long1,long,lat,diff){
+
+  if(diff > 500000000000000000){
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
           }else{
 
@@ -430,7 +448,9 @@ getLoc()
             }
           }
         }
-      }
+
+
+}
   
       // upload leave data 
  function loadLeave(){
