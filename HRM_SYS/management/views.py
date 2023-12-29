@@ -532,9 +532,9 @@ def clock(request):
             else:
 
                 late_diff = 0
-                                        
+                           
             
-            if len(att_filt) == 0 and (datetime.now().hour > 0 and datetime.now().hour <= 14): #record initial data
+            if len(att_filt) == 0 and (datetime.now().hour+3 > 0 and datetime.now().hour+3 <= 14): #record initial data
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
                         day = date.today(),
@@ -567,7 +567,7 @@ def clock(request):
             elif len(att_filt)>0 and  (att_filt[0].clock_in != '' and att_filt[0].clock_out != ''):
 
                 return JsonResponse("clock in and clockout already completed",safe=False)
-            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and len(att_filt)==0:
+            elif (datetime.now().hour+3 > 14 and datetime.now().hour+3 <= 24) and len(att_filt)==0:
 
                 attendance = Attendance(
                         employee =  Employee.objects.get(emp_id = request.user.username),
@@ -585,7 +585,7 @@ def clock(request):
                 attendance.save()
                 return JsonResponse("clock out successful",safe=False)
             
-            elif (datetime.now().hour > 14 and datetime.now().hour <= 24) and (att_filt[0].clock_out != ''):
+            elif (datetime.now().hour+3 > 14 and datetime.now().hour+3 <= 24) and (att_filt[0].clock_out != ''):
                 return JsonResponse("clock out already completed",safe=False)
 
 
