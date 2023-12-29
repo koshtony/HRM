@@ -947,7 +947,9 @@ def upload_leave(request):
            
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
-                applicant = request.user,details = form.cleaned_data.get("details"),
+                applicant = request.user,
+                details = form.cleaned_data.get("details"),
+                        
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
                 created_date = datetime.now(),created_time = datetime.now()+timedelta(hours=3),
@@ -1185,8 +1187,15 @@ def view_approval_details(request):
 
         id = request.POST.get("id")
 
-        details = Applications.objects.get(pk=id).details
-        
+        details = {
+            "title":str(Applications.objects.get(pk=id).type.name),
+            "details":Applications.objects.get(pk=id).details,
+            "start":Applications.objects.get(pk=id).start,
+            "end":Applications.objects.get(pk=id).end,
+            "days":Applications.objects.get(pk=id).days,
+            "applicant":"".join([str(emp.first_name)+ " "+str(emp.second_name) if len(Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username))>0 else "no employee details" for emp in Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username)])
+
+        }
 
         return JsonResponse(details,safe=False)
 @login_required

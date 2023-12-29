@@ -85,8 +85,8 @@
                 <div class="col-md-6 mb-4 stretch-card transparent">
                   <div class="card card-dark-blue">
                     <div class="card-body">
-                      <p class="mb-4">my applications</p>
-                      <a class="fs-30 mb-2" href="{% url 'management_list_approvals' %}">{{todos | length}}</a>
+                      <p class="mb-4">my To Do</p>
+                      <a class="fs-30 mb-2" href="#todoDiv">{{todos | length}}</a>
                       
                     </div>
                   </div>
@@ -97,7 +97,7 @@
                   <div class="card card-light-blue">
                     <div class="card-body">
                       <p class="mb-4">latest</p>
-                      <p class="fs-30 mb-2">{{event | length}}</p>
+                      <a class="fs-30 mb-2" href="{% url 'management_events' %}">{{event | length}}</a>
                       
                     </div>
                   </div>
@@ -187,8 +187,8 @@
                 </div>.
               </div>
             </div>
-            <div class="col-md-6 stretch-card grid-margin" >
-              <div class="card" style="overflow-y:scroll; height:500px;">
+            <div class="col-md-6 stretch-card grid-margin" id="todoDiv">
+              <div class="card" style="overflow-y:scroll; height:500px;" >
                 <div class="card-body">
                   <p class="card-title">To do</p>
                                                                                                                                                                                           
@@ -312,10 +312,10 @@
         
         <!-- Modal -->
         <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">approve</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Details</h5>
                 <div id="loaders2" style="display: none;">
                   <div class="spinner-grow text-primary" role="status">
                     <span class="sr-only">Loading...</span>
@@ -334,15 +334,40 @@
               <div class="modal-body">
                 <a onclick="hideDetails()"><i class="ti-arrow-circle-up"></i></a>
                 <a onclick="showDetails()"><i class="ti-arrow-circle-down"></i></a>
-                <div style="color:yellowgreen; overflow-y:scroll" id="detDiv" style="height:400px">
-                  <strong id="det"></strong>
-                  <a href="" download><i class="ti-download" id="attach"></i></a>
+                <div style="color:black; background-color:azure; overflow-y:scroll; overflow-x:scroll; border:2px;" id="detDiv" style="height:300px; margin:40px;">
+                  <h4 style="color:blue">Requested By:</h4>
+                   
+                   <svg width="34px" height="34px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M512 661.3c-117.6 0-213.3-95.7-213.3-213.3S394.4 234.7 512 234.7 725.3 330.4 725.3 448 629.6 661.3 512 661.3z m0-341.3c-70.6 0-128 57.4-128 128s57.4 128 128 128 128-57.4 128-128-57.4-128-128-128z" fill="#5F6379"></path><path d="M837 862.9c-15.7 0-30.8-8.7-38.2-23.7C744.3 729.5 634.4 661.3 512 661.3s-232.3 68.1-286.8 177.9c-10.5 21.1-36.1 29.7-57.2 19.2s-29.7-36.1-19.2-57.2C217.8 662.3 357 576 512 576s294.2 86.3 363.2 225.2c10.5 21.1 1.9 46.7-19.2 57.2-6.1 3-12.6 4.5-19 4.5z" fill="#5F6379"></path><path d="M512 1002.7c-270.6 0-490.7-220.1-490.7-490.7S241.4 21.3 512 21.3s490.7 220.1 490.7 490.7-220.1 490.7-490.7 490.7z m0-896c-223.5 0-405.3 181.8-405.3 405.3S288.5 917.3 512 917.3 917.3 735.5 917.3 512 735.5 106.7 512 106.7z" fill="#3688FF"></path></g></svg><strong id="applicant"></strong>
+                   <br>
+                 
+                  <h4 style="color:blue">Type:</h4>
+                  <h4 id="title"></h4>
+                  <br>
+                  <h4 style="color:blue">Details</h4>
+                  <p id="details"></p>
+                   <br>
+                   <h4 style="color:blue">From:</h4>
+                  
+                   <svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16.9995 15.9995L20.9995 11.9995M20.9995 11.9995L16.9995 7.99951M20.9995 11.9995H8.99951M12.9995 20.9995H6.20029C5.08019 20.9995 4.52014 20.9995 4.09231 20.7815C3.71599 20.5898 3.41003 20.2838 3.21828 19.9075C3.00029 19.4797 3.00029 18.9196 3.00029 17.7995V6.19951C3.00029 5.07941 3.00029 4.51935 3.21828 4.09153C3.41003 3.71521 3.71599 3.40925 4.09231 3.2175C4.52014 2.99951 5.08019 2.99951 6.20029 2.99951L12.9995 2.99951" stroke="#310af5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>&nbsp;&nbsp;<strong id="start"></strong>
+                   <br>
+                   <h4 style="color:blue">To:</h4>
+                   <svg width="34px" height="34px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <rect width="48" height="48" fill="white" fill-opacity="0.01"></rect> <path d="M14 23.9917L42 23.9917" stroke="#0938f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M26 36L14 24L26 12" stroke="#0938f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M5 36L5 12" stroke="#0938f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>&nbsp;&nbsp;<strong id="end"></strong>
+                   <br>
+                   <br>
+                   <h4 style="color:blue">Days:</h4>
+                   
+                   <svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Calendar / Calendar_Days"> <path id="Vector" d="M8 4H7.2002C6.08009 4 5.51962 4 5.0918 4.21799C4.71547 4.40973 4.40973 4.71547 4.21799 5.0918C4 5.51962 4 6.08009 4 7.2002V8M8 4H16M8 4V2M16 4H16.8002C17.9203 4 18.4796 4 18.9074 4.21799C19.2837 4.40973 19.5905 4.71547 19.7822 5.0918C20 5.5192 20 6.07899 20 7.19691V8M16 4V2M4 8V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8031C17.921 20 18.48 20 18.9074 19.7822C19.2837 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V8M4 8H20M16 16H16.002L16.002 16.002L16 16.002V16ZM12 16H12.002L12.002 16.002L12 16.002V16ZM8 16H8.002L8.00195 16.002L8 16.002V16ZM16.002 12V12.002L16 12.002V12H16.002ZM12 12H12.002L12.002 12.002L12 12.002V12ZM8 12H8.002L8.00195 12.002L8 12.002V12Z" stroke="#0930f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg><strong id="days"></strong>
+                   <br>
+                   
+                   <br>
+
+                  
                 </div>
                 <br><br>
                 <form class="forms-sample">
                   <div class="form-group">
                     <label for="exampleInputName1">id</label>
-                    <input type="text" class="form-control" id="approvePk" placeholder="Name">
+                    <input type="hidden" class="form-control" id="approvePk" placeholder="Name">
                   </div>
                   
                   <div class="form-group">
@@ -355,7 +380,7 @@
                   
                  
                   <div class="form-group">
-                    <label for="exampleTextarea1">Textarea</label>
+                    <label for="exampleTextarea1">Remarks</label>
                     <textarea class="form-control" id="approveComments" rows="4"></textarea>
                   </div>
                   <button type="button" class="btn btn-primary mr-2" onclick="doneApprove()">Submit</button>
@@ -382,6 +407,7 @@
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
       <script>
+        
     new DataTable('#newemp');
      
 // approval modal
@@ -407,7 +433,12 @@ function approveModal(id,link){
              },
       success:function(data,status){
        
-        document.getElementById("detDiv").innerHTML = data
+        document.getElementById("title").innerHTML = data["title"]
+        document.getElementById("details").innerHTML = data["details"]
+        document.getElementById("start").innerHTML = data["start"]
+        document.getElementById("end").innerHTML = data["end"]
+        document.getElementById("days").innerHTML = data["days"]
+        document.getElementById("applicant").innerHTML = data["applicant"]
       },
       complete:function(){
                 
@@ -594,6 +625,9 @@ function clearCache(){
 
    location.reload()
 }
+
+
+
 
       </script>
 {% endblock content %}
