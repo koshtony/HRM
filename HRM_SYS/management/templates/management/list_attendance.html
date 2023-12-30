@@ -78,7 +78,9 @@
                 </ul>
             </div>
             <h4>Filter+Download attendance data</h4>
-            <div class="col-lg-12">
+            <br>
+          
+              <div class="col-lg-12">
                 <div class="row tab-content">
                     <div id="list-view" class="tab-pane fade active show col-lg-12">
                         
@@ -86,17 +88,31 @@
                             
                             <div class="col-lg-4">
                         <div class="form-group">
-                            <label for="exampleInputEmail3">From</label>
+                            <label for="today_date1">From</label>
                             <input type="date" class="form-control" id="today_date1">
                           </div>
                             </div>
                             <div class="col-lg-4">
                           <div class="form-group">
-                            <label for="exampleInputEmail3">To</label>
+                            <label for="today_date2">To</label>
                             <input type="date" class="form-control" id="today_date2">
                           </div>
+                          </div>
+                          <div class="col-lg-2">
+                          <div class="form-group">
+                            <label for="dep">department</label>
+                            <input list="deps" name="dep" id="dep" class="form-control" placeholder="search dep" required>
+
+                                    <datalist id="deps">
+                                      {% for dep in deps %}
+                                      <option value="{{dep.pk}}">{{dep.name}}</option>
+                                      {% endfor %}
+
+                                    </datalist>
+                           
+                          </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-2">
                                 <button class="btn btn-light" onclick="overallGen()"><svg fill="#0ee00b" width="44px" height="44px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>pull</title> <path d="M0 26.016q0-1.952 1.12-3.488t2.88-2.144v-8.736q-1.76-0.64-2.88-2.176t-1.12-3.488q0-2.464 1.76-4.224t4.256-1.76 4.224 1.76 1.76 4.224q0 1.952-1.12 3.488t-2.88 2.176v8.736q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.224t-4.224 1.76-4.256-1.76-1.76-4.224zM4 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM4 6.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408zM14.016 6.016q0-0.832 0.576-1.408l4-4q0.416-0.448 1.024-0.544t1.152 0.096q0.576 0.224 0.896 0.736t0.352 1.12v1.984q2.464 0 4.224 1.76t1.76 4.256v10.368q1.76 0.608 2.88 2.144t1.12 3.488q0 2.496-1.76 4.256t-4.224 1.76-4.256-1.76-1.76-4.256q0-1.952 1.12-3.488t2.88-2.144v-10.368q0-0.832-0.576-1.408t-1.408-0.608v2.016q0 0.608-0.352 1.12t-0.896 0.704-1.152 0.128-1.024-0.544l-4-4q-0.576-0.608-0.576-1.408zM24 26.016q0 0.832 0.576 1.408t1.44 0.576 1.408-0.576 0.576-1.408-0.576-1.408-1.408-0.608-1.44 0.608-0.576 1.408z"></path> </g></svg></button>
                             </div>
                             <div id="loaders10" style="display: none;">
@@ -424,7 +440,7 @@ $("#payId").val(Math.trunc(Date.now() + Math.random()))
 //==================add filter by date *table=======================
 
 function overallGen(){
-
+     if($("#dep").val() != ''){
      $.ajax({
 
         type:"post",
@@ -433,6 +449,7 @@ function overallGen(){
 
             date1:$("#today_date1").val(),
             date2:$("#today_date2").val(),
+            dep:$("#dep").val(),
         },
         beforeSend:function(){
             $("#loaders10").show()
@@ -491,7 +508,9 @@ function overallGen(){
             $("#loaders10").hide()
           },
 
-     })
+     })}else{
+        alert("select department")
+     }
 }
 
 

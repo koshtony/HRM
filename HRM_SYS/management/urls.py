@@ -8,7 +8,7 @@ from .views import home,clock,add_department,view_attendance,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
             files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details,view_approval_details,\
             resign_employee,employee_profile,create_approval,import_att_settings,lookup_employee,get_approval_temp,get_approvals_name,mail_box,mail_actions,\
-            get_mail_body,mail_notify,view_late_attendance,view_absent_attendance
+            get_mail_body,mail_notify,view_late_attendance,view_absent_attendance,download_attendance
 
             
 
@@ -21,6 +21,7 @@ urlpatterns = [
      path('list_late_attendance',views.view_late_attendance,name="management_view_late_attendance"),
      path('list_absent_attendance',views.view_absent_attendance,name="management_view_absent_attendance"),
      path('get_attendance',views.get_attendance,name="management-get-attendance"),
+     path('download_attendance',views.download_attendance,name="management-download-attendance"),
      path('add_info',views.add_info,name="management_add_info"),
      path('add_departments',views.add_department,name="management_add_department"),
      path('add_roles',views.add_roles,name="management_add_roles"),

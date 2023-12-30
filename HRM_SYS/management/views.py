@@ -24,7 +24,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import EmpForm,ApprovalForm,LeaveForm,Employee,UserRegForm,filesForm,profileUpdateForm,UserUpdateForm,ChatForm,PostsForm,SettingsForm,CreateApprovalForm
 from django.contrib.auth import update_session_auth_hash
 from .models import *
-from .temps import gen_temp
+from .temps import gen_temp,emp_attendance
 from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
 import string
@@ -665,7 +665,7 @@ def get_attendance(request):
 @login_required
 def view_attendance(request):
 
-    #deps = Departments.objects.all()
+    deps = Department.objects.all()
     leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
     #print(attendances)
     today_leaves = []
@@ -689,8 +689,9 @@ def view_attendance(request):
 
         date1 = request.POST.get("date1")
         date2 = request.POST.get("date2")
+        dep = request.POST.get("dep")
 
-        att_filt_by_date = Attendance.objects.filter(day__gte=date1,day__lte=date2)
+        att_filt_by_date = Attendance.objects.filter(day__gte=date1,day__lte=date2,employee__departments__pk=int(dep))
         att_filt_by_date_list = []
         for attendance in att_filt_by_date:
             print(attendance)
@@ -712,66 +713,10 @@ def view_attendance(request):
             
         
         return JsonResponse(json.dumps(att_filt_by_date_list),safe=False)
-
-
-    '''
-    late = []
-    for attendance in attendances:
-         if attendance.clock_in != '':
-            try:
-                if datetime.strptime(attendance.clock_in, '%Y-%m-%d %H:%M:%S.%f').time() > AttSettings.objects.get(employee_id = attendance.employee.emp_id).start:
-             
-                    late_dict = {
-                    "employee":attendance.employee.emp_id,
-                    "employee_name":attendance.employee.first_name + " "+attendance.employee.second_name,
-                    "day":attendance.day,
-                    "clock_in":attendance.clock_in,
-                    "clock_out":attendance.clock_out,
-                    "set_clock_in":AttSettings.objects.get(employee_id = attendance.employee.emp_id).start,
-                    "set_clock_out":AttSettings.objects.get(employee_id = attendance.employee.emp_id).end,
-                    "count": attendance.days,
-                    "status":attendance.status,
                     
 
-                }
-                    late.append(late_dict)
-            except:
-                late_dict = {}
-    absents = []
 
-    for employee in Employee.objects.all():
-        if employee.emp_id not in [att.employee.emp_id for att in Attendance.objects.filter(day = date.today())]:
-            
-            try:
-                absent_dict = {
-                    "employee_id":employee.emp_id,
-                    "name":employee.first_name + employee.second_name ,
-                    "email":employee.email ,
-                    "phone":employee.phone ,
-                    "next_of_kin":employee.next_kin_name,
-                    "next_kin_phone":employee.next_kin_phone,
-                    "address":employee.address + employee.location,
-                    "set_clock_in":AttSettings.objects.get(employee_id = employee.emp_id).start,
-                    "expected_days":AttSettings.objects.get(employee_id = employee.emp_id).expected_days
-                }
-            except:
-                absent_dict = {
-                    "employee_id":employee.emp_id,
-                    "name":employee.first_name + employee.second_name ,
-                    "email":employee.email ,
-                    "phone":employee.phone ,
-                    "next_of_kin":employee.next_kin_name,
-                    "next_kin_phone":employee.next_kin_phone,
-                    "address":employee.address + employee.location,
-                    "set_clock_in":"no settings",
-                    "expected_days":"no settings"
-                }
-
-
-            absents.append(absent_dict)
-            '''
-
-    context = {"leaves":today_leaves}
+    context = {"leaves":today_leaves,"deps":deps}
 
     return render(request,'management/list_attendance.html',context)
 
@@ -867,6 +812,18 @@ def view_absent_attendance(request):
 
         return JsonResponse(json.dumps(absents),safe=False)
 
+def download_attendance(request):
+
+    filename = 'employee_attendance.xlsx'
+
+    filepath =  os.path.join(settings.MEDIA_ROOT, 'emp_attendance',filename)
+    emp_attendance(filepath)
+
+    path = open(filepath,'rb')
+
+    response = FileResponse(path,as_attachment=True)
+
+    return response
 
 @login_required
 def edit_att_settings(request,emp_id):
