@@ -176,13 +176,16 @@
                   <div>
                     <p style="color:green">set clock in > <span id="h1"></span>:<span id="m1"></span></p>
                     <p style="color:green">set clock out > <span id="h2">:</span><span id="m2"></span></p>
-                  <a class="ti-eye" onclick="getClock();">view</a>
+                    <i class="ti-alarm-clock" style="color:green" id="in"></i>
+                    <br>
+                    <i class="ti-alarm-clock" style="color:blue" id="out"></i>
+                 
                   <div>
                   <div>
-                  <i class="ti-alarm-clock" style="color:green" id="in"></i>
+                
                   </div>
                   <div>
-                    <i class="ti-alarm-clock" style="color:blue" id="out"></i>
+                   
                     </div>
                   </div>
                   </div>
@@ -506,8 +509,7 @@ function clockSub(lat1,long1,long,lat,diff){
   "{% url 'management-get-attendance' %}"
   
   );
-    // fetchRes is the promise to resolve
-    // it by using.then() method
+  
     fetchRes.then(res =>
         res.json()).then(d => {
            console.log(d)

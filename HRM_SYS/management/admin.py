@@ -34,7 +34,7 @@ class ApplicationsAdmin(admin.ModelAdmin):
         search_fields = ["approvers"]
 
 class AttAdmin(admin.ModelAdmin):
-        list_display = ("employee","clock_in","clock_out","lat","long","lat1","long1","image1","image2")
+        list_display = ("employee","clock_in","clock_out","lat","long","lat1","long1")
         
         search_fields = ["employee"]
         
