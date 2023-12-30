@@ -665,7 +665,7 @@ def get_attendance(request):
 @login_required
 def view_attendance(request):
 
-    
+    #deps = Departments.objects.all()
     leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
     #print(attendances)
     today_leaves = []
@@ -691,8 +691,10 @@ def view_attendance(request):
         date2 = request.POST.get("date2")
 
         att_filt_by_date = Attendance.objects.filter(day__gte=date1,day__lte=date2)
-
-        att_filt_by_date_list = [{
+        att_filt_by_date_list = []
+        for attendance in att_filt_by_date:
+            print(attendance)
+            att_filt_by_date_list.append({
             
             "emp_id":attendance.employee.emp_id,"name":str(attendance.employee.first_name)+str(attendance.employee.second_name),
             
@@ -706,7 +708,7 @@ def view_attendance(request):
                                   
                                   
                                   
-                                  } for attendance in att_filt_by_date]
+                                  })
             
         
         return JsonResponse(json.dumps(att_filt_by_date_list),safe=False)
