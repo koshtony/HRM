@@ -1,1 +1,1 @@
-web: gunicorn 'HRM_SYS.wsgi' --timeout 18720
+web: gunicorn 'HRM_SYS.wsgi' --timeout 118720
