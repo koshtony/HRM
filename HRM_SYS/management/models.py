@@ -25,6 +25,7 @@ class Department(models.Model):
     hod_username = models.CharField(max_length=50,default="None")
     size = models.FloatField(default=1)
     created = models.DateField(default=timezone.now)
+    approvers = models.TextField(default="")
     remarks = models.TextField(default="")
     
     def __str__(self):
@@ -117,6 +118,8 @@ class AttSettings(models.Model):
     deduction_per_day = models.FloatField(default=0.0)
     expected_days =  models.FloatField(default=24.0)
     leave_days =  models.FloatField(default=21.0)
+    sick_leave_days = models.FloatField(default=7.0)
+    compassionate_leave_days = models.FloatField(default=4.0)
     remarks = models.TextField(default="")
     address = models.CharField(max_length=300,default="")
     clock_in_latitude = models.CharField(max_length=1000,default="")

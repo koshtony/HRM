@@ -42,15 +42,24 @@
                     </div>
                     </div>
           <div class="row">
+            
             <form class="forms-sample" ectype="multipart/form-data">
                 <div class="form-group">
-                  <label>approval name</label>
-                  <input type="text" class="form-control" id="approvalName" placeholder="Name">
+                  <label>Department</label>
+                  <input list="departments" class="form-control" id="department">
+                  <datalist id="departments">
+                    {% for dep in deps %}
+                    <option value="{{dep.pk}}">{{dep.name}}</option>
+                    {% endfor %}
+
+                  </datalist>
+                  
                 </div>
                 <br>
-                <br>
+                
                 <div class="form-group">
-                    <label>select approvers</label>
+                <label>select approvers</label>
+                
                 <select class="selectpicker" multiple data-live-search="true" id="approversName">
 
                     {% for employee in employees %}
@@ -58,11 +67,11 @@
                     {% endfor %}
                   </select>
                   </div>
-                <label>create template</label>
+               
                  
                   <br>
                   <br>
-                <button type="button" class="btn btn-primary mr-2" onclick="createApproval()">create</button>
+                <button type="button" class="btn btn-primary mr-2" onclick="createApproval()">save</button>
               
               </form>
             
@@ -88,7 +97,7 @@
              url:"{% url 'management_create_approval' %}",
              data:{
 
-                approval:$("#approvalName").val().toString(),
+                department:$("#department").val().toString(),
                 approvers:$("#approversName").val().toString()
              },
              beforeSend:function(){

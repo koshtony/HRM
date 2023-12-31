@@ -71,6 +71,8 @@ class ExtraPayments(models.Model):
     awards = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     loan_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     welfare_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    unpaid_leave_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
+    modified_absentee_deductions = models.DecimalField(default=0.00,max_digits=10,decimal_places=2)
     created = models.DateTimeField(default=timezone.now)
 
 

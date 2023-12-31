@@ -88,10 +88,20 @@ def add_info(request):
 
     return render(request,'management/add_info.html')
 
+'''
+==========================================
+render application  form
+==========================================
+'''
 def approvals(request):
     context = {"appForm":ApprovalForm}
     return render(request,'management/approvals.html',context)
 
+'''
+==========================================
+list of approvals initiated by current user
+==========================================
+'''
 def view_approvals(request):
 
     context = {
@@ -101,7 +111,11 @@ def view_approvals(request):
         }
 
     return render(request,'management/approval_list.html',context)
-
+'''
+==========================================
+get the name of approver 
+==========================================
+'''
 @csrf_exempt
 def get_approvals_name(request):
 
@@ -110,7 +124,7 @@ def get_approvals_name(request):
       
         apps = Applications.objects.get(pk=pk)
         names = []
-        for id in apps.type.approvers.split('\r\n'):
+        for id in Employee.objects.get(emp_id = apps.applicant.username).departments.approvers.split('/r/n'):
             
             
             if id in apps.approvers.split(','):
@@ -130,16 +144,20 @@ def get_approvals_name(request):
                     print(id)
                     Employee.objects.get(emp_id = id)
 
-                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"approved"})
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"checked"})
                 except:
 
-                    names.append({"name":"couldn't find name for "+str(id),"status":"approved"})
+                    names.append({"name":"couldn't find name for "+str(id),"status":"checked"})
            
 
         return JsonResponse(names,safe=False)
 
 
-
+'''
+==========================================
+save leave approvals
+==========================================
+'''
 
 @login_required
 def leave(request):
@@ -392,7 +410,7 @@ def import_employee_data(request):
 @csrf_exempt
 def import_att_settings(request):
 
-    try:
+    
 
         file = request.FILES.get("file")
         settings_df = pandas.read_excel(file,sheet_name='attendance')
@@ -402,9 +420,7 @@ def import_att_settings(request):
                 )
             sett.save()
         return JsonResponse("done",safe=False)
-    except Exception as err:
-
-        return JsonResponse(str(err),safe=False)
+   
 
 
 @login_required
@@ -838,29 +854,38 @@ def edit_att_settings(request,emp_id):
             form.save()
 
     return render(request,'management/edit_attendance.html',context)
+
+'''
+==========================================
+create approval process shortcut
+==========================================
+'''
 @csrf_exempt
 @login_required
 def create_approval(request):
     
     if request.POST:
 
-        approval = request.POST.get("approval")
+        department = request.POST.get("department")
         approvers = "\n".join(request.POST.get("approvers").split(','))
 
-        apps = Approvals(
+        department_edit = Department.objects.get(pk=department)
+        department_edit.approvers = approvers
+        department_edit.save()
 
-            name = approval, 
-            approvers = approvers,
-            created = datetime.now()+timedelta(hours=3),
-            remarks = "created by -> "+str(request.user.username)
-        )
-        apps.save()
+        
 
         return JsonResponse("created successfully",safe=False)
 
 
-    context = {"employees":Employee.objects.all(),"form":CreateApprovalForm()}
+    context = {"employees":Employee.objects.all(),"deps":Department.objects.all()}
     return render(request,'management/create_approval.html',context)
+
+'''
+==========================================
+get template for approval initiated
+==========================================
+'''
 @csrf_exempt
 def get_approval_temp(request):
 
@@ -879,7 +904,11 @@ def get_approval_temp(request):
             return JsonResponse(data,safe=False)
 
         
-
+'''
+==========================================
+upload leave details and pass as an application process
+==========================================
+'''
 @login_required
 def upload_leave(request):
     if request.POST:
@@ -889,10 +918,13 @@ def upload_leave(request):
             form.instance.applicant = request.user
             form.save()
             
-            approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
-            approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
-            for approve in approvers:
             
+            approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+            #approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
+            approvers = [app.rstrip() for app in approvers if app!=request.user.username]
+            
+            for approve in approvers:
+                # create notofication for the process
                 notify = Notifications(
                     recipient = User.objects.get(username=approve),
                     info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
@@ -922,6 +954,12 @@ def upload_leave(request):
 
 
             return JsonResponse("application submitted successfully",safe=False)
+
+'''
+==========================================
+uploads application details
+==========================================
+'''
 @login_required    
 def upload_process(request):
     if request.POST:
@@ -932,8 +970,12 @@ def upload_process(request):
             form.instance.created = datetime.now()
             form.save()
             '''
-            approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
-            approvers = [app.rstrip() for app in approvers.approvers.split('\n') if app!=request.user.username]
+            try:
+                approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+            except:
+                return JsonResponse("not created as employee",safe=False)
+            #approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
+            approvers = [app.rstrip() for app in approvers if app!=request.user.username]
             
             if "leave" in str(Approvals.objects.get(name=form.cleaned_data.get("approvals")).name):
                 return JsonResponse("kindly, submit leave applications on attendance page!!",safe=False)
@@ -969,7 +1011,9 @@ def upload_process(request):
 
 
 '''
-processing all approvals
+==========================================
+direct processing all applications i.e approving applications
+==========================================
 '''
 @login_required
 def approve(request):
@@ -1012,6 +1056,12 @@ def approve(request):
 
         return JsonResponse("approved successfully",safe=False)
 
+
+'''
+==========================================
+processing all applications i.e rejecting applications
+==========================================
+'''
 @login_required
 def reject_approval(request):
 
@@ -1024,6 +1074,12 @@ def reject_approval(request):
         application.save()
 
         return JsonResponse("rejected successfully",safe=False)
+
+'''
+==========================================
+processing all applications by adding comments approving and rejecting applications
+==========================================
+'''
 @login_required() 
 def approve_by_details(request):
 
@@ -1044,7 +1100,12 @@ def approve_by_details(request):
                 application.save()
                 if application.type.name == "leave":
                     
-                    leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
+                    try:
+                        leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
+                    except:
+
+                        return JsonResponse("Attendance: leave days settings not created -> contact admin")
+
                     
 
                     att = Attendance(
@@ -1069,6 +1130,7 @@ def approve_by_details(request):
                 date = date.today(),
                 time = datetime.now()+timedelta(hours=3)
                 )
+                
             else:
                 application.status = "pending"
                 application.rate = int((application.stage // application.expected)*100)
@@ -1102,6 +1164,12 @@ def approve_by_details(request):
             track.save()
 
             return JsonResponse("application rejected successfully",safe=False)
+
+'''
+==========================================
+cancel application initiated: recall initiated by applicant
+==========================================
+'''
 @login_required        
 def recall_approval(request):
 
@@ -1120,6 +1188,12 @@ def recall_approval(request):
 
             return JsonResponse("recalled successful",safe=False)
 
+'''
+==========================================
+adding comments to indicate application recall: recall initiated by applicant.
+incase the applications is processed by atleats one approver
+==========================================
+'''
 def recall_by_comment(request):
 
     if request.POST:
@@ -1138,6 +1212,12 @@ def recall_by_comment(request):
         )
         track.save()
         return JsonResponse("remark added successfully",safe=False)
+
+'''
+==========================================
+list of application details
+==========================================
+'''
 @login_required
 @csrf_exempt
 def view_approval_details(request):

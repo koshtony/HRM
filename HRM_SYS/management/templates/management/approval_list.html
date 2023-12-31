@@ -130,7 +130,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">create approvals category</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add/Edit department approvers</h5>
        
       </div>
       <div class="modal-body">
@@ -153,7 +153,9 @@
           <div class="row">
             <div class="col-12 grid-margin stretch-card" style="height:500px; overflow-y: scroll;">
               <div class="card">
-                <button class="btn btn-outline" style="margin:10px; width:40px; border-color: black;;" onclick="createApprv()"><i class="fa fa-cogs"></i></button> 
+                {% if user.is_staff %}
+                <button class="btn btn-outline" onclick="createApprv()"><svg width="34px" height="34px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Add_Row"> <path id="Vector" d="M3 14V15C3 16.1046 3.89543 17 5 17L19 17C20.1046 17 21 16.1046 21 15L21 13C21 11.8954 20.1046 11 19 11H13M10 8H7M7 8H4M7 8V5M7 8V11" stroke="#0f77ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>Approvers</button> 
+                {% endif %}
                 <div class="card-body">
                   
                   <h4 class="card-title">approvals process</h4>
@@ -442,7 +444,7 @@ function getApprovers(id){
             $("#approversModalBdy").html('')
             for(key in data){
               
-
+                 
               $("#approversModalBdy").append(
 
               `

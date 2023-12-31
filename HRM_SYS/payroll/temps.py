@@ -4,6 +4,7 @@ import pandas
 def gen_temp(filename):
 
     extra_df = pandas.DataFrame(list(ExtraPayments.objects.all().values()))
+   
 
     extra_df["created"] = extra_df["created"].dt.date
 
