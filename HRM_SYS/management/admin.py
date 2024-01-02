@@ -1,10 +1,11 @@
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 from .models import Employee,Department,Roles,Approvals,\
 Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events,Station,approvalTrack,MailMessage
 
 # Register your models here.
 
-class EmpAdmin(admin.ModelAdmin):
+class EmpAdmin(ImportExportModelAdmin):
         list_display = ("emp_id","first_name","second_name","email","phone","dob")
         list_filter = ("departments",)
         search_fields = ["emp_id","first_name","second_name"]
@@ -33,7 +34,7 @@ class ApplicationsAdmin(admin.ModelAdmin):
         list_filter = ("type",)
         search_fields = ["approvers"]
 
-class AttAdmin(admin.ModelAdmin):
+class AttAdmin(ImportExportModelAdmin):
         list_display = ("employee","clock_in","clock_out","lat","long","lat1","long1")
         
         search_fields = ["employee"]

@@ -170,9 +170,14 @@
                             {% if track.application.pk == application.pk %}
                           <li>
                             <span class="badge badge-success"><i class="icon-minus-sign"></i>{{track.date}}</span>
+                            {% if track.status == "reject" %}
+                            <span class="badge badge-danger"><i class="icon-minus-sign"></i>rejected</span>
+                            {% else %}
+                            <span class="badge badge-success"><i class="icon-minus-sign"></i>approved</span>
+                            {% endif %}
                               <ul>
                                   <li>
-                                    <a href=""><span><i class="ti-timer"></i> {{track.time}}</span><img style="width: 50px; border-radius: 50%;" src="{{track.user.profile.image.url}}"><p>{{track.user.username}}</p> &ndash; {{track.comments}}</a>
+                                    <span><i class="ti-timer"></i> {{track.time}}</span><p><i class="fa fa-user"></i>{{track.user.username}}</p> <p><i class="fa fa-comments"></i>&nbsp;&nbsp;{{track.comments}}</p>
                                   </li>
                               </ul>
                           </li>

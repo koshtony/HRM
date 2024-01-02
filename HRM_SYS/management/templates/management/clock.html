@@ -219,9 +219,11 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-body">
+                  <div class="table-responsive">
               <table class="table table-striped">
                 <thead style="background-color: aqua;">
                   <tr>
+                    <th>Present+leave days</th>
                   <th>Annual Leave</th>
                   <th>sick Leave</th>
                   <th>compassionate Leave</th>
@@ -238,6 +240,7 @@
                   </tr>
                 </tbody>
               </table>
+              </div>
               </div>
               </div>
            
@@ -580,6 +583,7 @@ function clockSub(lat1,long1,long,lat,diff){
 
               `
               <tr>
+                    <td id="present-leave" style="background-color:greenyellow">${d["days"]}</td>
                     <td id="annual-leave" style="background-color:green">${d["leave"]}</td>
                     <td id="sick-leave" style="background-color:grey">${d["sick"]}</td>
                     <td id="comp-leave" style="background-color:orange">${d["comp"]}</td>

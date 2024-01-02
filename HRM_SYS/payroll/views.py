@@ -428,6 +428,7 @@ def flat_payroll(request):
             welfare_deductions = sum([i.welfare_deductions for i in ExtraPayments.objects.filter(employee_id = employee.emp_id) if i.created >= date1 and i.created <= date2])
             if str(welfare_deductions).isdecimal == False:
                 welfare_deductions == 0.00
+            
             deductions = 0.00
             
             

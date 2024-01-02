@@ -43,6 +43,7 @@ def home(request):
         if request.user.username == todo.approvers.split(',')[0]:
             apps = [
                  todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found'
+    
             ]
             todos.append(apps)
     event = Events.objects.last()
@@ -129,7 +130,7 @@ def get_approvals_name(request):
             
             
             if id in apps.approvers.split(','):
-                print(id)
+                
                 
             
                 try:
@@ -145,10 +146,10 @@ def get_approvals_name(request):
                     print(id)
                     Employee.objects.get(emp_id = id)
 
-                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"checked"})
+                    names.append({"name":str(Employee.objects.get(emp_id = id).first_name)+" "+str(Employee.objects.get(emp_id = id).second_name),"status":"processed"})
                 except:
 
-                    names.append({"name":"couldn't find name for "+str(id),"status":"checked"})
+                    names.append({"name":"couldn't find name for "+str(id),"status":"processed"})
            
 
         return JsonResponse(names,safe=False)
@@ -635,7 +636,7 @@ def get_attendance(request):
     if len(att_settings)>0:
 
         att_settings = att_settings[0]
-
+       
         if len(today_att) > 0:
 
             details = {
@@ -647,6 +648,13 @@ def get_attendance(request):
                 "m2":att_settings.end.minute,
                 "lat1":att_settings.clock_in_latitude,
                 "long1":att_settings.clock_in_longitude,
+                "leave":att_settings.leave_days,
+                "sick":att_settings.sick_leave_days,
+                "comp":att_settings.compassionate_leave_days,
+                "days":sum([att.days if att.day.month == datetime.now().month else 0 for att in Attendance.objects.filter(employee = Employee.objects.get(emp_id=request.user.username))])
+
+                
+            
             }
 
             return JsonResponse(details,safe=False)
@@ -661,7 +669,8 @@ def get_attendance(request):
                 "long1":att_settings.clock_in_longitude,
                 "leave":att_settings.leave_days,
                 "sick":att_settings.sick_leave_days,
-                "comp":att_settings.compassionate_leave_days
+                "comp":att_settings.compassionate_leave_days,
+                "days":sum([att.days if att.day.month == datetime.now().month else 0 for att in Attendance.objects.filter(employee=request.user.username)])
             }
         #print(details)
         return JsonResponse(details,safe=False)
@@ -924,8 +933,10 @@ def upload_leave(request):
             form.instance.applicant = request.user
             form.save()
             
-            
-            approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+            try:
+                approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+            except:
+                return JsonResponse("employee details not added",safe=False)
             #approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers if app!=request.user.username]
             
@@ -951,7 +962,8 @@ def upload_leave(request):
                 approvers = ",".join(approvers),expected = len(approvers),
                 created_date = datetime.now(),created_time = datetime.now()+timedelta(hours=3),
                 start = form.cleaned_data.get("start"), end = form.cleaned_data.get("end"),
-                days = form.cleaned_data.get("days")
+                days = form.cleaned_data.get("days"),
+                category = form.cleaned_data.get("category")
 
     
             )
@@ -1036,10 +1048,14 @@ def approve(request):
             application.status = "complete"
             application.rate = 100
             application.save()
-            if application.type.name == "leave":
-                
-                    leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
+            
+            try:
+                settings = AttSettings.objects.get(employee_id = application.applicant.username )
+            except:
+                return JsonResponse("attendance settings not added",safe=False)
 
+            if application.category == "leave":
+                
                     att = Attendance(
                         employee = Employee.objects.get(emp_id = application.applicant.username),
                         is_leave = True,
@@ -1048,11 +1064,59 @@ def approve(request):
                         remarks = "leave "+str(application.start)+" to "+str(application.end),
                         image1 = "", 
                         image2 = "",
-                        leave_days = leave_days - application.days
+                        leave_days = settings.leave_days - application.days
                         
                     )
 
                     att.save()
+
+                    settings.leave_days = settings.leave_days - application.days
+                    settings.save()
+
+            elif application.category == "sick":
+
+                    
+                    
+
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "sick-leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = "",
+                        
+                        
+                    )
+
+                    att.save()
+
+                    settings.sick_leave_days = settings.sick_leave_days - application.days
+                    settings.save()
+            
+            elif application.category == "compassionate":
+
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "compassionate-leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = "",
+                        
+                        
+                    )
+
+                    att.save()
+
+                    settings.compassionate_leave_days = settings.compassionate_leave_days - application.days
+                    settings.save()
+
+
+
+
         else:
             application.status = "pending"
             application.rate = int((application.stage / application.expected)*100)
@@ -1097,21 +1161,19 @@ def approve_by_details(request):
         if status == "approve":
             application = Applications.objects.get(pk=id)
             application.approvers = ",".join([i for i in application.approvers.split(',') if i!=request.user.username])
-            print(application.approvers)
+            
 
             application.stage +=1
             if application.stage == application.expected:
                 application.status = "complete"
                 application.rate = 100
                 application.save()
-                if application.type.name == "leave":
+                try:
+                    settings = AttSettings.objects.get(employee_id = application.applicant.username )
+                except:
+                    return JsonResponse("attendance settings not added",safe=False)
+                if application.category == "leave":
                     
-                    try:
-                        leave_days = AttSettings.objects.get(employee_id = application.applicant.username ).leave_days
-                    except:
-
-                        return JsonResponse("Attendance: leave days settings not created -> contact admin")
-
                     
 
                     att = Attendance(
@@ -1122,20 +1184,65 @@ def approve_by_details(request):
                         remarks = "leave "+str(application.start)+" to "+str(application.end),
                         image1 = "", 
                         image2 = "",
-                        leave_days = leave_days - application.days
+                        leave_days = settings.leave_days - application.days
                         
                     )
 
                     att.save()
 
+                    settings.leave_days = settings.leave_days - application.days
+                    settings.save()
+
+                elif application.category == "sick":
+
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "sick-leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = "",
+                        
+                        
+                    )
+
+                    att.save()
+
+                    settings.sick_leave_days = settings.sick_leave_days - application.days
+                    settings.save()
+            
+                elif application.category == "compassionate":
+
+                    att = Attendance(
+                        employee = Employee.objects.get(emp_id = application.applicant.username),
+                        is_leave = True,
+                        days = application.days,
+                        counts = application.days,
+                        remarks = "compassionate-leave "+str(application.start)+" to "+str(application.end),
+                        image1 = "", 
+                        image2 = "",
+                        
+                        
+                    )
+
+                    att.save()
+
+                    settings.compassionate_leave_days = settings.compassionate_leave_days - application.days
+                    settings.save()
+
+                    
+                    
+
                 track = approvalTrack(
-                application = Applications.objects.get(pk=id),
-                user = request.user,
-                comments = comments,
-                status = status,
-                date = date.today(),
-                time = datetime.now()+timedelta(hours=3)
+                    application = Applications.objects.get(pk=id),
+                    user = request.user,
+                    comments = comments,
+                    status = status,
+                    date = date.today(),
+                    time = datetime.now()+timedelta(hours=3)
                 )
+                track.save()
                 
             else:
                 application.status = "pending"
@@ -1238,7 +1345,8 @@ def view_approval_details(request):
             "start":Applications.objects.get(pk=id).start,
             "end":Applications.objects.get(pk=id).end,
             "days":Applications.objects.get(pk=id).days,
-            "applicant":"".join([str(emp.first_name)+ " "+str(emp.second_name) if len(Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username))>0 else "no employee details" for emp in Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username)])
+            "applicant":"".join([str(emp.first_name)+ " "+str(emp.second_name) if len(Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username))>0 else "no employee details" for emp in Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username)]),
+            "category":Applications.objects.get(pk=id).category
 
         }
 

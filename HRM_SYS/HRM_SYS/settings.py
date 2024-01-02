@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+bo43m_vcns%1t_9u(n3f$8!t+0^b=99s7&ppvi(tyxw@53@=&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'mathfilters',
     'user_visit',
     'online_users',
+    'import_export'
  
 
 
@@ -227,6 +228,8 @@ DROPBOX_APP_KEY = '878rh9tt2lqnbwc'
 DROPBOX_APP_SECRET = 'p1z60sqyjy1gpjx'
 
 DROPBOX_OAUTH2_REFRESH_TOKEN = 'OB6GXurPyhcAAAAAAAAAAWbYbxfp9e1izkfBVFr3UQiyGclINpl71M0fVfwO0vf5'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 
 TINYMCE_DEFAULT_CONFIG = {

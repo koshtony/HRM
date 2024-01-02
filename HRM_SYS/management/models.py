@@ -42,6 +42,9 @@ class Roles(models.Model):
     def __str__(self):
 
         return self.name
+    class Meta:
+        verbose_name = "Roles"
+        verbose_name_plural = "Roles"
 
 class Station(models.Model):
 
@@ -127,6 +130,10 @@ class AttSettings(models.Model):
 
     def __str__(self):
         return self.employee_id
+    
+    class Meta:
+        verbose_name = "Attendance Settings"
+        verbose_name_plural = "Attendance Settings"
 class FilesCategory(models.Model):
 
     category_name = models.CharField(max_length=100)
@@ -134,6 +141,11 @@ class FilesCategory(models.Model):
     def __str__(self):
 
         return self.category_name
+    class Meta:
+        verbose_name = "Files Category"
+        verbose_name_plural = "Files Categories"
+        
+    
     
 class EmpFiles(models.Model):
 
@@ -147,6 +159,10 @@ class EmpFiles(models.Model):
     def __str__(self):
 
         return self.file_name
+    
+    class Meta:
+        verbose_name = "Employee File"
+        verbose_name_plural = "Employees Files"
 
 
 
@@ -179,6 +195,12 @@ class Attendance(models.Model):
 
         return self.employee.emp_id
     
+    class Meta:
+        verbose_name = "Attendance"
+        verbose_name_plural = "Attendance"
+    
+    
+    
 
 
 
@@ -192,6 +214,10 @@ class Approvals(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = "Approvals"
+        verbose_name_plural = "Approvals"
 
 class Applications(models.Model):
 
@@ -209,12 +235,15 @@ class Applications(models.Model):
     start = models.DateField(default=timezone.now)
     end = models.DateField(default=timezone.now)
     days = models.IntegerField(default = 0)
+    category = models.CharField(max_length=100,default="")
 
     remarks = models.TextField()
 
     def __str__(self):
         return self.type.name
-    
+    class Meta:
+        verbose_name = "Applications"
+        verbose_name_plural = "Applications"
 class approvalTrack(models.Model):
 
     application = models.ForeignKey(Applications,on_delete=models.PROTECT)
@@ -227,6 +256,10 @@ class approvalTrack(models.Model):
     def __str__(self):
 
         return self.application.type.name
+    
+    class Meta:
+        verbose_name = "Approval Track"
+        verbose_name_plural = "Approval Track"
 
 class Process(models.Model):
 
@@ -240,6 +273,12 @@ class Process(models.Model):
     def __str__(self):
 
         return self.applicant.username
+    
+    class Meta:
+        verbose_name = "Process"
+        verbose_name_plural = "Processes"
+
+    
 
     
 class Leave(models.Model):
@@ -259,6 +298,9 @@ class Leave(models.Model):
 
         return self.category 
     
+    class Meta:
+        verbose_name = "Leave"
+        verbose_name_plural = "Leave"
 
 
 
@@ -286,6 +328,10 @@ class Events(models.Model):
     def __str__(self):
 
         return self.title 
+    
+    class Meta:
+        verbose_name = "Event"
+        verbose_name_plural = "Events"
     
 class Notifications(models.Model):
 
