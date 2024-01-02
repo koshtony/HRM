@@ -67,6 +67,18 @@
                     {% endfor %}
                   </select>
                   </div>
+                  <br>
+                  <button type="button" class="btn btn-primary" onclick="viewOrder();">push order</button>
+                  <br>
+                  <div class="form-group">
+                    
+                    <br>
+                    <label>approvers order</label>
+                    <textarea rows="5" cols="30" id="approversIds">
+
+                    </textarea>
+
+                  </div>
                
                  
                   <br>
@@ -88,17 +100,22 @@
 </body>
      <script>
         $('select').selectpicker();
-
+      
         function createApproval(){
-
+          alert($("#approversIds").val())
+         if(!$.trim($("#approversIds").val())){
+            
+           alert(" push to check order first")
+           
+         }else{
           $.ajax({
 
             type:"POST",
              url:"{% url 'management_create_approval' %}",
              data:{
 
-                department:$("#department").val().toString(),
-                approvers:$("#approversName").val().toString()
+                department:$("#department").val(),
+                approvers:$("#approversIds").val()
              },
              beforeSend:function(){
                 $("#loaders5").show()
@@ -109,14 +126,18 @@
              complete:function(){
                 
                 $("#loaders5").hide()
-                location.reload()
+                
   
                }
 
           })
         }
+        }
 
-
+function viewOrder(){
+document.getElementById("approversIds").value = $("#approversName").val().toString()
+  //$("#approversIds").val($("#approversName").val().toString())
+}
      </script>
 </html>
 

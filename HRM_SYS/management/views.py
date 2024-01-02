@@ -106,7 +106,8 @@ def view_approvals(request):
 
     context = {
         "applications":Applications.objects.filter(applicant=request.user).order_by('-pk'),
-        "tracks":approvalTrack.objects.all()
+        "tracks":approvalTrack.objects.all(),
+        
         
         }
 
@@ -645,7 +646,7 @@ def get_attendance(request):
                 "h2":att_settings.end.hour,
                 "m2":att_settings.end.minute,
                 "lat1":att_settings.clock_in_latitude,
-                "long1":att_settings.clock_in_longitude
+                "long1":att_settings.clock_in_longitude,
             }
 
             return JsonResponse(details,safe=False)
@@ -657,9 +658,12 @@ def get_attendance(request):
                 "clock_in":"",
                 "clock_out":"",
                 "lat1":att_settings.clock_in_latitude,
-                "long1":att_settings.clock_in_longitude
+                "long1":att_settings.clock_in_longitude,
+                "leave":att_settings.leave_days,
+                "sick":att_settings.sick_leave_days,
+                "comp":att_settings.compassionate_leave_days
             }
-        print(details)
+        #print(details)
         return JsonResponse(details,safe=False)
     else:
 
@@ -868,9 +872,11 @@ def create_approval(request):
 
         department = request.POST.get("department")
         approvers = "\n".join(request.POST.get("approvers").split(','))
+        print(approvers)
 
         department_edit = Department.objects.get(pk=department)
         department_edit.approvers = approvers
+        print(department_edit)
         department_edit.save()
 
         
@@ -895,7 +901,7 @@ def get_approval_temp(request):
         try:
 
             data = Applications.objects.filter(type=Approvals.objects.get(pk=int(approval))).filter(applicant=request.user).filter(status="complete")[0].details
-            print(data)
+            
             return JsonResponse(data,safe=False)
         except:
 
