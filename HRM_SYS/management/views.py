@@ -606,6 +606,10 @@ def clock(request):
             elif (datetime.now().hour+3 > 14 and datetime.now().hour+3 <= 24) and (att_filt[0].clock_out != ''):
                 return JsonResponse("clock out already completed",safe=False)
 
+            else:
+
+                return JsonResponse("out of scope",safe=False)
+
 
 
 
