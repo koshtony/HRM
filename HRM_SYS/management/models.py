@@ -285,10 +285,12 @@ class Leave(models.Model):
     
     applicant = models.ForeignKey(User,on_delete=models.PROTECT,related_name="applicant")
     Approvals_type = models.ForeignKey(Approvals,on_delete=models.PROTECT,related_name="leave")
-    category = models.CharField(max_length=100,choices=(("annual","annual"),("sick","sick"),("compassionate","compassionate"),("office","office")),default="")
+    category = models.CharField(max_length=100,choices=(("annual","annual"),("sick","sick"),("compassionate","compassionate"),("unpaid","unpaid")),default="")
     start = models.DateTimeField(default=timezone.now)
     end = models.DateTimeField(default=timezone.now)
     days = models.FloatField(default=0)
+    remaining_leave_days = models.FloatField(default=21.0)
+    work_assignment = models.TextField(default="")
     attachments = models.FileField(default="attachment.pdf",upload_to='application_files')
     status = models.CharField(max_length=30,default="pending")
     created = models.DateTimeField(default=timezone.now)

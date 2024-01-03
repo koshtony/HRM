@@ -60,7 +60,7 @@ class LeaveForm(forms.ModelForm):
     class Meta:
 
         model = Leave
-        fields = ['Approvals_type','category','start','end','days','attachments','details']
+        fields = ['Approvals_type','category','start','end','days','remaining_leave_days','work_assignment','attachments','details']
         widgets = {
             'start': DateInput(),
             'end': DateInput(),

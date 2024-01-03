@@ -39,7 +39,7 @@ import os
 @login_required
 def home(request):
     todos = []
-    for todo in Applications.objects.all():
+    for todo in Applications.objects.all().order_by('pk'):
         if request.user.username == todo.approvers.split(',')[0]:
             apps = [
                  todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found'
@@ -95,7 +95,7 @@ render application  form
 ==========================================
 '''
 def approvals(request):
-    context = {"appForm":ApprovalForm}
+    context = {"appForm":ApprovalForm,'leave_form':LeaveForm(),"settings":AttSettings.objects.filter(employee_id=request.user.username)}
     return render(request,'management/approvals.html',context)
 
 '''
@@ -961,18 +961,44 @@ def upload_leave(request):
                 )
 
                 notify.save()
-           
+
+
+            new_line = '\n'
             application = Applications(
                 type = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")),
                 applicant = request.user,
-                details = form.cleaned_data.get("details"),
+                
                         
                 attachment = form.cleaned_data.get("attachments"),remarks = "",
                 approvers = ",".join(approvers),expected = len(approvers),
                 created_date = datetime.now(),created_time = datetime.now()+timedelta(hours=3),
                 start = form.cleaned_data.get("start"), end = form.cleaned_data.get("end"),
                 days = form.cleaned_data.get("days"),
-                category = form.cleaned_data.get("category")
+                category = form.cleaned_data.get("category"),
+
+                details = f'''
+                <html>
+                <h4>Work Assignment Details</h4>:
+                <br>
+
+                <p>{form.cleaned_data.get("work_assignment")}</p>
+                <br>
+                <br>
+
+            
+
+                <h4>Remaining Leave Days: <h4> <strong>{form.cleaned_data.get("remaining_leave_days")}</strong>
+                <br>
+                <br>
+                <h4>Other Details:</h4>
+                <br>
+                <p>{form.cleaned_data.get("details")}{new_line}{new_line}</p>
+                <br>
+                <br>
+                created: {datetime.now()}
+               </html>
+
+                '''
 
     
             )
@@ -1355,7 +1381,8 @@ def view_approval_details(request):
             "end":Applications.objects.get(pk=id).end,
             "days":Applications.objects.get(pk=id).days,
             "applicant":"".join([str(emp.first_name)+ " "+str(emp.second_name) if len(Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username))>0 else "no employee details" for emp in Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username)]),
-            "category":Applications.objects.get(pk=id).category
+            "category":Applications.objects.get(pk=id).category,
+            "department":"".join([": "+str(emp.departments.name)+ " Role: "+str(emp.role.name) if len(Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username))>0 else "no employee details" for emp in Employee.objects.filter(emp_id=Applications.objects.get(pk=id).applicant.username)])
 
         }
 
