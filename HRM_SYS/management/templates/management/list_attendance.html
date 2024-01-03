@@ -139,6 +139,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
+                                                <th>Department</th>
                                                 <th>Day</th>
                                                 <th>Clock In</th>
                                                 <th>Clock Out</th>
@@ -205,6 +206,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
+                                                <th>Department</th>
                                                 <th>Day</th>
                                                 <th>Clock In</th>
                                                 <th>Clock Out</th>
@@ -471,6 +473,7 @@ function overallGen(){
 
               data[key]["emp_id"],
               data[key]["name"],
+              data[key]["department"],
               data[key]["day"],
               data[key]["clock_in"],
               data[key]["clock_out"],
@@ -549,6 +552,7 @@ function lateGen(){
                 lateTab.row.add([
                     
                     data[key]["employee"],data[key]["employee_name"],
+                    data[key]["department"],
                     data[key]["day"],
                     data[key]["clock_in"],
                     data[key]["clock_out"],
