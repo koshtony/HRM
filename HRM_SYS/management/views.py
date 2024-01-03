@@ -813,12 +813,13 @@ def view_absent_attendance(request):
         for employee in Employee.objects.all():
 
             if employee.emp_id not in [att.employee.emp_id for att in Attendance.objects.filter(day__gte = date1,day__lte=date2)]:
-                print(employee)
+                
                 try:
                     absent_dict = {
                         "employee_id":employee.emp_id,
                         "name":employee.first_name + employee.second_name ,
                         "email":employee.email ,
+                        "department":employee.departments.name,
                         "phone":employee.phone ,
                         "next_of_kin":employee.next_kin_name,
                         "next_kin_phone":employee.next_kin_phone,
@@ -831,6 +832,7 @@ def view_absent_attendance(request):
                         "employee_id":employee.emp_id,
                         "name":employee.first_name + employee.second_name ,
                         "email":employee.email ,
+                        "department":employee.departments.name,
                         "phone":employee.phone ,
                         "next_of_kin":employee.next_kin_name,
                         "next_kin_phone":employee.next_kin_phone,
@@ -841,7 +843,7 @@ def view_absent_attendance(request):
 
 
                 absents.append(absent_dict)
-        print(absents)
+        
 
         return JsonResponse(json.dumps(absents),safe=False)
 
