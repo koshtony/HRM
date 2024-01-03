@@ -817,7 +817,7 @@ def view_absent_attendance(request):
                 try:
                     absent_dict = {
                         "employee_id":employee.emp_id,
-                        "name":employee.first_name + employee.second_name ,
+                        "name":employee.first_name +" "+employee.second_name ,
                         "email":employee.email ,
                         "department":employee.departments.name,
                         "phone":employee.phone ,
@@ -830,7 +830,7 @@ def view_absent_attendance(request):
                 except:
                     absent_dict = {
                         "employee_id":employee.emp_id,
-                        "name":employee.first_name + employee.second_name ,
+                        "name":employee.first_name + " "+employee.second_name ,
                         "email":employee.email ,
                         "department":employee.departments.name,
                         "phone":employee.phone ,
