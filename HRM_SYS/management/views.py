@@ -730,7 +730,9 @@ def view_attendance(request):
             print(attendance)
             att_filt_by_date_list.append({
             
-            "emp_id":attendance.employee.emp_id,"name":str(attendance.employee.first_name)+str(attendance.employee.second_name),
+            "emp_id":attendance.employee.emp_id,"name":str(attendance.employee.first_name)+" "+str(attendance.employee.second_name),
+
+            "department":attendance.employee.departments.name,
             
             "day":str(attendance.day),"clock_in":str(attendance.clock_in),"clock_out":str(attendance.clock_out),"lat":attendance.lat,
 
@@ -779,6 +781,7 @@ def view_late_attendance(request):
                         late_dict = {
                         "employee":attendance.employee.emp_id,
                         "employee_name":attendance.employee.first_name + " "+attendance.employee.second_name,
+                        "department":attendance.employee.departments.name,
                         "day":str(attendance.day),
                         "clock_in":str(attendance.clock_in),
                         "clock_out":str(attendance.clock_out),
