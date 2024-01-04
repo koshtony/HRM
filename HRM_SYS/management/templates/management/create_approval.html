@@ -74,6 +74,11 @@
                     
                     <br>
                     <label>approvers order</label>
+                    <br>
+                    <p id="namesOrder" style="background-color:aquamarine"></p>
+                    <br>
+
+                    <label> edit id's to match desired order</label>
                     <textarea rows="5" cols="30" id="approversIds" class="form-control">
 
                     </textarea>
@@ -102,7 +107,7 @@
         $('select').selectpicker();
       
         function createApproval(){
-          alert($("#approversIds").val())
+        
          if(!$.trim($("#approversIds").val())){
             
            alert(" push to check order first")
@@ -137,6 +142,15 @@
 function viewOrder(){
 document.getElementById("approversIds").value = $("#approversName").val().toString()
   //$("#approversIds").val($("#approversName").val().toString())
+  const select_ = document.getElementById("approversName")
+  var options = select_.querySelectorAll("option:checked")
+  $("#namesOrder").html('')
+  options.forEach((option)=>{
+    console.log(option)
+      $("#namesOrder").append(
+         option.innerHTML+" , "
+      )
+  })
 }
      </script>
 </html>

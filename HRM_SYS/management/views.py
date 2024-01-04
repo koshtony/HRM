@@ -755,7 +755,7 @@ def view_attendance(request):
     context = {"leaves":today_leaves,"deps":deps}
 
     return render(request,'management/list_attendance.html',context)
-    
+
 @csrf_exempt
 @login_required
 def view_overall_attendance(request):
