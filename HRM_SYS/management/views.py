@@ -42,7 +42,8 @@ def home(request):
     for todo in Applications.objects.all().order_by('pk'):
         if request.user.username == todo.approvers.split(',')[0]:
             apps = [
-                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found'
+                 todo.pk,todo.approvers,todo.created_date,todo.details,todo.attachment.url,todo.type.name,f'{Employee.objects.filter(emp_id = todo.applicant.username)[0].first_name}' if len(Employee.objects.filter(emp_id = todo.applicant.username))>0 else f'{todo.applicant.username} name not found',
+                 todo.created_time
     
             ]
             todos.append(apps)
@@ -754,6 +755,47 @@ def view_attendance(request):
     context = {"leaves":today_leaves,"deps":deps}
 
     return render(request,'management/list_attendance.html',context)
+    
+@csrf_exempt
+@login_required
+def view_overall_attendance(request):
+    
+    if request.POST:
+
+        date1 = request.POST.get("date1")
+        date2 = request.POST.get("date2")
+
+        overall_filt_by_date = Attendance.objects.filter(day__gte=date1,day__lte=date2)
+
+        att_filt_by_date_list = []
+        for attendance in overall_filt_by_date:
+           
+            att_filt_by_date_list.append({
+            
+            "emp_id":attendance.employee.emp_id,"name":str(attendance.employee.first_name)+" "+str(attendance.employee.second_name),
+
+            "department":attendance.employee.departments.name,
+
+            "email":attendance.employee.email,
+            
+            "day":str(attendance.day),"clock_in":str(attendance.clock_in),"clock_out":str(attendance.clock_out),
+
+            "location1":attendance.lat+","+attendance.long,
+
+            "location2":attendance.lat1+","+attendance.long1,
+
+            "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
+
+            "leave_days":attendance.leave_days,"remarks":attendance.remarks,
+                                  
+                                  
+                                  
+                                  })
+            
+        
+        return JsonResponse(json.dumps(att_filt_by_date_list),safe=False)
+
+
 
 ''' 
 =========================================================

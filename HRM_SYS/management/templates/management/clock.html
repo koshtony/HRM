@@ -394,7 +394,12 @@ getLoc()
           var lat = document.getElementById("latitudes").value
 
           var diff = distance(lat,long,lat1,long1)
-          if (document.getElementById("in").innerHTML != ''){
+
+          const today = new Date();
+          
+          let h = today.getHours();
+          
+          if (document.getElementById("in").innerHTML != '' || h<15){
 
             var resp = confirm("sure! you want to clock out?")
             if (resp==true){
