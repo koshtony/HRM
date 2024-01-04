@@ -97,6 +97,10 @@
                  
                                         </div>
                 <div class="col-12 col-xl-4">
+            
+                  {% if nots > 0 %}
+                    <a href="{% url 'management_notifications' %}"><i class="fa fa-bell"></i>you have {{nots}} unread approval notifications</a>
+                  {% endif %}
                   
                   
                  <div class="justify-content-end d-flex">
@@ -253,6 +257,7 @@
               <div class="card" style="overflow-y:scroll; height:500px;" >
                 <div class="card-body">
                   <p class="card-title">To do</p>
+                  <a class="btn btn-light" onclick="location.reload" style="background-color: #94a0b4;"><i class="fa fa-refresh"></i></a>
                                                                                                                                                                                           
                     
                         <div class="li-wrapper px-3" >

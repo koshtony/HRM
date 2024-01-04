@@ -8,7 +8,7 @@ from .views import home,clock,add_department,view_attendance,\
             add_event,del_event,show_map,files_details,iframe_redirect,live_chat,live_chat_user,sent_msg,recv_msg,del_chat,chat_notify,chat_reply,\
             files_del,get_employee_template,import_employee_data,edit_att_settings,change_password,get_emp_other_details,view_approval_details,\
             resign_employee,employee_profile,create_approval,import_att_settings,lookup_employee,get_approval_temp,get_approvals_name,mail_box,mail_actions,\
-            get_mail_body,mail_notify,view_late_attendance,view_absent_attendance,download_attendance,view_overall_attendance
+            get_mail_body,mail_notify,view_late_attendance,view_absent_attendance,download_attendance,view_overall_attendance,view_notifications,notifications_details
 
             
 
@@ -63,6 +63,8 @@ urlpatterns = [
       path('emp_temp',views.get_employee_template,name="management_emp_temp"),
       path('iframe_redirect',views.iframe_redirect,name="management_iframe_redirect"),
       path('profile',views.profile,name="management_profile"),
+      path('notifications',views.view_notifications,name="management_notifications"),
+      path('notifications_details',views.notifications_details,name="management_notifications_details"),
       path('get_notify',views.get_notify, name='management_get_notify'),
       path('chat_notify',views.chat_notify, name='management_chat_notify'),
       path('chat_reply',views.chat_reply, name='management_chat_reply'),

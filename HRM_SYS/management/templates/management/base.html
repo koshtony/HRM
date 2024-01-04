@@ -575,7 +575,7 @@ function getApprovalNot(){
          $("#notify").append(
 
           `
-          <a class="dropdown-item preview-item" onclick="goTo(${data[key].id})">
+          <a class="dropdown-item preview-item" onclick="{% url 'management_notifications' %}">
                 <div class="preview-thumbnail">
                   <div class="preview-icon bg-success">
                     <img src="${data[key].image}">
@@ -719,23 +719,7 @@ $.get(url,
   )
 }
 
-function goTo(id){
-  $.ajax({
 
-        type:"post",
-        url:"{% url 'management_get_notify' %}",
-        data:{
-
-           id:id,
-           csrfmiddlewaretoken:'{{ csrf_token }}',
-
-        },
-        success:function(data,status){
-
-          location.href = "{% url 'management_list_approvals' %}"
-        }
-  })
-}
 
 // upload employee data 
 

@@ -26,6 +26,7 @@ class Department(models.Model):
     size = models.FloatField(default=1)
     created = models.DateField(default=timezone.now)
     approvers = models.TextField(default="")
+    notifiers = models.TextField(default="")
     remarks = models.TextField(default="")
     
     def __str__(self):
@@ -224,6 +225,7 @@ class Applications(models.Model):
     type = models.ForeignKey(Approvals,on_delete=models.PROTECT)
     applicant = models.ForeignKey(User,on_delete=models.PROTECT)
     approvers = models.TextField(default="")
+    notifiers = models.TextField(default="")
     details = HTMLField()
     created_date = models.DateField(default=timezone.now)
     created_time = models.TimeField(default=timezone.now)
@@ -339,6 +341,8 @@ class Notifications(models.Model):
 
     recipient = models.ForeignKey(User,on_delete=models.PROTECT)
     info = models.TextField()
+    details = models.TextField(default="")
+    application = models.IntegerField(default=0)
     url = models.CharField(max_length=100,default='')
     date = models.DateField(default=timezone.now)
     time = models.TimeField(default=timezone.now)

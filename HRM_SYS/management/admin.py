@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from .models import Employee,Department,Roles,Approvals,\
-Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events,Station,approvalTrack,MailMessage
+Applications,Attendance,AttSettings,EmpFiles,FilesCategory,Leave,Profile,Events,Station,approvalTrack,Notifications
 
 # Register your models here.
 
@@ -69,5 +69,5 @@ admin.site.register(Profile)
 admin.site.register(Events)
 admin.site.register(Station)
 admin.site.register(approvalTrack)
-#admin.site.register(MailMessage)
+admin.site.register(Notifications)
 

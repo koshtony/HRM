@@ -51,7 +51,7 @@ def home(request):
     department = Department.objects.count()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username,status="audited").order_by('-created_date')[:4]
     attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
-    context = {"todos":todos,"employees":Employee.objects.count(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance}
+    context = {"todos":todos,"employees":Employee.objects.count(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance,"nots":len(Notifications.objects.filter(recipient=request.user,seen=False))}
     return render(request,'management/index.html',context)
 
 
@@ -86,6 +86,31 @@ def register(request):
             
             return redirect('management-home')
     return render(request,'management/register.html',{'form':form})
+
+@login_required
+def view_notifications(request):
+
+    context = {"notifications":Notifications.objects.filter(recipient = request.user).order_by('-pk')}
+
+    return render(request,'management/notifications.html',context)
+@csrf_exempt
+@login_required
+def notifications_details(request):
+
+    if request.POST:
+
+        pk = request.POST.get("pk")
+
+        notification = Notifications.objects.filter(application=pk)[0]
+        
+
+        return JsonResponse(notification.details,safe=False)
+
+
+
+
+
+    
 def add_info(request):
 
     return render(request,'management/add_info.html')
@@ -126,8 +151,9 @@ def get_approvals_name(request):
         pk = request.POST.get("pk")
       
         apps = Applications.objects.get(pk=pk)
+        
         names = []
-        for id in Employee.objects.get(emp_id = apps.applicant.username).departments.approvers.split('/r/n'):
+        for id in Employee.objects.get(emp_id = apps.applicant.username).departments.approvers.split('\n'):
             
             
             if id in apps.approvers.split(','):
@@ -932,11 +958,12 @@ def create_approval(request):
 
         department = request.POST.get("department")
         approvers = "\n".join(request.POST.get("approvers").split(','))
-        print(approvers)
+        notifiers = "\n".join(request.POST.get("notifiers").split(','))
 
         department_edit = Department.objects.get(pk=department)
         department_edit.approvers = approvers
-        print(department_edit)
+        department_edit.notifiers = notifiers
+        
         department_edit.save()
 
         
@@ -985,24 +1012,18 @@ def upload_leave(request):
             form.save()
             
             try:
-                approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+                emp = Employee.objects.get(emp_id = request.user.username)
+                
+                approvers = emp.departments.approvers.split('\n')
+                
+                notifiers = emp.departments.notifiers.split('\n')
+                
             except:
                 return JsonResponse("employee details not added",safe=False)
             #approvers = Approvals.objects.get(name=form.cleaned_data.get("Approvals_type"))
             approvers = [app.rstrip() for app in approvers if app!=request.user.username]
             
-            for approve in approvers:
-                # create notofication for the process
-                notify = Notifications(
-                    recipient = User.objects.get(username=approve),
-                    info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
-                    date = datetime.now(),
-                    time = datetime.now()+timedelta(hours=3),
-                    url = "{}"
-         
-                )
-
-                notify.save()
+            
 
 
             new_line = '\n'
@@ -1020,7 +1041,8 @@ def upload_leave(request):
 
                 details = f'''
                 <html>
-                <h4>Work Assignment Details</h4>:
+               
+                <h4>Work Assignment Details:</h4>
                 <br>
 
                 <p>{form.cleaned_data.get("work_assignment")}</p>
@@ -1032,6 +1054,7 @@ def upload_leave(request):
                 <h4>Remaining Leave Days: <h4> <strong>{form.cleaned_data.get("remaining_leave_days")}</strong>
                 <br>
                 <br>
+                
                 <h4>Other Details:</h4>
                 <br>
                 <p>{form.cleaned_data.get("details")}{new_line}{new_line}</p>
@@ -1046,6 +1069,62 @@ def upload_leave(request):
             )
 
             application.save()
+           
+
+            for approve in approvers+notifiers:
+                # create notofication for the process
+                if User.objects.filter(username=approve).exists():
+                        notify = Notifications(
+                        recipient = User.objects.get(username=approve),
+                        info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
+                        date = datetime.now(),
+                        time = datetime.now()+timedelta(hours=3),
+                        url = "{}",
+                        application = application.pk,
+                        details = f'''
+                                    <html>
+                                    <h4>Type:</h4>
+                                    <br>
+                                    {Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")).name}
+                                    <br>
+                                    <h4> Requested by: </h4>
+                                        <br>
+                                            <p>{emp.first_name} {emp.second_name}</p>
+                                        <br>
+                                        <h4>Work Assignment Details</h4>:
+                                        <br>
+
+                                        <p>{form.cleaned_data.get("work_assignment")}</p>
+                                        <br>
+                                        <br>
+
+                                    
+
+                                        <h4>Remaining Leave Days: <h4> <strong>{form.cleaned_data.get("remaining_leave_days")}</strong>
+                                        <br>
+                                        <br>
+                                        <h4>Start:<h4>
+                                        <p>{form.cleaned_data.get("start")}</p>
+                                        <br>
+                                        <h4>Start:<h4>
+                                        <p>{form.cleaned_data.get("end")}</p>
+                                        <br>
+
+                                        <h4>Other Details:</h4>
+                                        <br>
+                                        <p>{form.cleaned_data.get("details")}{new_line}{new_line}</p>
+                                        <br>
+                                        <br>
+                                        created: {datetime.now()}
+                                    </html>
+
+                    '''
+            
+                    )
+
+                        notify.save()
+                else:
+                    pass
 
 
             return JsonResponse("application submitted successfully",safe=False)
@@ -1066,7 +1145,9 @@ def upload_process(request):
             form.save()
             '''
             try:
-                approvers = Employee.objects.get(emp_id = request.user.username).departments.approvers.split('\n')
+                emp = Employee.objects.get(emp_id = request.user.username)
+                approvers = emp.departments.approvers.split('\n')
+                notifiers = emp.departments.notifiers.split('\n')
             except:
                 return JsonResponse("not created as employee",safe=False)
             #approvers = Approvals.objects.get(name=form.cleaned_data.get("approvals"))
@@ -1075,18 +1156,7 @@ def upload_process(request):
             if "leave" in str(Approvals.objects.get(name=form.cleaned_data.get("approvals")).name):
                 return JsonResponse("kindly, submit leave applications on attendance page!!",safe=False)
             else:
-                for approve in approvers:
                 
-                    notify = Notifications(
-                        recipient = User.objects.get(username=approve),
-                        info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
-                        date = datetime.now(),
-                        time = datetime.now()+timedelta(hours=3),
-                        url = "{}"
-            
-                    )
-
-                    notify.save()
             
                 application = Applications(
                     type = Approvals.objects.get(name=form.cleaned_data.get("approvals")),
@@ -1099,6 +1169,40 @@ def upload_process(request):
                     
                 )
                 application.save()
+
+                for approve in approvers+notifiers:
+
+                    if User.objects.filter(username=approve).exists():
+                
+                        notify = Notifications(
+                            recipient = User.objects.get(username=approve),
+                            info = str(request.user.username)+" "+str(form.cleaned_data.get("approvals"))+" new approval",
+                            date = datetime.now(),
+                            time = datetime.now()+timedelta(hours=3),
+                            application = application.pk,
+                            url = "{}",
+                            details = f'''
+                            <html>
+                                    <h4>Type:</h4>
+                                    <br>
+                                    {Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")).name}
+                                    <br>
+                                    <h4> Requested by: </h4>
+                                        <br>
+                                            <p>{emp.first_name} {emp.second_name}</p>
+                                        <br>
+
+                                    {form.cleaned_data.get("details")}
+
+
+                            </html>
+                            '''
+                
+                        )
+
+                        notify.save()
+                    else:
+                        pass
 
                 
                 return JsonResponse("application submitted successfully",safe=False)
@@ -1131,7 +1235,7 @@ def approve(request):
             except:
                 return JsonResponse("attendance settings not added",safe=False)
 
-            if application.category == "leave":
+            if application.category == "annual":
                 
                     att = Attendance(
                         employee = Employee.objects.get(emp_id = application.applicant.username),

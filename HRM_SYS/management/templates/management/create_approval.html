@@ -82,6 +82,13 @@
                     <textarea rows="5" cols="30" id="approversIds" class="form-control">
 
                     </textarea>
+                    <br>
+                    <label>Notification recipient</label>
+                    <textarea rows="5" cols="30" id="notifiers" class="form-control">
+
+                    </textarea>
+
+
 
                   </div>
                
@@ -120,7 +127,8 @@
              data:{
 
                 department:$("#department").val(),
-                approvers:$("#approversIds").val()
+                approvers:$("#approversIds").val(),
+                notifiers:$("#notifiers").val(),
              },
              beforeSend:function(){
                 $("#loaders5").show()
