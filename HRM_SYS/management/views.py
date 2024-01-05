@@ -1106,9 +1106,13 @@ def upload_leave(request):
                                         <h4>Start:<h4>
                                         <p>{form.cleaned_data.get("start")}</p>
                                         <br>
-                                        <h4>Start:<h4>
+                                        <h4>End:<h4>
                                         <p>{form.cleaned_data.get("end")}</p>
                                         <br>
+
+                                        <h4> Days </h4>
+                                        <br>
+                                        {form.cleaned_data.get("days")}
 
                                         <h4>Other Details:</h4>
                                         <br>
