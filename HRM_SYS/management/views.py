@@ -1357,7 +1357,7 @@ def approve_by_details(request):
                     settings = AttSettings.objects.get(employee_id = application.applicant.username )
                 except:
                     return JsonResponse("attendance settings not added",safe=False)
-                if application.category == "leave":
+                if application.category == "annual":
                     
                     
 
@@ -1431,7 +1431,7 @@ def approve_by_details(request):
                 
             else:
                 application.status = "pending"
-                application.rate = int((application.stage // application.expected)*100)
+                application.rate = int((application.stage / application.expected)*100)
                 application.save()
              
                 track = approvalTrack(
