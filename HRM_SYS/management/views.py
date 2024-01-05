@@ -51,7 +51,7 @@ def home(request):
     department = Department.objects.count()
     payrolls = PayRoll.objects.filter(employee_id = request.user.username,status="audited").order_by('-created_date')[:4]
     attendance = Attendance.objects.filter(employee__emp_id = request.user.username).order_by('-day')[:5]
-    context = {"todos":todos,"employees":Employee.objects.count(),"event":event,"department":department,"payrolls":payrolls,"attendance":attendance,"nots":len(Notifications.objects.filter(recipient=request.user,seen=False))}
+    context = {"todos":todos,"employees":Employee.objects.count()-4,"event":event,"department":department,"payrolls":payrolls,"attendance":attendance,"nots":len(Notifications.objects.filter(recipient=request.user,seen=False))}
     return render(request,'management/index.html',context)
 
 
@@ -93,6 +93,20 @@ def view_notifications(request):
     context = {"notifications":Notifications.objects.filter(recipient = request.user).order_by('-pk')}
 
     return render(request,'management/notifications.html',context)
+
+@login_required
+def notifications_actions(request):
+    if request.POST:
+
+        pks = request.POST.get("pks").split(',')
+
+        for pk in pks:
+
+            notification = Notifications.objects.get(pk=int(pk))
+            notification.seen = True
+            notification.save()
+
+        return JsonResponse("done",safe=False)
 @csrf_exempt
 @login_required
 def notifications_details(request):
