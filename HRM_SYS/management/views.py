@@ -1085,7 +1085,7 @@ def upload_leave(request):
                                     <html>
                                     <h4>Type:</h4>
                                     <br>
-                                    {Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")).name}
+                                    Leave
                                     <br>
                                     <h4> Requested by: </h4>
                                         <br>
@@ -1185,7 +1185,7 @@ def upload_process(request):
                             <html>
                                     <h4>Type:</h4>
                                     <br>
-                                    {Approvals.objects.get(name=form.cleaned_data.get("Approvals_type")).name}
+                                    {Approvals.objects.get(name=form.cleaned_data.get("approvals")).name}
                                     <br>
                                     <h4> Requested by: </h4>
                                         <br>
