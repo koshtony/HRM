@@ -41,3 +41,4 @@ django-simple-history
 psycopg2
 python-memcached
 django-import-export
+geopy

@@ -794,6 +794,11 @@ def view_attendance(request):
 
             "long":attendance.long,"lat1":attendance.lat1,"long1":attendance.long1,"image1":attendance.image1,"image2":attendance.image2,
 
+            "distance1":str(attendance.clock_in_distance),
+
+            "distance2":str(attendance.clock_out_distance),
+
+
             "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
 
             "leave_days":attendance.leave_days,"remarks":attendance.remarks,
@@ -839,6 +844,10 @@ def view_overall_attendance(request):
 
             "location2":attendance.lat1+","+attendance.long1,
 
+            "distance1":str(attendance.clock_in_distance),
+
+            "distance2":str(attendance.clock_out_distance),
+
             "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
 
             "leave_days":attendance.leave_days,"remarks":attendance.remarks,
@@ -882,6 +891,8 @@ def view_late_attendance(request):
                         "day":str(attendance.day),
                         "clock_in":str(attendance.clock_in),
                         "clock_out":str(attendance.clock_out),
+                        "clock_in_distance":str(attendance.clock_in_distance),
+                        "clock_out_distance":str(attendance.clock_out_distance),
                         "set_clock_in":str(AttSettings.objects.get(employee_id = attendance.employee.emp_id).start),
                         "set_clock_out":str(AttSettings.objects.get(employee_id = attendance.employee.emp_id).end),
                         "count": attendance.days,
