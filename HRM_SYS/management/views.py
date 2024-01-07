@@ -29,6 +29,7 @@ from payroll.models import PayRoll
 from datetime import datetime,date,timedelta
 import string
 import pandas
+import geopy.distance
 import numpy 
 import math
 import folium
@@ -572,7 +573,7 @@ def clock(request):
             empty = ""
             att_filt = Attendance.objects.filter(day=date.today()).filter(employee = Employee.objects.get(emp_id=request.user.username))
             
-            early_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+            early_diff = ((datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') -datetime.strptime(att_settings.end.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds())//60
             '''
                 condition to determine if employee  left on time or early; early denoted by -ve
             '''
@@ -582,7 +583,7 @@ def clock(request):
             else:
                 early_diff = 0
             
-            late_diff = (datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') - datetime.strptime(att_settings.start.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds()
+            late_diff = ((datetime.strptime(datetime.now().strftime("%H:%M:%S"),'%H:%M:%S') - datetime.strptime(att_settings.start.strftime("%H:%M:%S"),"%H:%M:%S")).total_seconds())//60
             
             if late_diff > 0:
 
@@ -591,6 +592,16 @@ def clock(request):
             else:
 
                 late_diff = 0
+            
+            coords1 = (float(att_settings.clock_in_latitude),float(att_settings.clock_in_longitude))
+            coords2 = (float(lat),float(long))
+
+            distance_ = (geopy.distance.geodesic(coords1,coords2).km)*1000
+
+            #print(distance_)
+
+            #print(late_diff)
+            
                            
             
             if len(att_filt) == 0 and (datetime.now().hour+3 > 0 and datetime.now().hour+3 <= 14): #record initial data
@@ -602,7 +613,8 @@ def clock(request):
                         lat =lat ,long=long,image1=image_info,
                         lat1 = empty , long1 = empty, image2 = empty,remarks="clock in",
                         deductions  = 0,
-                        days = 1
+                        days = 1,
+                        clock_in_distance = str(distance_)
 
                         
 
@@ -619,6 +631,7 @@ def clock(request):
                 att_filt[0].status = "present"
                 att_filt[0].remarks = att_filt[0].remarks+" clock out"
                 att_filt[0].deductions =  0
+                att_filt[0].clock_out_distance = str(distance_)
                 att_filt[0].save()
 
                 return JsonResponse("clock out successful",safe=False)
@@ -636,7 +649,9 @@ def clock(request):
                         lat = empty ,long=empty,image1=empty,
                         lat1 = lat, long1 = long, image2 = image_info,remarks="clock out",
                         deductions  = 0,
-                        days = 1
+                        days = 1,
+                        clock_out_distance = str(distance_)
+
 
                         
 

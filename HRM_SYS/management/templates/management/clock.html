@@ -394,6 +394,7 @@ getLoc()
           var lat = document.getElementById("latitudes").value
 
           var diff = distance(lat,long,lat1,long1)
+          console.log(diff)
 
           const today = new Date();
           
@@ -404,12 +405,12 @@ getLoc()
             var resp = confirm("sure! you want to clock out?")
             if (resp==true){
                 
-              clockSub(lat1,long1,long,lat,diff)
+              clockSub(diff)
             }else{
               alert("process cancelled")
             }
           }else{
-            clockSub(lat1,long1,long,lat,diff)
+            clockSub(diff)
           }
           
          
@@ -417,7 +418,7 @@ getLoc()
       
       }
 
-function clockSub(lat1,long1,long,lat,diff){
+function clockSub(diff){
 
   if(diff > 500000000000000000){
             alert("you are "+diff.toString() +" Metres  from clock in zone, denied!!")
@@ -599,7 +600,7 @@ function clockSub(lat1,long1,long,lat,diff){
 
  document.getElementById("id_days").value = 1
  // calculate distance between clock in and set location
-
+/**
  function distance(lat1, lon1, lat2, lon2, unit) {
         var radlat1 = Math.PI * lat1/180
         var radlat2 = Math.PI * lat2/180
@@ -613,7 +614,34 @@ function clockSub(lat1,long1,long,lat,diff){
         if (unit=="N") { dist = dist * 0.8684 }
         return dist*1000
 }
+**/
 
+function distance(lat1,lon1,lat2,lon2) {
+   var R = 6371e3; // R is earth’s radius
+   var lat1 = 23.18489670753479; // starting point lat
+   var lat2 = 32.726601;         // ending point lat
+   var lon1 = 72.62524545192719; // starting point lon
+   var lon2 = 74.857025;         // ending point lon
+   var lat1radians = toRadians(lat1);
+   var lat2radians = toRadians(lat2);
+
+   var latRadians = toRadians(lat2-lat1);
+   var lonRadians = toRadians(lon2-lon1);
+
+   var a = Math.sin(latRadians/2) * Math.sin(latRadians/2) +
+        Math.cos(lat1radians) * Math.cos(lat2radians) *
+        Math.sin(lonRadians/2) * Math.sin(lonRadians/2);
+   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+   var d = R * c;
+
+   console.log(d)
+}
+
+function toRadians(val){
+    var PI = 3.1415926535;
+    return val / 180.0 * PI;
+}
 
 // hide options 
 const leaveDrop = document.getElementById("id_Approvals_type")

@@ -180,6 +180,8 @@ class Attendance(models.Model):
     long  = models.CharField(max_length=1000,default="")
     lat1 = models.CharField(max_length=1000,default="")
     long1 = models.CharField(max_length=1000,default="")
+    clock_in_distance = models.CharField(max_length=1000,default="")
+    clock_out_distance = models.CharField(max_length=1000,default="")
     image1 =models.TextField()
     image2 =models.TextField()
     status = models.CharField(max_length=100,default="partial")
