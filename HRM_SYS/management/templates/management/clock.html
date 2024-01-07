@@ -262,8 +262,8 @@
 
     <script>
       // creating live clock
-    
-getClock()
+      setInterval(getClock,4000)
+
 getLoc()
       function startTime() {
           const today = new Date();
@@ -566,7 +566,7 @@ function clockSub(diff){
 
    
   
-     
+/**
  
  var input1 = document.getElementById("id_start")
  input1.addEventListener("change",(event) => {
@@ -597,6 +597,7 @@ function clockSub(diff){
             document.getElementById("id_days").value = (end - start)/(24*3600000)+1
        }
  })
+
 
  document.getElementById("id_days").value = 1
  // calculate distance between clock in and set location
@@ -652,7 +653,7 @@ drops.forEach((drop)=>{
   }
 })
 
-setInterval(getClock,1000)
+
 
     </script>
   {% endblock content %}

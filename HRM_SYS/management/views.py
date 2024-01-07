@@ -620,7 +620,14 @@ def clock(request):
 
                     )
                 attendance.save()
-                return JsonResponse("clock in successful",safe=False)
+
+                resp = f'''
+                  clock in successful
+
+                  {distance_} Metres registered from set zone.
+
+                '''
+                return JsonResponse(resp,safe=False)
             
             elif len(att_filt)>0 and att_filt[0].clock_out == '':
                 
@@ -634,7 +641,14 @@ def clock(request):
                 att_filt[0].clock_out_distance = str(distance_)
                 att_filt[0].save()
 
-                return JsonResponse("clock out successful",safe=False)
+                resp = f'''
+                  clock out successful
+
+                  {distance_} Metres registered from set zone.
+
+                '''
+
+                return JsonResponse(resp,safe=False)
             
             elif len(att_filt)>0 and  (att_filt[0].clock_in != '' and att_filt[0].clock_out != ''):
 
@@ -657,7 +671,14 @@ def clock(request):
 
                     )
                 attendance.save()
-                return JsonResponse("clock out successful",safe=False)
+
+                resp = f'''
+                  clock out successful
+
+                  {distance_} Metres registered from set zone.
+
+                '''
+                return JsonResponse(resp,safe=False)
             
             elif (datetime.now().hour+3 > 14 and datetime.now().hour+3 <= 24) and (att_filt[0].clock_out != ''):
                 return JsonResponse("clock out already completed",safe=False)
@@ -799,7 +820,7 @@ def view_attendance(request):
             "distance2":str(attendance.clock_out_distance),
 
 
-            "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
+            "status":attendance.status,"counts":attendance.days,"deductions":attendance.deductions,"leave":attendance.is_leave,
 
             "leave_days":attendance.leave_days,"remarks":attendance.remarks,
                                   
@@ -848,7 +869,7 @@ def view_overall_attendance(request):
 
             "distance2":str(attendance.clock_out_distance),
 
-            "status":attendance.status,"counts":attendance.counts,"deductions":attendance.deductions,"leave":attendance.is_leave,
+            "status":attendance.status,"counts":attendance.days,"deductions":attendance.deductions,"leave":attendance.is_leave,
 
             "leave_days":attendance.leave_days,"remarks":attendance.remarks,
                                   

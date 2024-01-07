@@ -148,6 +148,8 @@
                                                 <th>Clock Out Location</th>
                                                 <th>Clock In Image</th>
                                                 <th>Clock Out Image</th>
+                                                <th>Clock in Distance</th>
+                                                <th>Clock out Distance</th>
                                                 <th>Status</th>
                                                 <th>Count</th>
                                                 <th>Deduction</th>
@@ -213,7 +215,8 @@
                                       <th>Clock Out</th>
                                       <th>Clock In Location</th>
                                       <th>Clock Out Location</th>
-                                      
+                                      <th>Clock in Distance</th>
+                                      <th>Clock out Distance</th>
                                       <th>Status</th>
                                       <th>Count</th>
                                       <th>Deduction</th>
@@ -277,8 +280,11 @@
                                                 <th>Day</th>
                                                 <th>Clock In</th>
                                                 <th>Clock Out</th>
+                                                <th>Clock in Distance</th>
+                                                <th>Clock out Distance</th>
                                                 <th>Set Clock In</th>
                                                 <th>Set Clock Out</th>
+                                                
                                                 <th>Count</th>
                                                 <th>Status</th>
                                                 
@@ -557,6 +563,8 @@ function overallGen(){
                                 <i class="fa fa-image"></i>
 
                             </button>`,
+                data[key]["distance1"],  
+                data[key]["distance2"],       
                 data[key]["status"],
                 data[key]["counts"],
                 data[key]["deductions"],
@@ -623,6 +631,8 @@ function lateGen(){
                     data[key]["day"],
                     data[key]["clock_in"],
                     data[key]["clock_out"],
+                    data[key]["clock_in_distance"],
+                    data[key]["clock_out_distance"],
                     data[key]["set_clock_in"],
                     data[key]["set_clock_out"],
                     data[key]["count"],
@@ -741,6 +751,8 @@ $.ajax({
             data[key]["clock_out"],
             data[key]["location1"],
             data[key]["location2"],
+            data[key]["distance1"],
+            data[key]["distance2"],
             data[key]["status"],
             data[key]["counts"],
             data[key]["deductions"],
