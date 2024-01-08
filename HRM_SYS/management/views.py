@@ -776,24 +776,8 @@ def get_attendance(request):
 def view_attendance(request):
 
     deps = Department.objects.all()
-    leaves = Attendance.objects.filter(is_leave = True).order_by('-pk')
+    
     #print(attendances)
-    today_leaves = []
-    for leave in leaves:
-        
-        if date.today() in [datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date() + timedelta(days=i) for i in range((datetime.strptime(leave.remarks.split(' ')[3],'%Y-%m-%d').date() - datetime.strptime(leave.remarks.split(' ')[1],'%Y-%m-%d').date()).days + 1)]:
-
-            today_leaves_dict = {
-                "employee_id":leave.employee.emp_id,
-                "name":leave.employee.first_name+ " "+leave.employee.second_name ,
-                "day":leave.day,
-                "days":leave.days,
-                "leave_days":leave.leave_days,
-                "created":leave.created,
-                "status":leave.status,
-                "remarks":leave.remarks
-            }
-            today_leaves.append(today_leaves_dict)
     
     if request.POST:
 
@@ -833,9 +817,59 @@ def view_attendance(request):
                     
 
 
-    context = {"leaves":today_leaves,"deps":deps}
+    context = {"deps":deps}
 
     return render(request,'management/list_attendance.html',context)
+
+@csrf_exempt
+@login_required 
+def view_leave(request):
+
+    if request.POST:
+
+        start = request.POST.get("date1")
+        end = request.POST.get("date2") 
+
+        filt_leave = Applications.objects.filter(created_date__gte=start,created_date__lte=end,type__name__icontains = "leave")
+
+        leaves = []
+
+        for leave in filt_leave:
+
+            leaves.append(
+
+                {
+                    "emp_id": leave.applicant.username,
+
+                    "name": str(Employee.objects.get(emp_id=leave.applicant.username).first_name)+" "+str(Employee.objects.get(emp_id=leave.applicant.username).second_name),
+
+                    "department": str(Employee.objects.get(emp_id=leave.applicant.username).departments.name),
+
+                    "category": leave.category,
+
+                    "status": leave.status,
+
+                    "rate": leave.rate,
+
+                    "start":str(leave.start),
+
+                    "end": str(leave.end),
+
+                    "days": leave.days
+
+
+
+
+
+                }
+            )
+        
+        
+        return JsonResponse(json.dumps(leaves),safe=False)
+
+
+
+
 
 @csrf_exempt
 @login_required

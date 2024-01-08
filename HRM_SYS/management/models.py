@@ -31,7 +31,7 @@ class Department(models.Model):
     
     def __str__(self):
 
-        return self.name
+        return str(self.name)
 
 
 class Roles(models.Model):
