@@ -771,6 +771,11 @@ def get_attendance(request):
 ============================================================================================
 
 '''
+def splitter(strng):
+    if ' ' in strng:
+        return strng.split(' ')[1]
+    else:
+        return ''
 @csrf_exempt
 @login_required
 def view_attendance(request):
@@ -795,7 +800,7 @@ def view_attendance(request):
 
             "department":attendance.employee.departments.name,
             
-            "day":str(attendance.day),"clock_in":str(attendance.clock_in),"clock_out":str(attendance.clock_out),"lat":attendance.lat,
+            "day":str(attendance.day),"clock_in":splitter(attendance.clock_in),"clock_out":splitter(attendance.clock_out),"lat":attendance.lat,
 
             "long":attendance.long,"lat1":attendance.lat1,"long1":attendance.long1,"image1":attendance.image1,"image2":attendance.image2,
 
@@ -884,6 +889,8 @@ def view_overall_attendance(request):
 
         att_filt_by_date_list = []
         for attendance in overall_filt_by_date:
+
+
            
             att_filt_by_date_list.append({
             
@@ -893,7 +900,7 @@ def view_overall_attendance(request):
 
             "email":attendance.employee.email,
             
-            "day":str(attendance.day),"clock_in":str(attendance.clock_in),"clock_out":str(attendance.clock_out),
+            "day":str(attendance.day),"clock_in":splitter(attendance.clock_in),"clock_out":splitter(attendance.clock_out),
 
             "location1":attendance.lat+","+attendance.long,
 

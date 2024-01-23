@@ -751,12 +751,16 @@ $.ajax({
     success:function(data,success){
 
         var data = JSON.parse(data)
-        var absentsTab = new DataTable("#all-attendance")
+        var absentsTab = $('#all-attendance').dataTable( {
+  "lengthMenu": [ 1000,10000]
+} );
         absentsTab.clear().draw()
         absentsTab.destroy()
 
 
-        var absentTab = new DataTable("#all-attendance")
+        var absentTab = $('#all-attendance').dataTable( {
+  "lengthMenu": [ 1000,10000]
+} );
         for(key in data){
 
             absentTab.row.add([
