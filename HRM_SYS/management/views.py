@@ -900,7 +900,7 @@ def view_overall_attendance(request):
 
             "email":attendance.employee.email,
             
-            "day":str(attendance.day),"clock_in":attendance.clock_in,"clock_out":attendance.clock_out,
+            "day":str(attendance.day),"clock_in":splitter(attendance.clock_in),"clock_out":splitter(attendance.clock_out),
 
             "location1":attendance.lat+","+attendance.long,
 

@@ -552,11 +552,18 @@ function overallGen(){
         success:function(data,status){
 
             var data = JSON.parse(data)
-            var allTab= new DataTable("#attendance")
+            var allTab= new DataTable("#attendance",{
+              "lengthMenu": [1000,10000]
+
+            })
             allTab.clear().draw()
             allTab.destroy()
 
-            var overallTab= new DataTable("#attendance")
+            var overallTab= new DataTable("#attendance",{
+              "lengthMenu": [1000,10000]
+
+            })
+            
             for (key in data){
 
                 overallTab.row.add(
@@ -751,16 +758,19 @@ $.ajax({
     success:function(data,success){
 
         var data = JSON.parse(data)
-        var absentsTab = $('#all-attendance').dataTable( {
-  "lengthMenu": [ 1000,10000]
-} );
+        var absentsTab = new DataTable("#all-attendance",{
+              "lengthMenu": [1000,10000]
+
+            });
         absentsTab.clear().draw()
         absentsTab.destroy()
 
 
-        var absentTab = $('#all-attendance').dataTable( {
-  "lengthMenu": [ 1000,10000]
-} );
+        var absentTab = new DataTable("#all-attendance",{
+              "lengthMenu": [1000,10000]
+
+            });
+
         for(key in data){
 
             absentTab.row.add([
