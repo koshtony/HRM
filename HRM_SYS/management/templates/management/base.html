@@ -600,10 +600,10 @@ function getApprovalNot(){
       }
   })
 }
-setInterval(getApprovalNot,90*1000)
+
 
   // mail notifications ====================
-  setInterval(getMailNot,60*1000)
+  
 function getMailNot(){
   $.ajax({
 
@@ -668,7 +668,7 @@ document.getElementById("unread-mail").innerHTML = key_mail_array.length
 
         });
   }
-  setInterval(getLatest,45*1000)
+  
   function getLatest(){
 
 var url = "{% url 'management_chat_notify' %}"
